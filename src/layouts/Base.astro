@@ -112,6 +112,10 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     .cabecera__extra { grid-row: 1; grid-column: 2; }
     .cabecera__nav { grid-row: 2; grid-column: 1 / -1; }
   }
+  @media (max-width: 480px) {
+    .cabecera__logo :global(.logo) { font-size: 26px !important; }
+    .cabecera__extra { gap: 12px; }
+  }
 
   .pie {
     display: grid;

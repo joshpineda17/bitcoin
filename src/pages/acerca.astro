@@ -1,0 +1,118 @@
+---
+import Base from '../layouts/Base.astro';
+import Simbolo from '../components/Simbolo.astro';
+import { SECCIONES } from '../lib/secciones';
+---
+
+<Base titulo="Acerca" descripcion="Qué es Cacao Media y cómo funciona Cacao Gate.">
+  <div class="columna">
+    <h1 class="display">Dos mitades, una historia.</h1>
+
+    <p>Cacao Media publica crónicas, guías y cultura de El Salvador. Escribimos desde aquí, para quienes viven aquí y para quienes quieren entender el país más allá de la postal.</p>
+
+    <p>Nuestro símbolo es un grano de cacao partido. Hace 500 años, en Cuscatlán, el grano de cacao era moneda: se usaba para pagar lo justo, poco a poco. Una mitad es quien escribe; la otra, quien lee. Entre las dos queda la historia que se comparte.</p>
+
+    <div class="simbolo">
+      <Simbolo tamano={120} />
+    </div>
+
+    <h2 id="cacao-gate">Cómo funciona Cacao Gate</h2>
+
+    <p>No hay suscripción ni cuenta. Cada historia tiene un precio pequeño, desde $0.12. Leés el comienzo gratis y, si querés seguir, desbloqueás solo esa historia.</p>
+
+    <ol>
+      <li>Abrí cualquier historia y leé el comienzo.</li>
+      <li>Tocá Desbloquear para pagar solo esa historia.</li>
+      <li>Tenés acceso por 7 días en ese dispositivo.</li>
+    </ol>
+
+    <div class="nota">
+      <p class="etiqueta">Modo demo</p>
+      <p>El sitio está en modo demo: el botón de desbloquear funciona, pero todavía no se cobra nada.</p>
+    </div>
+
+    <h2>Secciones</h2>
+
+    <ul class="secciones">
+      {
+        SECCIONES.map((s) => (
+          <li>
+            <a class="pastilla" data-seccion={s.id} href={`/${s.ruta}/`}>{s.plural}</a>
+            <p>{s.descripcion}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Contacto</h2>
+
+    <p>Escribinos a <a href="mailto:hola@cacaomedia.sv">hola@cacaomedia.sv</a>.</p>
+  </div>
+</Base>
+
+<style>
+  .columna {
+    width: min(100% - 2 * var(--canal), var(--ancho-lectura));
+    margin-inline: auto;
+    padding-block: clamp(32px, 6vw, 72px);
+  }
+
+  .display {
+    margin-bottom: 0.6em;
+    font-size: var(--t-h1);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    overflow-wrap: anywhere;
+  }
+
+  .columna > p,
+  .columna > ol,
+  .columna > .nota,
+  .columna > .secciones {
+    margin-top: 1.2em;
+  }
+
+  .simbolo {
+    display: flex;
+    justify-content: center;
+    margin-block: 32px;
+  }
+
+  .columna h2 {
+    margin-top: 2em;
+    margin-bottom: 0.6em;
+  }
+
+  ol {
+    padding-left: 1.4em;
+  }
+
+  ol li + li {
+    margin-top: 0.4em;
+  }
+
+  .nota {
+    background: var(--arena);
+    border-radius: var(--radio-chico);
+    padding: 1em 1.2em;
+  }
+
+  .nota > .etiqueta {
+    margin-bottom: 0.4em;
+  }
+
+  .secciones {
+    list-style: none;
+    margin-bottom: 0;
+    padding: 0;
+  }
+
+  .secciones li + li {
+    margin-top: 1.2em;
+  }
+
+  .secciones p {
+    margin-top: 0.4em;
+  }
+</style>

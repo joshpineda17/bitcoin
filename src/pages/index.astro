@@ -1,7 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
+import Feed from '../components/Feed.astro';
+import { todasLasHistorias } from '../lib/historias';
 ---
 
 <Base>
-  <p class="contenedor">En construcción.</p>
+  <div class="contenedor intro">
+    <h1 class="intro__titulo">Historias de El Salvador, grano a grano.</h1>
+    <p class="intro__bajada">Crónicas, guías y cultura local. Sin suscripciones: pagás solo lo que leés.</p>
+  </div>
+  <Feed historias={await todasLasHistorias()} />
 </Base>
+
+<style>
+  .intro__titulo {
+    max-width: 14ch;
+    padding-block: clamp(32px, 6vw, 72px) 20px;
+    font-size: var(--t-display);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    overflow-wrap: anywhere;
+  }
+
+  .intro__bajada {
+    max-width: 34ch;
+    color: var(--tinta-suave);
+    padding-bottom: clamp(28px, 5vw, 56px);
+  }
+</style>

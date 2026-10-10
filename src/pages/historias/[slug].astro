@@ -1,7 +1,10 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import CacaoGate from '../../components/CacaoGate.astro';
 import { todasLasHistorias, type Historia } from '../../lib/historias';
+import { fechaCorta, fechaIso, precio } from '../../lib/formato';
+import { seccionPorId, slugTag } from '../../lib/secciones';
 
 export async function getStaticPaths() {
   return (await todasLasHistorias()).map((historia) => ({
@@ -15,11 +18,184 @@ interface Props {
 }
 const { historia } = Astro.props;
 const { Content } = await render(historia);
+
+const d = historia.data;
+const seccion = seccionPorId(d.seccion);
+const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónica' : 'historia';
 ---
 
-<Base titulo={historia.data.titulo} descripcion={historia.data.bajada} seccion={historia.data.seccion}>
-  <article class="contenedor">
-    <h1>{historia.data.titulo}</h1>
-    <Content />
+<Base titulo={d.titulo} descripcion={d.bajada} seccion={d.seccion} imagen={d.portada}>
+  <article class="historia" data-historia={historia.id} data-gate-estado={d.gratis ? 'gratis' : 'bloqueado'}>
+    <header class="historia__cabeza contenedor">
+      <a class="pastilla" href={`/${seccion.ruta}/`}>{seccion.singular} · {d.lugar}</a>
+      <h1>{d.titulo}</h1>
+      <p class="historia__bajada">{d.bajada}</p>
+      <div class="historia__meta etiqueta">
+        <span>{d.autor}</span>
+        <time datetime={fechaIso(d.fecha)}>{fechaCorta(d.fecha)}</time>
+        <span>{d.minutos} min</span>
+        {d.coords && <span>{d.coords}</span>}
+        <span class="pastilla historia__estado" data-gate-pastilla data-precio={precio(d.precio)}>
+          {d.gratis ? 'Gratis' : precio(d.precio)}
+        </span>
+      </div>
+    </header>
+
+    <figure class="historia__portada contenedor">
+      <img src={d.portada} alt={d.alt} width="1600" height="1000" />
+    </figure>
+
+    <div class="historia__cuerpo">
+      <div class="prosa">
+        <Content />
+      </div>
+      {!d.gratis && <CacaoGate tipo={tipo} precio={precio(d.precio)} />}
+    </div>
+
+    <footer class="historia__pie">
+      {d.tags.map((tag) => (
+        <a class="pastilla" href={`/tags/${slugTag(tag)}/`}>{tag}</a>
+      ))}
+      <a href="/">Volver al inicio</a>
+    </footer>
   </article>
 </Base>
+
+<style>
+  .historia__cabeza {
+    padding-block: clamp(28px, 6vw, 64px);
+    display: grid;
+    gap: 18px;
+    justify-items: start;
+  }
+  .historia h1 {
+    font-size: var(--t-display);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    max-width: 18ch;
+    overflow-wrap: anywhere;
+  }
+  .historia__bajada {
+    font-size: var(--t-h2);
+    font-weight: 400;
+    color: var(--tinta-suave);
+    max-width: 36ch;
+  }
+  .historia__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .historia__portada { margin: 0 auto; }
+  .historia__portada img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: var(--radio);
+  }
+
+  .historia__cuerpo {
+    width: min(100% - 2 * var(--canal), var(--ancho-lectura));
+    margin: clamp(28px, 5vw, 56px) auto 0;
+  }
+
+  .historia__pie {
+    width: min(100% - 2 * var(--canal), var(--ancho-lectura));
+    margin: 40px auto 0;
+    border-top: 1.5px solid var(--tostado);
+    padding-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Markdown output is not scoped, so these rules use :global(). */
+  .prosa :global(p) { margin-block: 0 1.2em; font-size: 1.1875rem; line-height: 1.65; }
+  .prosa :global(h2) { margin-block: 1.8em 0.6em; font-weight: 800; }
+  .prosa :global(blockquote) {
+    margin: 0 0 1.6em;
+    padding: 0.8em 1.1em;
+    background: var(--arena);
+    border-radius: var(--radio-chico);
+    font-family: var(--mono);
+    font-size: var(--t-etiqueta);
+  }
+  .prosa :global(blockquote p) { margin: 0; font-size: inherit; }
+  .prosa :global(ul),
+  .prosa :global(ol) { padding-left: 1.2em; margin-block: 0 1.2em; }
+  .prosa :global(li) { margin: 0.4em 0; }
+  .prosa :global(a) { text-decoration: underline; }
+
+  .historia :global([data-gate-cerrado]) { display: none; }
+  .historia[data-gate-estado='desbloqueado'] :global([data-gate-cerrado]),
+  .historia[data-gate-estado='leyendo'] :global([data-gate-cerrado]),
+  .historia[data-gate-estado='gratis'] :global([data-gate-cerrado]) { display: block; }
+  .historia[data-gate-estado='desbloqueado'] :global([data-gate-muro]),
+  .historia[data-gate-estado='leyendo'] :global([data-gate-muro]),
+  .historia[data-gate-estado='gratis'] :global([data-gate-muro]) { display: none; }
+</style>
+
+<script>
+  import { estadoGate, desbloquear, type EstadoGate } from '../../lib/gate';
+
+  const articulo = document.querySelector<HTMLElement>('[data-historia]');
+
+  if (articulo && articulo.dataset.gateEstado !== 'gratis') {
+    const slug = articulo.dataset.historia ?? '';
+    const pastilla = articulo.querySelector<HTMLElement>('[data-gate-pastilla]');
+    const boton = articulo.querySelector<HTMLButtonElement>('[data-gate-boton]');
+    const vencido = articulo.querySelector<HTMLElement>('[data-gate-vencido]');
+    const cerrado = articulo.querySelector<HTMLElement>('[data-gate-cerrado]');
+    let observador: IntersectionObserver | null = null;
+
+    const pintar = (): EstadoGate => {
+      const estado = estadoGate(slug);
+      articulo.dataset.gateEstado = estado;
+
+      if (pastilla) {
+        if (estado === 'bloqueado') pastilla.textContent = pastilla.dataset.precio ?? '';
+        else if (estado === 'desbloqueado') pastilla.textContent = 'Desbloqueado';
+        else pastilla.textContent = 'Expirado';
+      }
+
+      if (vencido) {
+        if (estado === 'expirado') vencido.removeAttribute('hidden');
+        else vencido.setAttribute('hidden', '');
+      }
+
+      if (boton) {
+        boton.textContent =
+          estado === 'expirado' ? 'Desbloquear de nuevo' : (boton.dataset.textoNormal ?? '');
+      }
+
+      return estado;
+    };
+
+    const observar = () => {
+      if (observador || !cerrado || typeof IntersectionObserver === 'undefined') return;
+      observador = new IntersectionObserver((entradas) => {
+        if (!entradas.some((e) => e.isIntersecting)) return;
+        articulo.dataset.gateEstado = 'leyendo';
+        if (pastilla) pastilla.textContent = 'Leyendo';
+        observador?.disconnect();
+      });
+      observador.observe(cerrado);
+    };
+
+    boton?.addEventListener('click', () => {
+      desbloquear(slug);
+      pintar();
+      if (cerrado) {
+        cerrado.tabIndex = -1;
+        cerrado.focus();
+      }
+      observar();
+    });
+
+    if (pintar() === 'desbloqueado') observar();
+  }
+</script>
