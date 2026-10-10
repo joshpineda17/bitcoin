@@ -33,6 +33,8 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title="Cacao Media" href="/rss.xml" />
     <meta name="theme-color" content="#2A1912" />
+    <!-- Stories are unverified drafts. Remove this line (and public/robots.txt) once they are fact-checked. -->
+    <meta name="robots" content="noindex" />
     <meta property="og:site_name" content="Cacao Media" />
     <meta property="og:title" content={tituloCompleto} />
     <meta property="og:description" content={descripcion} />
@@ -73,6 +75,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
       <nav aria-label="Pie">
         <a href="/archivo/">Archivo</a>
         <a href="/acerca/">Acerca</a>
+        <a href="/creditos/">Créditos de fotos</a>
         <a href="/rss.xml">RSS</a>
       </nav>
       <p class="etiqueta">13.69°N · 89.22°W · San Salvador</p>

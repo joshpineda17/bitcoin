@@ -2,21 +2,29 @@
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import CacaoGate from '../../components/CacaoGate.astro';
+import GrillaHistorias from '../../components/GrillaHistorias.astro';
 import { todasLasHistorias, type Historia } from '../../lib/historias';
 import { fechaCorta, fechaIso, precio } from '../../lib/formato';
 import { seccionPorId, slugTag } from '../../lib/secciones';
 
 export async function getStaticPaths() {
-  return (await todasLasHistorias()).map((historia) => ({
-    params: { slug: historia.id },
-    props: { historia },
-  }));
+  const todas = await todasLasHistorias();
+  return todas.map((historia) => {
+    // Same section first, then the newest of the rest, so there are always three.
+    const otras = todas.filter((h) => h.id !== historia.id);
+    const relacionadas = [
+      ...otras.filter((h) => h.data.seccion === historia.data.seccion),
+      ...otras.filter((h) => h.data.seccion !== historia.data.seccion),
+    ].slice(0, 3);
+    return { params: { slug: historia.id }, props: { historia, relacionadas } };
+  });
 }
 
 interface Props {
   historia: Historia;
+  relacionadas: Historia[];
 }
-const { historia } = Astro.props;
+const { historia, relacionadas } = Astro.props;
 const { Content } = await render(historia);
 
 const d = historia.data;
@@ -43,6 +51,12 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
 
     <figure class="historia__portada contenedor">
       <img src={d.portada} alt={d.alt} width="1600" height="1000" />
+      {d.credito && (
+        <figcaption class="etiqueta">
+          Foto: {d.creditoUrl ? <a href={d.creditoUrl} rel="noopener">{d.credito}</a> : d.credito}
+          {d.licencia && ` · ${d.licencia}`}
+        </figcaption>
+      )}
     </figure>
 
     <div class="historia__cuerpo">
@@ -59,6 +73,7 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
       <a href="/">Volver al inicio</a>
     </footer>
   </article>
+  <GrillaHistorias titulo="Seguí leyendo" historias={relacionadas} />
 </Base>
 
 <style>
@@ -96,6 +111,8 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
     object-fit: cover;
     border-radius: var(--radio);
   }
+
+  .historia__portada figcaption { margin-top: 10px; color: var(--tinta-suave); }
 
   .historia__cuerpo {
     width: min(100% - 2 * var(--canal), var(--ancho-lectura));

@@ -1,7 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import Feed from '../components/Feed.astro';
+import GrillaHistorias from '../components/GrillaHistorias.astro';
 import { todasLasHistorias } from '../lib/historias';
+
+const DESTACADAS = 6;
+const RECIENTES = 18;
+const historias = await todasLasHistorias();
 ---
 
 <Base>
@@ -9,7 +14,15 @@ import { todasLasHistorias } from '../lib/historias';
     <h1 class="intro__titulo">Historias de El Salvador, grano a grano.</h1>
     <p class="intro__bajada">Crónicas, guías y cultura local. Sin suscripciones: pagás solo lo que leés.</p>
   </div>
-  <Feed historias={await todasLasHistorias()} />
+  <Feed historias={historias.slice(0, DESTACADAS)} />
+  <GrillaHistorias titulo="Más historias" historias={historias.slice(DESTACADAS, RECIENTES)} />
+  {
+    historias.length > RECIENTES && (
+      <p class="contenedor mas">
+        <a class="boton boton--oscuro" href="/archivo/">Ver las {historias.length} historias</a>
+      </p>
+    )
+  }
 </Base>
 
 <style>
@@ -22,6 +35,8 @@ import { todasLasHistorias } from '../lib/historias';
     letter-spacing: -0.03em;
     overflow-wrap: anywhere;
   }
+
+  .mas { margin-top: clamp(28px, 5vw, 56px); text-align: center; }
 
   .intro__bajada {
     max-width: 34ch;
