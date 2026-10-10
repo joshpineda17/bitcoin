@@ -1,0 +1,25 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { todasLasHistorias, type Historia } from '../../lib/historias';
+
+export async function getStaticPaths() {
+  return (await todasLasHistorias()).map((historia) => ({
+    params: { slug: historia.id },
+    props: { historia },
+  }));
+}
+
+interface Props {
+  historia: Historia;
+}
+const { historia } = Astro.props;
+const { Content } = await render(historia);
+---
+
+<Base titulo={historia.data.titulo} descripcion={historia.data.bajada} seccion={historia.data.seccion}>
+  <article class="contenedor">
+    <h1>{historia.data.titulo}</h1>
+    <Content />
+  </article>
+</Base>
