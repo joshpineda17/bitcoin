@@ -7,7 +7,8 @@ autor: Redacción Cacao
 lugar: Apaneca
 coords: 13.87°N · 89.79°W
 minutos: 3
-precio: 0.12
+precio: 0
+gratis: true
 portada: /portadas/el-cafe-de-sombra-y-los-pajaros.jpg
 alt: 'Un ave de plumaje verde y cejas turquesas posada en una rama, con colinas de bosque al fondo'
 credito: 'JoAnn Miller from Mexico City, Mexico'
@@ -21,8 +22,6 @@ Al amanecer, el cafetal de sombra tiene más ruido que el de sol. Cantan los pá
 En Apaneca, muchas fincas crecen bajo árboles altos que dan sombra a las plantas de café. Esa sombra cambia el ritmo de la planta: el grano suele madurar más despacio y el campo se parece más a un bosque que a un monocultivo. Ahí, la finca funciona como un sistema, no como una línea de plantas.
 
 Esa forma de cultivar tiene un nombre: café de sombra, o café bajo sombra. La pregunta es simple: qué gana el café, y qué ganan los pájaros.
-
-<!-- gate -->
 
 ## Un bosque con tazas
 

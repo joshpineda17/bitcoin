@@ -7,12 +7,13 @@ autor: Redacción Cacao
 lugar: San Salvador
 coords: 13.69°N · 89.22°W
 minutos: 3
-precio: 0.12
+precio: 0
+gratis: true
 portada: /portadas/yuca-frita-pasteles-y-la-tarde.jpg
-alt: Carreta de un vendedor ambulante con cocos, tomates y chiles verdes sobre una calle de asfalto, vista desde arriba.
-credito: 'Ayaita'
-licencia: 'CC BY 3.0'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:VendedorAmbulanteElSalvador.jpg'
+alt: 'Canasta con papel rojo y blanco, con una pupusa, curtido, salsa roja y yuca frita dorada'
+credito: 'Ruth Hartnup from Vancouver, Canada'
+licencia: 'CC BY 2.0'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:Pupusa_and_yucca_frita_from_Guanaco_food_truck_(11594529115).jpg'
 tags: [Comida, San Salvador, Tradiciones]
 ---
 
@@ -21,8 +22,6 @@ En San Salvador la tarde no empieza con una hora sino con un olor. Cuando el cal
 Lo que se vende cambia según el barrio y la hora, pero hay un núcleo que se repite: frituras, frutas peladas, bebidas frías y algo dulce para cerrar. Si tenés hambre a media tarde, no hace falta buscar un restaurante. Basta con seguir la fila más corta y preguntar qué salió recién de la olla.
 
 Esa costumbre de comer de pie, en la acera, es una de las formas más directas de entender la vida diaria de la capital. Nadie apura el paso, el vendedor conoce a la mitad de los clientes por nombre y la conversación casi siempre gira alrededor del clima o del partido de la noche.
-
-<!-- gate -->
 
 ## La yuca frita y su compañía
 

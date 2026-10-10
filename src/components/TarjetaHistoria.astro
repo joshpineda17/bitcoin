@@ -28,12 +28,11 @@ const url = urlHistoria(historia);
 
 <style>
   .tarjeta { display: grid; gap: 12px; justify-items: start; align-content: start; min-width: 0; }
-  .tarjeta__foto { display: block; width: 100%; }
-  .tarjeta__foto img {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
-    border-radius: var(--radio-chico);
+  .tarjeta__foto { display: block; width: 100%; overflow: hidden; border-radius: var(--radio-chico); }
+  .tarjeta__foto img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+  @media (prefers-reduced-motion: no-preference) {
+    .tarjeta__foto img { transition: transform 0.5s ease; }
+    .tarjeta:hover .tarjeta__foto img { transform: scale(1.04); }
   }
   .pastilla { white-space: normal; }
   h3 { font-size: var(--t-h2); font-weight: 800; overflow-wrap: anywhere; }

@@ -10,10 +10,10 @@ minutos: 3
 precio: 0
 gratis: true
 portada: /portadas/leer-la-etiqueta-bolsa-de-cafe.jpg
-alt: 'Granos de café tostados, apilados y enfocados de cerca'
-credito: 'MarkSweep'
-licencia: 'Public domain'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:Roasted_coffee_beans.jpg'
+alt: 'Saco de yute con letras impresas en negro que dicen arabica y coffee beans, visto de cerca'
+credito: 'Dietmar Rabich'
+licencia: 'CC BY-SA 4.0'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Privatr%C3%B6sterei_Schr%C3%B6er,_Kaffeesack_--_2018_--_0567.jpg'
 tags: [Café, San Salvador, Guía rápida]
 ---
 

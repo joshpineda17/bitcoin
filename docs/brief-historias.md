@@ -94,3 +94,45 @@ Photo rules:
 
 Report in under 120 words: the slugs you created, and for any story where you could not find a
 good photo, say so plainly and which photo you used instead.
+
+---
+
+# Round 2: upgrade pass (overrides anything above that conflicts)
+
+You are upgrading EXISTING stories. Never rename a file. Never change `titulo`, `seccion`, `fecha`,
+`lugar`, `precio`, `gratis`, or add or remove the `<!-- gate -->` line (paid stories keep exactly one,
+free stories have none). Edit each story with the Edit tool or rewrite it fully with Write, one story
+at a time. Only touch the story files assigned to you and their cover in `public/portadas/`.
+
+## Photos: the bar is a magazine cover
+
+The current covers were picked fast and many are mediocre. For each story:
+
+1. Look at the current cover with Read (`public/portadas/<slug>.jpg`).
+2. Build contact sheets of candidates, at least 3 different queries per story:
+   `node scripts/portada.mjs hoja "<query>" <any-short-name>` then Read `.hojas/<any-short-name>.jpg`.
+   The sheet shows up to 12 numbered thumbnails; the printed list maps numbers to file titles.
+   Thumbnails labelled PREMIADA are award-winning Commons photos: prefer them when relevant.
+   Good queries are short: a place name, a landmark, a dish, a thing. Try Spanish and English, the
+   municipality, the department, and nearby landmarks.
+3. Choose the single most striking photo that truly shows the story's place or subject: strong
+   light, clear subject, good composition, sharp, no date stamps, no watermarks, no clutter.
+   Golden hour, dramatic skies, saturated colour and close food shots win. Hazy, flat, tilted,
+   overexposed or snapshot-looking photos lose.
+4. Download it: `node scripts/portada.mjs bajar "File:Exact title.jpg" <slug>`, then Read
+   `public/portadas/<slug>.jpg` at full size to confirm it survived the 16:10 crop. If the script
+   says the photo is already used by another story, pick another.
+5. Replace the current cover only if the new one is clearly better. If you replace it, update
+   `credito`, `licencia`, `creditoUrl` with the printed lines and rewrite `alt` from what you see.
+6. If the photo is not of the exact place (for example a neighbouring beach), the `alt` must name
+   what and where it really is. Never use a photo from another country for a story about a specific
+   Salvadoran place.
+
+All other photo rules above still apply (no identifiable person as the main subject, no officials,
+logos, maps, paintings).
+
+## Text
+
+- Keep every accuracy rule above. No invented people, quotes, businesses, prices, statistics.
+- Fix anything that breaks the voice rules: clichés, filler, em dashes, generic travel-brochure lines.
+- Set `minutos` to the body word count divided by 200, rounded up.

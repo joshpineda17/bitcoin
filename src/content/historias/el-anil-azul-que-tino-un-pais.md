@@ -7,7 +7,8 @@ autor: Redacción Cacao
 lugar: Suchitoto
 coords: 13.94°N · 89.02°W
 minutos: 3
-precio: 0.12
+precio: 0
+gratis: true
 portada: /portadas/el-anil-azul-que-tino-un-pais.jpg
 alt: Iglesia blanca de Suchitoto iluminada al anochecer, con una fuente redonda de mosaico verde y dos personas junto a ella.
 credito: 'ElmerGuevara'
@@ -22,8 +23,6 @@ Para entender ese azul no hace falta buscar una tinta. Basta con mirar el cielo 
 
 Hoy el añil se recuerda más en libros y en conversaciones de mayores que en los campos. Aun así, su historia sigue presente en el paisaje, en la economía de otros tiempos y en la memoria de los oficios que dependían de él. Vale la pena escucharla con calma.
 
-<!-- gate -->
-
 ## Del arbusto a la tina
 
 El trabajo era duro y tenía olor. Mientras el agua fermentaba, los trabajadores debían vigilar cada etapa: un poco de más o de menos y el pigmento salía opaco o no se asentaba bien. Poco tenía de poético aquel oficio, y mucho de cansancio.
@@ -32,12 +31,12 @@ El resultado eran panes de color azul oscuro, que se secaban y después se vend�
 
 ## Un azul que se volvió historia
 
-Hacia finales del siglo XIX y comienzos del XX, los tintes sintéticos llegaron al mercado y el añil perdió su lugar. Los campos cambiaron de cultivo y la economía del país se movió hacia otros productos, entre ellos el café. Esa transición no fue solo comercial: cambió la forma en que la gente vivía del campo.
+Hacia finales del siglo XIX y comienzos del XX, los tintes sintéticos llegaron al mercado y el añil perdió su lugar. Los campos cambiaron de cultivo y la economía del país se movió hacia otros productos, entre ellos el café. Esa transición no fue solo comercial: cambió la forma en que la gente vivía del campo. Para quienes vivían de ese trabajo, buscar otro oficio no fue una decisión sencilla.
 
 Hoy, cuando alguien habla del añil en El Salvador, habla de una época, de un pasado que dejó huellas en la tierra y en la memoria de muchas familias. Caminar por los pueblos del centro es una manera de acercarse a esa historia, sin fórmulas ni apuros.
 
 ## Cómo mirarlo hoy
 
-Si querés conocer ese pasado, preguntá en el centro si hay algún espacio que cuente la historia de la zona y a qué hora atiende. Si lo encontrás, dale tiempo, porque leer con calma lleva más de lo que parece. Y si la visita te deja con ganas de saber más, buscá libros de historia económica de El Salvador que expliquen el tema con calma.
+Si querés conocer ese pasado, preguntá en el centro si hay algún espacio que cuente la historia de la zona y a qué hora atiende. Los horarios cambian, así que confirmalos antes de salir de San Salvador. Si lo encontrás, dale tiempo, porque leer con calma lleva más de lo que parece. Y si la visita te deja con ganas de saber más, buscá libros de historia económica de El Salvador que expliquen el tema con calma.
 
 Después, subí a la plaza al atardecer. Mirá cómo cambia el cielo sobre la iglesia, escuchá las campanas si suenan y dejá que el azul se apague despacio. Llevá una chaqueta liviana, porque la noche se siente más fresca cerca del lago.

@@ -8,13 +8,13 @@ lugar: San Salvador
 coords: 13.69°N · 89.19°W
 minutos: 3
 precio: 0
-portada: /portadas/como-pedir-un-cafe-de-altura.jpg
-alt: 'Mesas y sillas de un café al aire libre en una calle de San Salvador, con edificios altos y autos estacionados'
-credito: 'Ciencia1.com'
-licencia: 'CC BY-SA 3.0'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:Caf%C3%A9_al_aire_libre_en_Av._Rep%C3%BAblica_de_El_Salvador_-_panoramio.jpg'
-tags: [Café, Guía rápida, San Salvador]
 gratis: true
+portada: /portadas/como-pedir-un-cafe-de-altura.jpg
+alt: 'Taza blanca de café negro sobre un plato, con una galleta y una cucharita, en una mesa de madera'
+credito: 'Melsj'
+licencia: 'CC BY-SA 4.0'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:Caf%C3%A9_coado.jpg'
+tags: [Café, Guía rápida, San Salvador]
 ---
 
 Pedir un café de altura puede dar algo de pena si no sabés qué significa la palabra. No hace falta saberlo todo. En la mayoría de cafeterías de San Salvador basta con tener claro qué querés en la taza y decir una frase corta, y el barista suele ayudarte con el resto.

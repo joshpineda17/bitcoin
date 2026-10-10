@@ -7,12 +7,13 @@ autor: Redacción Cacao
 lugar: San Juan Opico
 coords: 13.84°N · 89.39°W
 minutos: 3
-precio: 0.12
+precio: 0
+gratis: true
 portada: /portadas/joya-de-ceren-la-pompeya-de-america.jpg
-alt: Ruinas de adobe excavadas bajo un techo de lámina, con un recinto de piedra en el centro y paredes de tierra en capas.
-credito: 'Mariordo (Mario Roberto Duran Ortiz)'
-licencia: 'CC BY-SA 3.0'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:ES_Joya_Ceren_05_2012_Estructura_9_Area_2_Tamazcal_wide_angle_1479.JPG'
+alt: 'Estructura de adobe con postes excavada entre capas de ceniza volcánica en el parque arqueológico Joya de Cerén'
+credito: 'xiquinhosilva'
+licencia: 'CC BY 4.0'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:Parque_Arqueol%C3%B3gico_Joya_de_Cer%C3%A9n_-_55384173232.jpg'
 tags: [Arqueología, Historia, Occidente]
 ---
 
@@ -21,8 +22,6 @@ Hace más de mil años, una aldea agrícola quedó bajo capas de ceniza volcáni
 El apodo es comprensible, pero no del todo exacto. En Pompeya el volcán sepultó una ciudad romana; en Joya de Cerén fue una aldea agrícola de la época prehispánica. Lo que las dos tienen en común es la ceniza, que conservó lo cotidiano en lugar de lo monumental, y eso hace que visitarla sea una experiencia distinta a la de cualquier templo.
 
 El sitio está en el departamento de La Libertad, en el municipio de San Juan Opico, a una distancia corta de San Salvador. Fue declarado Patrimonio Mundial por la UNESCO en 1993, y desde entonces se ha convertido en una de las visitas arqueológicas más importantes del país.
-
-<!-- gate -->
 
 ## Qué se ve al llegar
 
@@ -45,6 +44,6 @@ Andá temprano para evitar el calor del mediodía y para tener más tiempo con c
 
 ## Por qué importa
 
-Joya de Cerén no solo muestra cómo vivía una comunidad hace siglos. Muestra también cómo se puede proteger un sitio cuando la gente que vive cerca lo cuida. Es uno de los lugares donde mejor se entiende la historia cotidiana del país, porque no muestra a reyes ni monumentos, sino a familias que cocinaban, guardaban su grano y vivían en el mismo sitio de siempre.
+Joya de Cerén no solo muestra cómo vivía una comunidad hace siglos. También muestra que un sitio así necesita cuidado constante, con técnicos, guías y visitantes que respeten las reglas. Es uno de los lugares donde mejor se entiende la historia cotidiana del país, porque no muestra a reyes ni monumentos, sino a familias que cocinaban, guardaban su grano y vivían en el mismo sitio de siempre.
 
 Si ya estuviste y querés volver, fijate en los detalles pequeños: la forma de un fogón, la altura de un muro, la disposición de los depósitos. Ahí es donde la ceniza hace su trabajo, y donde se ve la vida que la erupción detuvo.

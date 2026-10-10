@@ -7,12 +7,13 @@ autor: Redacción Cacao
 lugar: Santa Ana
 coords: 13.99°N · 89.56°W
 minutos: 3
-precio: 0.12
+precio: 0
+gratis: true
 portada: /portadas/bourbon-pacas-y-pacamara-variedades-nacieron-aqui.jpg
-alt: 'Una mano sostiene una cereza de café partida y un grano claro'
-credito: 'Roger Burger'
-licencia: 'CC0'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:Open_coffee_cherry.jpg'
+alt: 'Cerezas de café rojas y maduras colgando de una rama, con un fondo azul grisáceo desenfocado'
+credito: 'lienyuan lee'
+licencia: 'CC BY 3.0'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:Coffee_cherries_%E5%92%96%E5%95%A1%E6%9E%9C_-_panoramio.jpg'
 tags: [Café, Santa Ana]
 ---
 
@@ -21,8 +22,6 @@ Si alguna vez pediste un café y notaste un sabor a panela o a fruta madura, par
 El bourbon viene de la isla de Reunión, que antes se llamó Borbón, y llegó a América hace siglos. Con el tiempo, en fincas de distintas zonas, aparecieron plantas con cambios pequeños: otra altura, otro grano, otro ritmo de maduración. Algunos de esos cambios se volvieron nombres propios.
 
 Dos de esos nombres son la pacas y la pacamara. Hoy se escriben en las etiquetas de cafés de todo el mundo, y vale la pena saber de dónde salieron.
-
-<!-- gate -->
 
 ## El bourbon, la base de casi todo
 

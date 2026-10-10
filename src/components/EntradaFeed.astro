@@ -7,14 +7,16 @@ import { fechaCorta, fechaIso, precio } from '../lib/formato';
 interface Props {
   historia: Historia;
   destacada?: boolean;
+  /** Photo on the right instead of the left. */
+  invertida?: boolean;
 }
-const { historia, destacada = false } = Astro.props;
+const { historia, destacada = false, invertida = false } = Astro.props;
 const { titulo, bajada, seccion: seccionId, fecha, lugar, minutos, gratis, portada, alt } = historia.data;
 const seccion = seccionPorId(seccionId);
 const url = urlHistoria(historia);
 ---
 
-<article class:list={['entrada', destacada && 'entrada--destacada']} data-seccion={seccionId}>
+<article class:list={['entrada', destacada && 'entrada--destacada', invertida && 'entrada--invertida']} data-seccion={seccionId}>
   <a class="entrada__imagen" href={url}>
     <img
       src={portada}
@@ -46,19 +48,26 @@ const url = urlHistoria(historia);
   @media (min-width: 800px) {
     .entrada {
       grid-template-columns: minmax(0, 62fr) minmax(0, 38fr);
-      align-items: start;
+      align-items: center;
     }
+    .entrada--invertida { grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); }
+    .entrada--invertida .entrada__imagen { order: 2; }
   }
 
   .entrada__imagen {
     display: block;
     min-width: 0;
+    overflow: hidden;
+    border-radius: var(--radio);
   }
   .entrada__imagen img {
     width: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
-    border-radius: var(--radio-chico);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .entrada__imagen img { transition: transform 0.5s ease; }
+    .entrada:hover .entrada__imagen img { transform: scale(1.03); }
   }
 
   .entrada__texto {

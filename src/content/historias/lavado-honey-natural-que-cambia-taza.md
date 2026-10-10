@@ -7,12 +7,13 @@ autor: Redacción Cacao
 lugar: Apaneca
 coords: 13.87°N · 89.79°W
 minutos: 3
-precio: 0.12
+precio: 0
+gratis: true
 portada: /portadas/lavado-honey-natural-que-cambia-taza.jpg
-alt: 'Patio de secado cubierto de granos de café al sol, en un beneficio de Costa Rica'
-credito: 'Ronchy'
-licencia: 'Public domain'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:Coffee_Drying_on_concrete_Patio.jpg'
+alt: 'Cerezas de café extendidas sobre lonas azules para secarse al sol, con una tanda de granos ya secos al fondo'
+credito: 'Josep M. Gracia'
+licencia: 'CC BY-SA 4.0'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:WAE_-_Coffee_cherries_drying_in_Wae_Rebo,_Flores,_Indonesia,_2019.jpg'
 tags: [Café, Ruta de las Flores]
 ---
 
@@ -21,8 +22,6 @@ Dos bolsas del mismo café pueden tener nombres distintos y sabores que se parec
 En Apaneca, donde las fincas se mezclan con bosque y la neblina baja temprano, los productores deciden cómo secar el grano antes de que cambie el clima. Esa decisión define buena parte de lo que vas a tomar en la taza. Si pasás por un beneficio en temporada, vas a sentir el olor dulce de la pulpa y el ruido del agua corriendo por los canales.
 
 Los tres nombres más usados son lavado, honey y natural. No son marcas ni niveles de calidad. Son formas de procesar la cereza, y cada una deja su huella.
-
-<!-- gate -->
 
 ## Lavado: fermentar, lavar y secar
 

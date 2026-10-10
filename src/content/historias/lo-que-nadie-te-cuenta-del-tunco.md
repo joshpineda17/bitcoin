@@ -1,12 +1,12 @@
 ---
 titulo: Lo que nadie te cuenta del Tunco
-bajada: Detrás de las fotos de olas y atardeceres hay un pueblo que vive del turismo y de sus propias contradicciones.
+bajada: El Tunco tiene dos relojes: el de quien llega el viernes y el de quien se queda. Entre los dos corre un río.
 seccion: cronica
 fecha: 2026-09-16
 autor: Redacción Cacao
 lugar: El Tunco
 coords: 13.49°N · 89.38°W
-minutos: 3
+minutos: 7
 precio: 0.12
 portada: /portadas/lo-que-nadie-te-cuenta-del-tunco.jpg
 alt: 'Surfista de espaldas con tabla clara sobre rocas oscuras en la playa, al atardecer'
@@ -16,22 +16,48 @@ creditoUrl: 'https://commons.wikimedia.org/wiki/File:El-Tunco-La-Libertad-3.jpg'
 tags: [Surf, La Libertad, Turismo]
 ---
 
-Las fotos de El Tunco casi siempre salen temprano o al atardecer, cuando la arena está vacía y la ola parece hecha para una postal. Lo que no sale en la imagen es el ruido de los camiones que suben y bajan por la carretera, ni la fila de gente que busca cuarto cuando llega una buena marejada.
+A las cinco de la mañana la arena negra de El Tunco todavía guarda el fresco de la noche. Se camina sobre ella sin sentir nada, y a esa hora se ve lo que después el sol y la gente tapan: una playa de piedras redondas, un río que desemboca en un costado y, mar adentro, un grupo de rocas oscuras que cada quien interpreta a su manera.
 
-Quien llega por primera vez suele creer que el pueblo es solo surf y fiesta. Pero detrás de los hostales y los puestos de comida hay familias que llevan décadas viviendo de la pesca, del transporte y de cuidar las casas que otros alquilan. Esa mezcla es la clave para entender el lugar.
+Una de ellas, según cuenta quien la mira con paciencia, tiene forma de cerdo echado. De ahí el nombre, porque en El Salvador al cerdo se le dice tunco. Es un nombre de vecinos, sin pretensiones, y aun así ha llegado mucho más lejos que otros bautizados con más solemnidad.
+
+Eso ya dice algo. Un lugar cuyo nombre es una broma de vecinos terminó convertido en sinónimo de fin de semana, y ahora tiene que vivir con dos relojes distintos. Uno marca la hora de quien llega el viernes y se va el domingo. El otro marca la hora de quien despierta aquí el lunes, cuando el mar sigue ahí, pero ya no hay nadie a quien venderle nada.
 
 <!-- gate -->
 
-## Lo que se ve desde la carretera
+## Una playa hecha de volcanes
 
-La entrada del pueblo está llena de letreros en inglés y de tiendas que abren hasta tarde. Del otro lado de la calle, las casas de block y lámina siguen en pie, con gallinas en el patio y ropa tendida al sol. Basta caminar dos cuadras para cambiar de mundo.
+La arena es negra porque El Salvador se levantó del mar a golpes. La placa del Pacífico se hunde bajo la del Caribe frente a esta costa, y esa fricción lleva millones de años levantando volcanes, sacudiendo la tierra y desmenuzando roca oscura que los ríos y las olas reducen a granos. La arena de El Tunco es, en sentido literal, un volcán molido y repartido en la orilla.
 
-Ese contraste no es nuevo, pero se nota más en las temporadas altas, como Semana Santa y diciembre, cuando suben los precios de los cuartos y de la comida. Los que viven aquí tienen que decidir cada año si alquilan su cuarto a un turista o si lo guardan para la familia que vuelve de visita. No hay una respuesta fácil. Hay familias que prefieren alquilar en diciembre porque el ingreso ayuda, y otras que dejan la casa cerrada unos meses para no tener que atender a nadie. Las dos decisiones tienen sentido, y las dos cambian la cara de la calle.
+Tiene consecuencias prácticas. Al mediodía la arena oscura absorbe el sol y quema los pies de quien no esperaba tanto. Por la tarde devuelve el calor y la playa se vuelve agradable. Y de noche conserva algo de esa temperatura hasta tarde, cosa que explica por qué la gente se queda sentada en ella mucho después de la puesta del sol.
 
-## Lo que se ve desde la arena
+Lo mismo vale para las piedras. Son restos de coladas antiguas, pulidas por el agua, y por eso la playa no perdona a quien entra sin mirar. Una caída sobre ellas no es lo mismo que una caída sobre arena blanda. El Tunco enseña que lo bello y lo duro suelen venir en el mismo material.
 
-Cuando baja la marea, los pescadores sacan los botes y los surfistas cargan sus tablas hacia el agua. Se cruzan sin problema, aunque cada grupo tiene sus horarios y sus reglas no escritas sobre quién entra primero. Nadie las publica en un letrero, pero se respetan, sobre todo cuando el mar está grande.
+## Un día en la orilla
 
-La pesca de pequeña escala sigue, pero ya no alcanza para vivir solo de ella. Muchas familias combinan el mar con un negocio chico en la calle principal, un taller o un servicio de transporte para los visitantes. Esa forma de sobrevivir cambia con cada temporada, y por eso el pueblo se ve distinto de un mes a otro.
+El mar también tiene su reloj, y es más fiable que el de los hoteles. En la costa salvadoreña, por la mañana suele soplar viento desde tierra, que alisa las olas y las deja limpias. Hacia el mediodía el viento gira, llega desde el mar y las revuelve. Por eso los surfistas madrugan, y por eso a las siete de la mañana hay más gente en el agua que en la calle.
 
-Si vas, andá con respeto. Pedí permiso antes de fotografiar a la gente, comprá en las tiendas de la comunidad y no dejes basura en la arena. Llegá temprano para ver la playa sin apuros, y si querés entender el pueblo, conversá con quien atiende en la tienda o con quien trabaja en el agua. Lo que más se recuerda de El Tunco no es la ola, sino esa conversación con alguien que lleva años viendo llegar y salir a los turistas.
+La estación del año cambia el cuadro. En la época seca el mar suele estar más manso y la playa se llena de caminantes. En la lluviosa, las tormentas son más frecuentes, las tardes se cargan de nubes y el oleaje crece. Un mismo lugar puede ser una piscina grande en febrero y un sitio serio en agosto. Quien lo sabe entra al agua con otra cabeza.
+
+## Dos relojes en una sola calle
+
+El reloj de los visitantes se mueve en ciclos de fin de semana. El viernes llegan los carros desde la capital, que queda a una hora o poco más según el tráfico, y llegan también los viajeros con mochila. La calle principal se llena de música, de cuartos que se ocupan al caer la tarde, de cocinas que trabajan hasta pasada la medianoche. El domingo la marea de gente vuelve a salir por la misma carretera.
+
+El otro reloj arranca más temprano. Alguien tuvo que lavar los vasos anoche, tuvo que abrir la cocina antes del amanecer, tuvo que barrer la arena de la entrada, tuvo que lavar las sábanas de los cuartos. Ese trabajo no se ve desde el agua. Lo hacen personas que viven aquí o en los caseríos cercanos, y que a veces tienen que cruzar el pueblo en dirección contraria al flujo de visitantes para llegar a tiempo.
+
+El problema no es nuevo y no es exclusivo de El Tunco. Un pueblo que vive del turismo depende de que todo funcione para quien llega, y esa exigencia recae sobre los que se quedan. La pregunta honesta no es si el turismo es bueno o malo. Es cuánto de lo que paga el visitante llega, efectivamente, a quien hace funcionar la calle.
+
+## La playa de todos y el camino de alguien
+
+La ley salvadoreña trata las playas como espacios de uso público. Eso significa, en teoría, que cualquiera puede llegar a la orilla. En la práctica, el acceso depende del camino. Cuando una playa se llena de hoteles, restaurantes y casas, los senderos que antes llevaban al agua pueden quedar cercados, y llegar a la arena exige pasar por la puerta de un negocio.
+
+Es una tensión que conoce cualquier playa de moda, y El Tunco, pequeño y compacto, la siente rápido. Todo está muy cerca de todo, y por eso las decisiones sobre quién entra, por dónde y a qué hora pesan más que en una costa larga. No hay una respuesta única, pero sí una pregunta que conviene hacerse al llegar: ¿por dónde entraba la gente del lugar antes de que existiera el primer hostal?
+
+También el río cuenta esa historia. Desemboca junto a la playa, y en la estación lluviosa baja cargado de lodo y de todo lo que se arrojó cuenca arriba. Cada temporada recuerda que lo que se tira en un sitio termina en otro. Un puente peatonal lo cruza para unir los dos lados del caserío, y cuidar que el río no se convierta en un caño es un trabajo que ningún visitante nota cuando funciona.
+
+## Lo que se recuerda de un lugar
+
+Quien llega por primera vez suele quedarse con la imagen de postal, la de la roca con el sol detrás y el surfista de espaldas. Es verdad, pero es una verdad de unos minutos. La otra, la de la calle a las seis de la mañana, la del cuarto que se limpia, la del río que baja cargado, tarda más en verse y casi nunca se fotografía.
+
+Si hay un modo de visitar El Tunco sin llevarse solo la postal, empieza por quedarse un rato de más. Ver la playa un martes. Ver cómo se vacía el domingo por la noche. Notar quién barre la arena de la entrada y a qué hora. Con eso alcanza para descubrir que el lugar tiene dos caras que se necesitan mutuamente. Quien vive de servir y quien llega a descansar dependen uno del otro, aunque casi nunca se lo digan, y aunque a veces se estorben sin querer. Entender esa dependencia vale más que cualquier foto del atardecer, y es la única parte del viaje que no se compra.
+
+Cuando el último carro sale hacia la capital, la calle queda por un rato en un silencio extraño. La arena negra suelta el calor del día, la roca con forma de cerdo se vuelve una sombra más oscura contra un cielo oscuro, y el mar sigue rompiendo contra las piedras como si no hubiera pasado nada. Para el pueblo, ese es el momento en que empieza la semana.

@@ -7,12 +7,13 @@ autor: Redacción Cacao
 lugar: Ahuachapán
 coords: 13.92°N · 89.85°W
 minutos: 3
-precio: 0.12
+precio: 0
+gratis: true
 portada: /portadas/la-temporada-de-corta.jpg
-alt: 'Una mano recoge cerezas de café rojas y verdes de una rama'
-credito: 'Saddymonster'
+alt: 'Montón de cerezas de café rojas, amarillas y verdes, con distintos grados de madurez, vistas de cerca'
+credito: 'PJeganathan'
 licencia: 'CC BY-SA 4.0'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:Hands-that-are-picking-coffee-beans-from-coffee-tree.jpg'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:Coffee_berries_harvest_in_Anaimalai_Hills,_Southern_Western_Ghats_P1110963.jpg'
 tags: [Café, Cosecha, Occidente]
 ---
 
@@ -21,8 +22,6 @@ Cuando el cafetal se pone rojo, las fincas de Ahuachapán empiezan a moverse má
 La temporada de corta es el momento en que el trabajo del año se vuelve visible. Es un trabajo lento, a mano, que depende del clima, de la altura y de la paciencia de quien recoge. Por eso vale la pena saber cómo funciona antes de tomar una taza sin pensar en su origen.
 
 Si vas a visitar una finca en esas fechas, andá temprano, usá calzado cerrado y llevá agua. Los caminos en la montaña pueden estar resbalosos, así que conviene ir con un guía local. Cada finca tiene su propio ritmo, y el mejor momento para llegar es el que te diga quien trabaja ahí.
-
-<!-- gate -->
 
 ## Solo lo que está listo
 

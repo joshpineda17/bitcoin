@@ -7,12 +7,13 @@ autor: Redacción Cacao
 lugar: Chalchuapa
 coords: 13.99°N · 89.67°W
 minutos: 3
-precio: 0.12
+precio: 0
+gratis: true
 portada: /portadas/tazumal-y-las-ruinas-de-chalchuapa.jpg
-alt: Pirámide escalonada de piedra con pasto en la cima, sobre un prado verde, bajo un cielo con nubes.
-credito: 'Mariordo (Mario Roberto Durán Ortiz)'
+alt: 'Pirámide de Tazumal iluminada de noche, con escalinatas de piedra y la cima cubierta de pasto, en Chalchuapa'
+credito: 'Danny Omar'
 licencia: 'CC BY-SA 3.0'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:ES_Tazumal_06_2011_2216.jpg'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:Ruinas_de_Tazumal_en_la_noche_-_02030004.jpg'
 tags: [Arqueología, Historia, Occidente]
 ---
 
@@ -22,17 +23,15 @@ Tazumal está en Chalchuapa, en el departamento de Santa Ana, en la parte occide
 
 El viaje desde San Salvador es de más de una hora por carretera, y conviene planearlo como una excursión de medio día, no como una parada rápida.
 
-<!-- gate -->
-
 ## Qué ver en el sitio
 
 El sitio fue ocupado durante siglos, desde antes del inicio de nuestra era hasta bien entrado el periodo posclásico, y en distintas épocas se levantaron allí templos, plazas y viviendas. La estructura principal es la pirámide que da nombre al lugar, con terrazas que se leen como capas de una misma historia. Se nota que fue construida y reconstruida varias veces, porque las piedras y los rellenos no siguen un solo plano.
 
-Alrededor de la pirámide hay otras estructuras más bajas y áreas de excavación. Un museo cercano reúne piezas encontradas en la zona, como cerámica y objetos de uso cotidiano. Si tenés tiempo, empezá por el museo para entender el contexto y después caminá el sitio con ese conocimiento fresco.
+Conviene rodear la pirámide y mirarla desde distintos ángulos, porque cada lado muestra mejor una etapa diferente de la construcción. Alrededor de la pirámide hay otras estructuras más bajas y áreas de excavación. Un museo cercano reúne piezas encontradas en la zona, como cerámica y objetos de uso cotidiano. Si tenés tiempo, empezá por el museo para entender el contexto y después caminá el sitio con ese conocimiento fresco.
 
 ## Chalchuapa, más allá de las ruinas
 
-El centro de Chalchuapa tiene una iglesia de fachada sencilla y un parque donde la gente se sienta a conversar al final del día. Son lugares tranquilos, sin mucho bullicio, que muestran la vida de un pueblo de occidente más que cualquier folleto. Pasear por sus calles es parte de la visita.
+El centro de Chalchuapa tiene una iglesia de fachada sencilla y un parque donde la gente se sienta a conversar al final del día. Son lugares tranquilos, sin mucho bullicio, que muestran la vida de un pueblo de occidente más que cualquier folleto. Pasear por sus calles es parte de la visita. Antes de salir del pueblo, preguntá por un lugar sencillo para almorzar, porque los puestos y restaurantes cambian con el tiempo y no todos abren los mismos días.
 
 Esta zona también es cafetalera, y en algunas temporadas se ven los cafetales de altura alrededor del pueblo. Si estás interesado en el café, preguntá en la zona por los beneficios o fincas que reciben visitantes, pero confirmá antes de llegar, porque no todos abren todos los días.
 

@@ -1,12 +1,12 @@
 ---
 titulo: Las alfombras de Semana Santa en Sonsonate
-bajada: Aserrín de colores, flores y horas de trabajo sobre el asfalto. Qué mirar y cómo verlas sin estorbar.
+bajada: Se hacen en una noche y las borra una procesión en minutos. Esa es la razón de ser de las alfombras.
 seccion: cronica
 fecha: 2025-12-08
 autor: Redacción Cacao
 lugar: Sonsonate
 coords: 13.72°N · 89.72°W
-minutos: 3
+minutos: 7
 precio: 0.12
 portada: /portadas/las-alfombras-de-semana-santa-en-sonsonate.jpg
 alt: Alfombra de colores sobre una calle de asfalto, con un círculo azul y amarillo, flores y una figura blanca en el centro.
@@ -16,28 +16,48 @@ creditoUrl: 'https://commons.wikimedia.org/wiki/File:Afombras_en_las_calles_de_E
 tags: [Tradiciones, Occidente, Arte]
 ---
 
-Antes de que pase la procesión, la calle ya tiene dueño. Durante la madrugada, en Sonsonate y en otros pueblos del occidente, grupos de vecinos extienden moldes, miden con cordel y van llenando el asfalto con aserrín teñido de colores. Cuando el dibujo está listo, la calle parece un tapete que alguien olvidó levantar.
+Antes del amanecer, en Semana Santa, hay gente de rodillas sobre el asfalto. Trabajan con la espalda doblada y las manos pintadas de colores, y a su alrededor la calle todavía guarda el calor del día anterior. Alguien mide con un cordel. Alguien sacude una plantilla con cuidado. Alguien reparte puñados de aserrín teñido como quien siembra, y el dibujo va apareciendo grano a grano, un borde primero, un centro después.
 
-Las alfombras de Semana Santa son una forma de rezar con las manos. No se hacen para mirarlas de lejos. Cada figura lleva horas de trabajo, y la gente que las hace suele conocer a los demás por su nombre, por el barrio o por la familia que tiene la costumbre de salir cada año a la misma cuadra.
+Sonsonate es una ciudad de tierra caliente, en el occidente del país, a poca distancia del mar. Fue durante la colonia un punto importante de comercio, cerca de las tierras donde se cultivaba el cacao de Izalco, que circulaba como mercancía y también como moneda. Un lugar así acostumbra a mirar procesiones: tiene iglesias grandes, calles anchas para los pasos y una memoria larga de fiestas religiosas.
 
-Lo que más sorprende al llegar es el tamaño. Una alfombra puede ocupar varios metros, y mientras más grande es, más se nota el esfuerzo de quienes la hicieron. Los colores son vivos, pero el dibujo es delicado, y basta una camioneta mal estacionada para arruinar una parte del trabajo.
+Las alfombras son la parte de esa memoria que se hace con las manos. Se cree que la costumbre de cubrir de flores y colores el camino de una imagen llegó con los españoles, que ya hacían algo parecido en sus propias fiestas, y que aquí se mezcló con materiales y gustos locales hasta volverse otra cosa. Lo que sorprende no es el origen. Es lo que ocurre con ellas al final: nacen para ser pisadas.
 
 <!-- gate -->
 
-## Cómo se hacen
+## Aserrín, tintes y plantillas
 
-El material base suele ser aserrín, al que se le añade color con tintes o pigmentos. Algunas alfombras combinan el aserrín con flores, hojas y pétalos, y otras incluyen pino o frutas picadas para dar textura. El dibujo se marca primero con tiza o con una plantilla, y después se va llenando por secciones, con cuidado para que las líneas no se mezclen.
+El material base es el aserrín, a menudo el que sobra de las carpinterías, que se tiñe de antemano con anilinas hasta conseguir una paleta que va del rojo intenso al verde, del amarillo al morado. Cada color se guarda aparte, como en un taller de pintura. Después se prepara la calle: se barre, a veces se humedece un poco para que el polvo no vuele, y se marca la superficie con tiza, con cordeles y con plantillas de cartón o de madera.
 
-Un buen diseño tiene un centro claro, un borde que lo contenga y detalles pequeños en las esquinas. Las figuras religiosas, los símbolos de la pasión y las flores son los temas que más se repiten. Muchas veces el trabajo empieza en la noche y termina cuando el sol ya pega en el pavimento, por eso el tiempo juega en contra.
+El dibujo se arma de afuera hacia adentro, o al revés, según el estilo de cada grupo. Se rellenan las figuras por capas, y las plantillas sirven para que las líneas queden limpias. Hay motivos que se repiten: la cruz, el cáliz, la corona de espinas, flores, rostros, palomas. Otros materiales entran para dar textura y volumen. Hojas de pino, pétalos de flores, semillas, y en algunas alfombras frutas picadas formando cruces y cenefas. Cada alfombra es una pieza de paciencia donde un error se corrige con una brocha pequeña.
 
-## Cómo verlas sin estorbar
+Nada de esto se puede hacer apurado, y casi todo se hace contra reloj. La procesión sale a una hora fija, y a esa hora el dibujo tiene que estar terminado. Por eso se trabaja de noche, con el fresco, y por eso las manos de los grupos están coordinadas como las de una cuadrilla.
 
-Las alfombras están hechas para el paso de la procesión, así que el primer respeto es no pisarlas. Caminá por el borde, sostené a tus hijos de la mano y evitá tocar el dibujo, aunque parezca firme. Si querés fotografiarlas, hacelo desde la acera o desde un balcón, sin subir a la calle cuando todavía hay gente trabajando.
+## Una calle que se reza
 
-Andá temprano, porque las mejores horas son antes de que llegue la multitud. Llevá agua, usá gorra y calzado cómodo, porque vas a caminar mucho sobre el asfalto caliente. Si no conocés la ciudad, pedí a alguien del barrio que te indique cuáles calles tienen alfombras ese año, o contratá un guía local que conozca los recorridos.
+Para quienes las hacen, las alfombras no son un adorno. Son una forma de oración con el cuerpo. Se tiñe el aserrín, se pasa la noche arrodillado, se pone la calle a los pies de una imagen. El esfuerzo es parte del sentido, igual que el cansancio es parte de una promesa cumplida.
 
-## Lo que queda cuando se va la procesión
+En El Salvador, la Semana Santa tiene dos caras. Es una semana de vacaciones, y miles de familias se van a la playa, al río o a casa de algún pariente. Y es, a la vez, la semana en que las ciudades del occidente se llenan de una devoción antigua. Las dos conviven sin molestarse, a pocos kilómetros de distancia, y quien viaja por la carretera ve en pocas horas el bullicio del agua y el silencio de una procesión.
 
-Cuando pasa la procesión, las alfombras se borran rápido. Los pies, las llantas y el viento hacen su parte, y lo que queda es una mancha de colores en el suelo que nadie quiere barrer del todo. Muchos vecinos esperan ese momento con una mezcla de tristeza y alivio, porque saben que el trabajo fue para unas horas.
+Durante la Semana Santa, los pasos, esas plataformas con imágenes que cargan al hombro decenas de personas, recorren las calles de la ciudad. En los días fuertes, como el Viernes Santo, las procesiones se mueven despacio, entre cantos y rezos, con túnicas moradas, incienso y el peso sobre los hombros de quienes los llevan. La alfombra está puesta justo ahí, en el camino.
 
-Esa fugacidad es parte del sentido. Las alfombras no son para durar, sino para decir algo en el momento en que la calle se llena de gente. Si visitás Sonsonate en esa semana, mirá con calma, hablá con quien esté trabajando y dejá que el dibujo te diga lo que quiera antes de que lo borre la procesión.
+Aquí aparece la paradoja que le da identidad a la tradición. Una alfombra que nadie pisa ha fracasado. Está hecha para que la imagen pase por encima, para que las andas y las suelas la deshagan, para que lo que costó una noche dure unos minutos. En una época que guarda todo en fotos y en registros, esta costumbre decide, una vez al año, hacer algo que se sabe que no se puede guardar.
+
+## Quién la hace
+
+Detrás de cada tramo suele haber un grupo con nombre propio: una familia, un barrio, un grupo de la parroquia, a veces un colegio. No hay un solo organizador ni un solo estilo. Cada cuadra tiene sus costumbres y sus rivalidades amistosas, y hay quienes llevan años haciendo la misma calle, con la misma gente, de madrugada, entre café y bromas.
+
+Esa red de manos es la verdadera obra. Un visitante apurado mira la alfombra terminada y se pregunta cuánto tardó. La pregunta correcta es otra: cuántas personas aprendieron a hacerla, quién enseñó a quién, qué se transmite cuando alguien le pasa a un niño una plantilla por primera vez. La alfombra desaparece, pero esa cadena queda.
+
+Los más jóvenes suelen empezar con tareas pequeñas: acarrear bolsas de aserrín, sostener una plantilla, rellenar un borde que nadie más va a mirar de cerca. Con los años pasan al centro del dibujo, que es donde se juega la reputación de un grupo. Así se hereda el oficio, sin diplomas y sin manuales.
+
+Tampoco hay una sola alfombra. Hay grandes, de varios metros, que ocupan toda la calle, y hay pequeñas, frente a una casa o una iglesia. Hay las de diseño muy cuidado, con figuras que parecen pintadas, y las más sencillas, de flores y hojas, que no necesitan más para decir lo mismo.
+
+## Lo que borra la procesión
+
+Cuando pasan los pasos, la alfombra se rompe. Primero lo hacen los pies de los cargadores, y después los de quienes siguen detrás. Los colores se mezclan, el dibujo se parte en trozos, las flores se aplastan. Al terminar la procesión, lo que queda en la calle es una franja de polvo coloreado, con huellas, y un olor a incienso y a flores machacadas.
+
+Hoy casi cada alfombra tiene su fotografía antes de que pase el primer paso, y eso tampoco está mal: la imagen es la única manera de que el trabajo viaje más allá de esa calle. Pero la foto muestra el resultado, y la tradición está en el proceso, en el cuerpo agachado, en la noche sin dormir, en el momento exacto en que todo se deshace. Mirar una alfombra en una pantalla es como leer el menú de una comida que no se probó.
+
+Algunos miran esa escena con tristeza. Otros con alivio, porque la tradición se cumplió. Casi todos con las dos cosas a la vez, y esa mezcla es probablemente la emoción más fiel a lo que la Semana Santa quiere decir: que algo puede ser hermoso y breve, y que su brevedad es parte de lo que lo hace valioso.
+
+Por la mañana, alguien sale con una escoba. Barre los restos con calma, de a poco, y todos los colores, el rojo, el verde, el amarillo, el morado, se juntan en un mismo montón gris que se sube a una carreta y desaparece. Pero en las suelas de quienes cargaron los pasos queda todavía un poco de pintura, y esa mancha, que nadie limpia hasta la noche, es la única alfombra que sigue andando.

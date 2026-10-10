@@ -10,10 +10,10 @@ minutos: 3
 precio: 0
 gratis: true
 portada: /portadas/como-preparar-cafe-de-altura-en-casa.jpg
-alt: 'Vertido de agua desde una tetera de cuello fino sobre café molido en un filtro, con frascos y una taza al lado'
-credito: 'Kim Sanso'
-licencia: 'CC0'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:Manual_drip_(pour-over)_coffee.jpg'
+alt: 'Café molido en un filtro blanco de cerámica, con burbujas de florecimiento y una tetera negra de cuello fino'
+credito: 'Indigo.udm'
+licencia: 'CC BY 4.0'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:Tasty_Coffee_pourover_V60_bloom_2025.jpg'
 tags: [Café, San Salvador]
 ---
 

@@ -6,21 +6,31 @@ fecha: 2026-09-24
 autor: Redacción Cacao
 lugar: Apaneca
 coords: 13.87°N · 89.79°W
-minutos: 3
+minutos: 5
 precio: 0.12
-portada: /portadas/fincas-apaneca.jpg
-alt: 'Pueblo de Apaneca visto desde lejos, rodeado de laderas verdes y cafetales'
-credito: 'JMRAFFi'
-licencia: 'CC BY 4.0'
-creditoUrl: 'https://commons.wikimedia.org/wiki/File:Apaneca_a_la_Vista.jpg'
+portada: /portadas/5-fincas-de-cafe-que-tenes-que-visitar.jpg
+alt: Tres personas de espaldas cargan sacos de café y canastos por un sendero de tierra entre árboles, en Tacuba, Ahuachapán, no en Apaneca.
+credito: 'Adam C. Baker'
+licencia: 'CC BY 2.0'
+creditoUrl: 'https://commons.wikimedia.org/wiki/File:ElSalvadorfairtradecoffee.jpg'
 tags: [Café, Ruta de las Flores, Occidente]
 ---
 
-Apaneca, en la cordillera del Bálsamo, reúne fincas cafetaleras de altura con décadas de historia. La neblina sube por las laderas temprano, los cafetales crecen bajo la sombra de árboles grandes y el aire se siente fresco aunque el día después esté caliente.
+Apaneca, en la sierra de Apaneca-Ilamatepec, reúne fincas cafetaleras de altura con décadas de historia. La neblina sube por las laderas temprano, los cafetales crecen bajo la sombra de árboles grandes y el aire se siente fresco aunque el día después esté caliente.
 
-Cada visita empieza en el beneficio húmedo y termina en la taza: la ruta perfecta para una mañana entera. Conviene pedir cita con anticipación, porque cada finca organiza sus visitas a su manera y los horarios cambian según la cosecha.
+Cada visita empieza en el cafetal y termina en la taza. Es una ruta para una mañana entera, y conviene combinarla con la Ruta de las Flores, que une varios pueblos del occidente. Pedí cita con anticipación, porque cada finca organiza sus visitas a su manera y los horarios cambian según la cosecha.
+
+Lo que sigue no es una lista de lugares, sino una guía de lo que vale la pena mirar en cualquier finca de la zona y de cómo sacarle provecho a la visita sin apuro.
 
 <!-- gate -->
+
+## Antes de llegar
+
+Escribí con tiempo y pedí cita. Preguntá qué incluye la visita, cuánto dura, si hay recorrido por el cafetal y si se prueba café. Algunas fincas cobran tarifa de visita y pueden no aceptar tarjeta, así que preguntá por el precio al reservar, no al llegar. Ese dato evita sorpresas y te deja libre el resto del día.
+
+Salí temprano. La neblina puede cubrir las curvas de la cordillera, y en las primeras horas el aire es más fresco y el camino se ve mejor. Si vas en carro, manejá con calma, mirá el camino antes de cada curva y no te fíes de la señal del celular en las partes altas.
+
+Llevá calzado cerrado, porque los cafetales tienen tierra suelta y pendientes, agua, una chaqueta liviana para la mañana y algo de efectivo. Una libreta también sirve: vas a querer anotar lo que probaste.
 
 ## Cinco cosas que mirar
 
@@ -34,8 +44,22 @@ Este recorrido sigue el orden natural del café. Empezás entre los surcos, dond
 
 Si solo tenés tiempo para dos paradas, elegí el beneficio y la catación. Ahí se entiende mejor cómo el proceso cambia el sabor del mismo grano.
 
-## Qué llevar y cómo moverte
+Preguntá también por la cosecha: en qué época se recoge, cómo se seleccionan las cerezas maduras y qué pasa con las que no están listas. Son preguntas simples que casi siempre abren una conversación larga y útil.
 
-Llevá calzado cerrado, agua y algo de efectivo. Algunas fincas cobran tarifa de visita y pueden no aceptar tarjeta, así que preguntá por el precio al reservar, no al llegar. Si vas en carro, salí temprano: la neblina puede cubrir las curvas de la cordillera y conviene manejar con calma.
+## Probar la taza sin apuro
 
-Al final del día vas a notar la diferencia entre un café de finca y uno de cafetería. Pedí la primera taza sin azúcar, probala con calma y después decidí cuál te gustó más. Esa comparación es la mejor parte de la ruta. Anotá en una libreta lo que notaste en cada taza, porque después de cuatro o cinco catas es fácil olvidar cuál era cuál. Y si algo no te quedó claro, preguntá sin pena: en una finca, las preguntas bien hechas suelen ser la mejor parte de la visita.
+Al final del día vas a notar la diferencia entre un café de finca y uno de cafetería. Pedí la primera taza sin azúcar, probala con calma y después decidí cuál te gustó más. Esa comparación es la mejor parte de la ruta.
+
+Tomá tu tiempo entre taza y taza. Oler el café antes de probarlo, dejar que se enfríe un poco y notar cómo cambia el sabor al pasar los minutos son parte de la práctica. No hace falta saber de café para disfrutarlo; alcanza con decir qué te recuerda cada taza.
+
+Anotá en la libreta lo que notaste en cada una, porque después de cuatro o cinco catas es fácil olvidar cuál era cuál. Si algo no te quedó claro, preguntá sin pena. En una finca, las preguntas bien hechas suelen ser la mejor parte de la visita.
+
+## Después de la visita
+
+Cuando termines, tomá un momento para caminar por el pueblo de Apaneca. Las calles tienen la misma calma que las laderas, y es un buen lugar para llevar algo a casa si la finca vende café.
+
+Si tenés tiempo, Juayúa queda a poca distancia y forma parte de la misma ruta. Puede servir para comer después de la visita, pero conviene revisar los horarios de cada lugar, porque no todo abre igual todos los días.
+
+Al volver, manejá con calma. La neblina puede volver a bajar por la tarde, y las curvas de la cordillera piden atención. Si el día fue largo, descansá antes de salir de nuevo.
+
+Un café de finca cambia la manera de tomarlo. Después de una visita así, la taza de cada mañana se vuelve una pregunta: de dónde viene, cuánto trabajo tuvo y qué sabor tiene. Eso es lo que más se lleva cualquier visitante, y vale más que una foto del cafetal.
