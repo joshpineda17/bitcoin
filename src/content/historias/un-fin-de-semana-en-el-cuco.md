@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: El Cuco
 coords: 13.19°N · 88.13°W
 minutos: 5
-precio: 0.12
+precio: 120
 portada: /portadas/un-fin-de-semana-en-el-cuco.jpg
 alt: Playa de arena oscura al atardecer, con olas suaves, una persona caminando cerca de la orilla y gallinas sobre la arena.
 credito: 'Ll1324'

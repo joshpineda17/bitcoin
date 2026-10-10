@@ -21,7 +21,7 @@ autor: Redacción Cacao
 lugar: <given>
 coords: <approximate, format 13.49°N · 89.44°W>
 minutos: <integer, words / 200, rounded up>
-precio: 0.12
+precio: 120
 portada: /portadas/<slug>.jpg
 alt: <what the photo literally shows, one sentence, in Spanish>
 credito: <from the script>

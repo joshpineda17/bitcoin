@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: La Libertad
 coords: 13.49°N · 89.32°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/muelle-la-libertad-amanecer.jpg
 alt: Muelle de madera que se adentra en el mar al caer la tarde, con gente sobre la pasarela, y una mujer de espaldas mirándolo desde la arena.
 credito: 'Ayaita'

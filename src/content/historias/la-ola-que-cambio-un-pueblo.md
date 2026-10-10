@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: El Zonte
 coords: 13.49°N · 89.44°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/la-ola-que-cambio-un-pueblo.jpg
 alt: 'Carretera costera entre bosque y océano Pacífico al atardecer, en Punta Mango, en el oriente del país. No es El Zonte: no encontramos una foto libre y buena de esta cala.'
 credito: 'Casa Presidencial El Salvador'

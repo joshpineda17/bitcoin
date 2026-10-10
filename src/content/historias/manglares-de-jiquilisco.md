@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Jiquilisco
 coords: 13.22°N · 88.60°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/manglares-de-jiquilisco.jpg
 alt: Bahía de Jiquilisco con un ave de pico largo y curvo volando sobre el agua, una estaca de madera en primer plano y un volcán al fondo.
 credito: 'ElmerGuevara'

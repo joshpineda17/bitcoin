@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Nahuizalco
 coords: 13.83°N · 89.52°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/nahuizalco-y-el-mercado-de-noche.jpg
 alt: Torre blanca de la iglesia de San Juan Bautista en Nahuizalco, con persianas de madera, palmeras y cielo nublado.
 credito: 'Efegé'

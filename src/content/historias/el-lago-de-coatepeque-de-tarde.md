@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Coatepeque
 coords: 13.86°N · 89.55°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/el-lago-de-coatepeque-de-tarde.jpg
 alt: Vista aérea del lago de Coatepeque, con agua azul, una isla boscosa en el centro y lomas verdes alrededor.
 credito: 'JMRAFFi'

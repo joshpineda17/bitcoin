@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Nejapa
 coords: 13.80°N · 89.25°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/las-bolas-de-fuego-de-nejapa.jpg
 alt: Una bola de fuego cruza la calle de noche dejando una estela de llamas, con el público mirando desde la acera y otras bolas ardiendo al fondo.
 credito: 'ElmerGuevara'

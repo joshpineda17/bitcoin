@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Sonsonate
 coords: 13.72°N · 89.72°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/las-alfombras-de-semana-santa-en-sonsonate.jpg
 alt: Alfombra de colores sobre una calle de asfalto, con un círculo azul y amarillo, flores y una figura blanca en el centro.
 credito: 'Ll1324'

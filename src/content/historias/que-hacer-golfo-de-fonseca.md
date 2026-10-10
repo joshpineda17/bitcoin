@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: La Unión
 coords: 13.31°N · 87.78°W
 minutos: 5
-precio: 0.12
+precio: 120
 portada: /portadas/que-hacer-golfo-de-fonseca.jpg
 alt: Vista aérea de una costa boscosa con una bahía de agua azul, una isla al fondo y una franja de piedras oscuras en la orilla.
 credito: 'Noelesp'

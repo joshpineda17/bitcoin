@@ -10,7 +10,7 @@ test('paid story starts locked', async ({ page }) => {
   await expect(page.locator('[data-historia]')).toHaveAttribute('data-gate-estado', 'bloqueado');
   await expect(page.locator('[data-gate-cerrado]')).toBeHidden();
   await expect(page.locator('[data-gate-muro]')).toBeVisible();
-  await expect(page.locator('[data-gate-pastilla]')).toHaveText('$0.12');
+  await expect(page.locator('[data-gate-pastilla]')).toHaveText('120 sats');
   await expect(page.locator('[data-gate-muro]')).toContainText('Modo demo');
 });
 

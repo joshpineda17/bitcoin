@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Suchitoto
 coords: 13.94°N · 89.02°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/suchitoto-el-pueblo-que-se-quedo-quieto.jpg
 alt: Calle empedrada de Suchitoto con casas coloniales amarillas y blancas, faroles de hierro y palmeras a un costado.
 credito: 'ElmerGuevara'

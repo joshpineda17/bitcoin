@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Ilopango
 coords: 13.67°N · 89.05°W
 minutos: 6
-precio: 0.12
+precio: 120
 portada: /portadas/lago-de-ilopango-volcan-lleno-de-agua.jpg
 alt: Vista elevada del lago de Ilopango desde un mirador, con agua azul, una isla pequeña y lomas verdes alrededor bajo un cielo despejado.
 credito: 'JMRAFFi'

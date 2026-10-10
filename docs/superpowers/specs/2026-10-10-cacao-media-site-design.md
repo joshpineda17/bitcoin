@@ -27,7 +27,7 @@ newsletter prompt).
 - Section colour (`--acento` / `--sobre-acento`, set by `data-seccion` on any ancestor):
   cronica = Criollo, guia = Mazorca, cultura = Grano fresco, cafe = Chocolate.
 - Copy: Spanish, Salvadoran voseo (pagás, leés, desbloqueá, recibí). Short and direct. Headlines in
-  sentence case. Kickers look like `CRÓNICA · EL ZONTE`; data looks like `8 min · $0.12`.
+  sentence case. Kickers look like `CRÓNICA · EL ZONTE`; data looks like `8 min · 120 sats`.
 
 ## Stack
 
@@ -42,7 +42,7 @@ Astro 7, static output, TypeScript strict, plain CSS (scoped `<style>` in compon
 - `src/layouts/Base.astro`: props `titulo?`, `descripcion?`, `seccion?`, `imagen?`. Renders the
   framed sheet, header, `<main id="contenido">` with the default slot, footer.
 - `src/lib/secciones.ts`: `SECCIONES`, `seccionPorId(id)`, `slugTag(tag)`, types `SeccionId`, `Seccion`.
-- `src/lib/formato.ts`: `fechaCorta(date)` gives `6 OCT 2026`, `fechaIso(date)`, `precio(n)` gives `$0.12`.
+- `src/lib/formato.ts`: `fechaCorta(date)` gives `6 OCT 2026`, `fechaIso(date)`, `precio(n)` gives `120 sats`.
 - `src/lib/historias.ts`: `todasLasHistorias()` (newest first), `historiasDeSeccion(id)`,
   `urlHistoria(h)` gives `/historias/<id>/`, type `Historia`.
 - `src/content.config.ts`: collection `historias`.
@@ -63,7 +63,7 @@ Astro 7, static output, TypeScript strict, plain CSS (scoped `<style>` in compon
 | `lugar` | string | |
 | `coords` | string, optional | `13.49°N · 89.44°W` |
 | `minutos` | integer | |
-| `precio` | number | default `0.12` |
+| `precio` | number | default `120`, in satoshis |
 | `portada` | string | `/portadas/<file>.svg` in `public/` |
 | `alt` | string | |
 | `tags` | string[] | |
@@ -99,12 +99,12 @@ All seed stories are placeholders and say so in an opening blockquote.
 - CSS: `[data-gate-cerrado]` is hidden unless the article has
   `data-gate-estado="desbloqueado"`, `"leyendo"` or `"gratis"`.
 - Wall: element `[data-gate-muro]` with the split bean, the line
-  `Desbloqueá esta <guía|crónica|historia> completa`, `por $0.12 · sin cuenta, sin suscripción`,
+  `Desbloqueá esta <guía|crónica|historia> completa`, `por 120 sats · sin cuenta, sin suscripción`,
   button `[data-gate-boton]` reading `Desbloquear <guía|crónica|historia>`, note
   `Acceso por 7 días en este dispositivo.` and a visible `MODO DEMO · no se cobra nada` label.
   Hidden when unlocked or free.
 - When `expirado`, the wall shows `Tu acceso venció.` and the button reads `Desbloquear de nuevo`.
-- Status pill `[data-gate-pastilla]` near the article meta: `$0.12` (bloqueado), `Desbloqueado`,
+- Status pill `[data-gate-pastilla]` near the article meta: `120 sats` (bloqueado), `Desbloqueado`,
   `Leyendo` (set once the locked part scrolls into view, state `leyendo`), `Expirado`, `Gratis`.
 - Known limit, by design: locked text is in the page source. The mock hides, it does not protect.
 

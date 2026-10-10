@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Ahuachapán
 coords: 13.83°N · 89.87°W
 minutos: 6
-precio: 0.12
+precio: 120
 portada: /portadas/el-imposible-bosque-que-casi-se-pierde.jpg
 alt: Vista desde un mirador del Parque Nacional El Imposible, con montañas cubiertas de bosque, nubes y un árbol en primer plano; unos visitantes se asoman a la baranda.
 credito: 'ElmerGuevara'

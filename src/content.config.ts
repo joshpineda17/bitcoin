@@ -13,7 +13,8 @@ const historias = defineCollection({
     lugar: z.string(),
     coords: z.string().optional(),
     minutos: z.number().int().positive(),
-    precio: z.number().nonnegative().default(0.12),
+    /** In satoshis. */
+    precio: z.number().int().nonnegative().default(120),
     portada: z.string(),
     alt: z.string(),
     credito: z.string().optional(),

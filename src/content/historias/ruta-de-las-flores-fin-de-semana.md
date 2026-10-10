@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Juayúa
 coords: 13.85°N · 89.78°W
 minutos: 5
-precio: 0.12
+precio: 120
 portada: /portadas/ruta-de-las-flores-fin-de-semana.jpg
 alt: 'Parroquia del Cristo Negro en Juayúa, fachada blanca con techos rojos y torres, y un cerro boscoso a la izquierda'
 credito: 'Jose Quintanilla'

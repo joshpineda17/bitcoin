@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Apaneca
 coords: 13.87°N · 89.79°W
 minutos: 5
-precio: 0.12
+precio: 120
 portada: /portadas/5-fincas-de-cafe-que-tenes-que-visitar.jpg
 alt: Tres personas de espaldas cargan sacos de café y canastos por un sendero de tierra entre árboles, en Tacuba, Ahuachapán, no en Apaneca.
 credito: 'Adam C. Baker'

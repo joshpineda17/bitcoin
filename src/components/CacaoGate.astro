@@ -3,7 +3,7 @@ import Simbolo from './Simbolo.astro';
 
 interface Props {
   tipo: 'guía' | 'crónica' | 'historia';
-  /** Already formatted, e.g. "$0.12". */
+  /** Already formatted, e.g. "120 sats". */
   precio: string;
 }
 const { tipo, precio } = Astro.props;

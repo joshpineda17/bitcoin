@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Izalco
 coords: 13.81°N · 89.63°W
 minutos: 6
-precio: 0.12
+precio: 120
 portada: /portadas/izalco-el-faro-del-pacifico.jpg
 alt: El cono oscuro y casi perfecto del volcán de Izalco, visto desde Cerro Verde, con la llanura al fondo y árboles verdes en primer plano.
 credito: 'ogwen'

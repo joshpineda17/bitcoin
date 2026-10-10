@@ -64,7 +64,7 @@ a:hover { color: var(--mazorca-oscuro); }
 
 :focus-visible { outline: 3px solid var(--mazorca); outline-offset: 3px; border-radius: 4px; }
 
-/* Mono label: CRÓNICA · 8 MIN · $0.12 */
+/* Mono label: CRÓNICA · 8 MIN · 120 SATS */
 .etiqueta {
   font-family: var(--mono);
   font-size: var(--t-etiqueta);

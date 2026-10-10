@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: El Tunco
 coords: 13.49°N · 89.38°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/lo-que-nadie-te-cuenta-del-tunco.jpg
 alt: 'Surfista de espaldas con tabla clara sobre rocas oscuras en la playa, al atardecer'
 credito: 'Pablo J Gonzalez 7'

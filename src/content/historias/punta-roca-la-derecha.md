@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: La Libertad
 coords: 13.49°N · 89.38°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/punta-roca-la-derecha.jpg
 alt: Una ola verde rompe entre las hojas de varias palmeras en una playa de El Sunzal, con espuma blanca sobre la arena. Es una ola de la costa de La Libertad, cercana a Punta Roca.
 credito: 'Hermann Luyken'

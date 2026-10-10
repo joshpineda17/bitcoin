@@ -7,7 +7,7 @@ autor: Redacción Cacao
 lugar: Ahuachapán
 coords: 13.68°N · 89.90°W
 minutos: 7
-precio: 0.12
+precio: 120
 portada: /portadas/la-barra-de-santiago.jpg
 alt: Canal de agua marrón entre manglares de raíces expuestas, con hojas verdes brillantes en la orilla derecha, en el municipio de Jujutla, Ahuachapán.
 credito: 'davidjoviera'
