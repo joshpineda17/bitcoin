@@ -3,7 +3,7 @@
 //
 // Intro (first page of a session, or any URL with ?intro=1): a ticket is issued. It rises, the bean
 // is stamped on it, the wordmark prints, the perforation is cut, the stub fills in, and the ticket
-// tears along the perforation to reveal the site.
+// tears along the perforation to reveal the site. Start to finish it takes under two seconds.
 // Loader (every later in-site navigation): the two halves of the bean breathing apart and together.
 //
 // Everything is switched on by classes the inline script puts on <html>, so without JavaScript the
@@ -89,7 +89,7 @@
   .ct-intro .ct-mini, .ct-intro .ct-solo-carga { display: none; }
 
   /* The ticket: body and stub are separate pieces so they can tear apart. */
-  .ct-boleto { --ancho: min(520px, 84vw); width: var(--ancho); animation: ct-sube 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .ct-boleto { --ancho: min(520px, 84vw); width: var(--ancho); animation: ct-sube 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
   .ct-cuerpo, .ct-talon { background: #f5ede3; color: #2a1912; }
   .ct-cuerpo {
     display: flex;
@@ -99,8 +99,8 @@
     border-radius: 28px 28px 0 0;
   }
   .ct-sello { width: calc(var(--ancho) * 0.17); height: calc(var(--ancho) * 0.17); flex: none; overflow: visible; }
-  .ct-sello .ct-izq { animation: ct-izq 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both; }
-  .ct-sello .ct-der { animation: ct-der 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both; }
+  .ct-sello .ct-izq { animation: ct-izq 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both; }
+  .ct-sello .ct-der { animation: ct-der 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both; }
   .ct-onda {
     fill: none;
     stroke: #d9902f;
@@ -108,7 +108,7 @@
     transform-box: fill-box;
     transform-origin: center;
     opacity: 0; /* invisible until the stamp lands */
-    animation: ct-onda 0.8s cubic-bezier(0.33, 1, 0.68, 1) 0.68s forwards;
+    animation: ct-onda 0.5s cubic-bezier(0.33, 1, 0.68, 1) 0.4s forwards;
   }
   /* The wordmark is printed, letter by letter, like a ticket printer. */
   .ct-marca {
@@ -118,7 +118,7 @@
     line-height: 1;
     white-space: nowrap;
     clip-path: inset(-10% 100% -10% 0);
-    animation: ct-imprime 0.66s steps(11, end) 0.8s forwards;
+    animation: ct-imprime 0.4s steps(11, end) 0.45s forwards;
   }
   .ct-marca b { font-weight: 800; }
 
@@ -132,7 +132,7 @@
     height: 24px;
     border-radius: 50%;
     background: #2a1912;
-    animation: ct-muesca 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 1.3s both;
+    animation: ct-muesca 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.75s both;
   }
   .ct-talon::before { left: -12px; }
   .ct-talon::after { right: -12px; }
@@ -144,7 +144,7 @@
     right: 18px;
     border-top: 2px dashed #c9b6a4;
     clip-path: inset(-8px 100% -8px 0);
-    animation: ct-corta 0.6s cubic-bezier(0.65, 0, 0.35, 1) 1.4s forwards;
+    animation: ct-corta 0.35s cubic-bezier(0.65, 0, 0.35, 1) 0.8s forwards;
   }
   .ct-perfo::after {
     content: '';
@@ -156,13 +156,13 @@
     border-radius: 50%;
     background: #d9902f;
     opacity: 0;
-    animation: ct-viaja 1.2s cubic-bezier(0.65, 0, 0.35, 1) 2.1s infinite;
+    animation: ct-viaja 1.2s cubic-bezier(0.65, 0, 0.35, 1) 1.35s infinite;
   }
   .ct-talon dl { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; gap: 12px; margin: 0; }
-  .ct-talon dl > div { animation: ct-aparece 0.4s cubic-bezier(0.33, 1, 0.68, 1) both; }
-  .ct-talon dl > div:nth-child(1) { animation-delay: 1.7s; }
-  .ct-talon dl > div:nth-child(2) { animation-delay: 1.82s; }
-  .ct-talon dl > div:nth-child(3) { animation-delay: 1.94s; }
+  .ct-talon dl > div { animation: ct-aparece 0.25s cubic-bezier(0.33, 1, 0.68, 1) both; }
+  .ct-talon dl > div:nth-child(1) { animation-delay: 0.9s; }
+  .ct-talon dl > div:nth-child(2) { animation-delay: 0.97s; }
+  .ct-talon dl > div:nth-child(3) { animation-delay: 1.04s; }
   .ct-talon dt, .ct-rotulo, .ct-saltar { font-family: 'JetBrains Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.08em; }
   .ct-talon dt { font-size: clamp(9px, calc(var(--ancho) * 0.021), 11px); color: #6b5648; }
   .ct-talon dd { margin: 2px 0 0; font-size: clamp(13px, calc(var(--ancho) * 0.034), 18px); font-weight: 800; }
@@ -173,7 +173,7 @@
   .ct-mini .ct-der { animation: ct-respira-der 0.8s ease-in-out infinite alternate; }
 
   .ct-rotulo { margin: 0; font-size: 12px; color: #d9902f; }
-  .ct-intro .ct-rotulo { animation: ct-aparece 0.4s ease 0.5s both; }
+  .ct-intro .ct-rotulo { animation: ct-aparece 0.3s ease 0.2s both; }
   .ct-saltar {
     position: absolute;
     right: clamp(16px, 4vw, 40px);
@@ -185,16 +185,16 @@
     color: #f5ede3;
     font-size: 12px;
     cursor: pointer;
-    animation: ct-aparece 0.4s ease 0.9s both;
+    animation: ct-aparece 0.3s ease 0.3s both;
   }
   .ct-saltar:hover { border-color: #d9902f; color: #d9902f; }
   .ct-saltar:focus-visible { outline: 3px solid #d9902f; outline-offset: 3px; }
 
   /* Exit. Intro: the ticket tears, body up and stub down. Loader: a quick fade. */
-  .ct-fuera #ct-telon { pointer-events: none; transition: opacity 0.45s ease 0.25s; opacity: 0; }
+  .ct-fuera #ct-telon { pointer-events: none; transition: opacity 0.35s ease 0.2s; opacity: 0; }
   .ct-fuera.ct-cargando #ct-telon { transition: opacity 0.25s ease; }
-  .ct-fuera .ct-cuerpo { transition: transform 0.65s cubic-bezier(0.7, 0, 0.84, 0); transform: translateY(-110vh) rotate(-4deg); }
-  .ct-fuera .ct-talon { transition: transform 0.65s cubic-bezier(0.7, 0, 0.84, 0); transform: translateY(110vh) rotate(9deg); }
+  .ct-fuera .ct-cuerpo { transition: transform 0.55s cubic-bezier(0.7, 0, 0.84, 0); transform: translateY(-110vh) rotate(-4deg); }
+  .ct-fuera .ct-talon { transition: transform 0.55s cubic-bezier(0.7, 0, 0.84, 0); transform: translateY(110vh) rotate(9deg); }
   .ct-fuera .ct-rotulo, .ct-fuera .ct-saltar { transition: opacity 0.2s; opacity: 0; }
 
   @keyframes ct-entra { from { opacity: 0; } }
@@ -231,7 +231,7 @@
       if (d.classList.contains('ct-fuera')) return;
       if (!d.classList.contains('ct-intro') && !d.classList.contains('ct-cargando')) return;
       d.classList.add('ct-fuera');
-      setTimeout(quitar, enIntro ? 750 : 280);
+      setTimeout(quitar, enIntro ? 580 : 280);
     }
 
     // Leave once the page is ready, but never before the animation has had its minimum time.
@@ -242,7 +242,8 @@
     }
 
     if (enIntro) {
-      alEstarLista('load', 2700);
+      // 1.25 s to build the ticket + 0.58 s to tear it away: under two seconds in all.
+      alEstarLista('load', 1250);
       setTimeout(fuera, 7000); // never hold the visitor hostage on a slow connection
       telon.querySelector('.ct-saltar').addEventListener('click', fuera);
       addEventListener('keydown', function (e) { if (e.key === 'Escape') fuera(); });
