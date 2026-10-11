@@ -40,12 +40,14 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
   <body>
     <Telon />
     <a class="saltar" href="#contenido">Saltar al contenido</a>
-    <p class="aviso dato">Modo demo · experiencias de muestra · todavía no se puede reservar</p>
+    <p class="aviso dato">Modo demo · experiencias de muestra · se reserva sin cobro</p>
     <header class="cabecera contenedor">
       <a href="/" aria-label="Cacao Travel, inicio"><Logo /></a>
       <nav aria-label="Principal">
         <a href="/#experiencias">Experiencias</a>
-        <a href="/#como-funciona">Cómo funciona</a>
+        <a href="/mapa/">Mapa</a>
+        <a href="/reservas/">Mis reservas</a>
+        <a href="/operadores/">Operadores</a>
         <a href={`${MEDIA_URL}/`}>Cacao Media</a>
       </nav>
     </header>
@@ -58,6 +60,9 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
         <p>Experiencias en El Salvador, pagadas en bitcoin.</p>
         <nav aria-label="Pie">
           <a href="/#experiencias">Experiencias</a>
+          <a href="/mapa/">Mapa</a>
+          <a href="/reservas/">Mis reservas</a>
+          <a href="/operadores/">Publicá tu experiencia</a>
           <a href="/api/tours.json">API</a>
           <a href={`${MEDIA_URL}/`}>Cacao Media</a>
           <a href={`${MEDIA_URL}/creditos/`}>Créditos de fotos</a>

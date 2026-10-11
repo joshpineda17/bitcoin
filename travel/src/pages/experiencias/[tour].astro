@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Boleto from '../../components/Boleto.astro';
+import { DESCUENTO_LECTOR, NOMBRE_DIA, PARTES } from '../../lib/reparto';
 import { MEDIA_URL, personas, sats, todosLosTours, type Tour } from '../../lib/tours';
 
 export async function getStaticPaths() {
@@ -114,31 +115,70 @@ const datos = [
         </section>
       </div>
 
-      <aside class="reserva" aria-label="Reservar" data-reserva data-precio={d.precio}>
-        <p class="reserva__precio">
-          <span>Desde</span>
-          <strong data-precio-unidad>{sats(d.precio)}</strong>
-          <span>por persona</span>
-        </p>
-        <label class="reserva__campo">
-          <span>Fecha</span>
-          <input type="date" data-fecha />
-        </label>
-        <div class="reserva__campo">
-          <span id="etiqueta-personas">Personas</span>
-          <div class="contador" role="group" aria-labelledby="etiqueta-personas">
-            <button type="button" data-menos aria-label="Una persona menos">−</button>
-            <output data-personas data-min={grupo.min} data-max={grupo.max}>{Math.max(grupo.min, 2)}</output>
-            <button type="button" data-mas aria-label="Una persona más">+</button>
-          </div>
-        </div>
-        <div class="reserva__talon">
-          <p class="reserva__total">
-            <span>Total</span>
-            <strong data-total>{sats(d.precio * Math.max(grupo.min, 2))}</strong>
+      <aside
+        class="reserva"
+        aria-label="Reservar"
+        data-reserva
+        data-tour={tour.id}
+        data-precio={d.precio}
+        data-salidas={d.salidas.join(',')}
+        data-con-autor={d.historias.length > 0 ? '1' : ''}
+        data-descuento={DESCUENTO_LECTOR}
+        data-plataforma={PARTES.plataforma}
+        data-autor={PARTES.autor}
+      >
+        <form data-form novalidate>
+          <p class="reserva__precio">
+            <span>Desde</span>
+            <strong data-precio-unidad>{sats(d.precio)}</strong>
+            <span>por persona</span>
           </p>
-          <span class="boton" role="link" aria-disabled="true">Reservar con bitcoin</span>
-          <p class="reserva__nota">Próximamente. Catálogo de muestra: no se cobra nada.</p>
+          <label class="reserva__campo">
+            <span>Fecha · sale {d.salidas.map((s) => NOMBRE_DIA[s]).join(', ')}</span>
+            <input type="date" data-fecha required aria-describedby="error-reserva" />
+          </label>
+          <div class="reserva__campo">
+            <span id="etiqueta-personas">Personas</span>
+            <div class="contador" role="group" aria-labelledby="etiqueta-personas">
+              <button type="button" data-menos aria-label="Una persona menos">−</button>
+              <output data-personas data-min={grupo.min} data-max={grupo.max}>{Math.max(grupo.min, 2)}</output>
+              <button type="button" data-mas aria-label="Una persona más">+</button>
+            </div>
+          </div>
+          <div class="reserva__talon">
+            <dl class="reserva__cuenta">
+              <div data-fila-descuento hidden>
+                <dt>Descuento lector de Cacao Media</dt>
+                <dd data-descuento-monto></dd>
+              </div>
+              <div class="reserva__total">
+                <dt>Total</dt>
+                <dd data-total>{sats(d.precio * Math.max(grupo.min, 2))}</dd>
+              </div>
+            </dl>
+            <details class="reserva__reparto">
+              <summary>Cómo se reparte tu pago</summary>
+              <dl>
+                <div><dt>Operador</dt><dd data-r-operador></dd></div>
+                <div><dt>Cacao Travel</dt><dd data-r-plataforma></dd></div>
+                <div data-fila-autor><dt>Autor de la historia</dt><dd data-r-autor></dd></div>
+              </dl>
+            </details>
+            <p class="reserva__error" id="error-reserva" role="alert" data-error hidden></p>
+            <button class="boton" type="submit" data-reservar>Reservar</button>
+            <p class="reserva__nota">Reserva de muestra: no se cobra nada. El pago con bitcoin llega pronto.</p>
+          </div>
+        </form>
+
+        <div class="reserva__lista" data-confirmada hidden tabindex="-1">
+          <p class="reserva__sello">Reserva de muestra confirmada</p>
+          <p class="reserva__codigo" data-codigo></p>
+          <p data-resumen></p>
+          <div data-lecturas-reserva hidden>
+            <p class="reserva__abre">Tu reserva abre estas historias en Cacao Media:</p>
+            <ul data-lecturas-lista></ul>
+          </div>
+          <a class="boton" href="/reservas/">Ver mis reservas</a>
         </div>
       </aside>
     </div>
@@ -268,10 +308,29 @@ const datos = [
   }
   .reserva__talon::before { left: calc(var(--muesca) / -2); }
   .reserva__talon::after { right: calc(var(--muesca) / -2); }
-  .reserva__total { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-  .reserva__total strong { font-family: var(--mono); font-size: 1.5rem; font-weight: 500; letter-spacing: -0.03em; }
+  .reserva__cuenta, .reserva__reparto dl { margin: 0; display: grid; gap: 6px; }
+  .reserva__cuenta > div, .reserva__reparto dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .reserva__cuenta > div[hidden] { display: none; }
+  .reserva__cuenta dt, .reserva__reparto dt { font-size: 0.8125rem; font-weight: 600; color: var(--tinta-suave); }
+  .reserva__cuenta dd, .reserva__reparto dd { margin: 0; font-family: var(--mono); font-size: 0.9375rem; }
+  .reserva__total dd { font-size: 1.5rem; letter-spacing: -0.03em; }
+  .reserva__reparto summary { cursor: pointer; font-size: 0.875rem; font-weight: 600; }
+  .reserva__reparto dl { margin-top: 8px; }
+  .reserva__reparto [hidden] { display: none; }
+  .reserva__error { padding: 10px 12px; border-radius: 10px; background: var(--criollo); color: var(--pulpa); font-size: 0.9375rem; }
+  .reserva__error[hidden], .reserva__lista[hidden] { display: none; }
   .reserva .boton { width: 100%; }
+  .reserva .boton:hover:not(:disabled) { background: var(--tostado); color: var(--pulpa); }
+  .reserva .boton:disabled { opacity: 0.6; cursor: progress; }
   .reserva__nota { font-size: 0.8125rem; color: var(--tinta-suave); }
+
+  .reserva__lista { display: grid; gap: 12px; padding: 24px; }
+  .reserva__lista:focus-visible { outline: 3px solid var(--mazorca); outline-offset: -3px; border-radius: var(--radio); }
+  .reserva__sello { font-size: 0.8125rem; font-weight: 800; color: var(--criollo); }
+  .reserva__codigo { font-family: var(--mono); font-size: 2rem; letter-spacing: 0.06em; line-height: 1; overflow-wrap: anywhere; }
+  .reserva__abre { font-weight: 800; }
+  .reserva__lista ul { margin: 6px 0 0; padding-left: 1.2em; }
+  .reserva__lista li { margin: 0.3em 0; }
 
   .lecturas, .parecidas { margin-top: clamp(48px, 8vw, 96px); }
   .lecturas h2, .parecidas h2 { font-size: var(--t-h2); }
@@ -302,23 +361,139 @@ const datos = [
     const min = Number(salida.dataset.min);
     const max = Number(salida.dataset.max);
 
+    const form = caja.querySelector<HTMLFormElement>('[data-form]')!;
+    const error = caja.querySelector<HTMLElement>('[data-error]')!;
+    const boton = caja.querySelector<HTMLButtonElement>('[data-reservar]')!;
+    const filaDescuento = caja.querySelector<HTMLElement>('[data-fila-descuento]')!;
+    const tour = caja.dataset.tour ?? '';
+    const salidas = (caja.dataset.salidas ?? '').split(',');
+    const conAutor = Boolean(caja.dataset.conAutor);
+    const DIAS = ['dom', 'lun', 'mar', 'mie', 'jue', 'vie', 'sab'];
+    const sats = (n: number) => `${n.toLocaleString('en-US')} sats`;
+    const poner = (sel: string, texto: string) => {
+      const el = caja.querySelector<HTMLElement>(sel);
+      if (el) el.textContent = texto;
+    };
+    let esLector = false;
+
+    // Same arithmetic as the server (src/lib/reparto.ts). The server recomputes it when booking.
     const pintar = (n: number) => {
       const personas = Math.min(max, Math.max(min, n));
+      const subtotal = precio * personas;
+      const descuento = esLector ? Math.round(subtotal * Number(caja.dataset.descuento)) : 0;
+      const aPagar = subtotal - descuento;
+      const plataforma = Math.floor(aPagar * Number(caja.dataset.plataforma));
+      const autor = conAutor ? Math.floor(aPagar * Number(caja.dataset.autor)) : 0;
       salida.value = String(personas);
-      total.textContent = `${(precio * personas).toLocaleString('en-US')} sats`;
+      total.textContent = sats(aPagar);
+      filaDescuento.hidden = descuento === 0;
+      poner('[data-descuento-monto]', `−${sats(descuento)}`);
+      poner('[data-r-operador]', sats(aPagar - plataforma - autor));
+      poner('[data-r-plataforma]', sats(plataforma));
+      poner('[data-r-autor]', sats(autor));
+      caja.querySelector<HTMLElement>('[data-fila-autor]')!.hidden = !conAutor;
       menos.disabled = personas <= min;
       mas.disabled = personas >= max;
     };
     menos.addEventListener('click', () => pintar(Number(salida.value) - 1));
     mas.addEventListener('click', () => pintar(Number(salida.value) + 1));
 
-    // No past dates; pick up what the visitor chose in the search bar.
-    const hoy = new Date();
-    fecha.min = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+    const mostrarError = (mensaje: string) => {
+      error.textContent = mensaje;
+      error.hidden = !mensaje;
+    };
+    // Weekday of a YYYY-MM-DD date without time-zone drift.
+    const diaDe = (f: string) => DIAS[new Date(`${f}T12:00:00Z`).getUTCDay()];
+    const validarFecha = (): boolean => {
+      if (!fecha.value) return mostrarError('Elegí una fecha.'), false;
+      if (fecha.value < fecha.min) return mostrarError('La fecha tiene que ser a partir de mañana.'), false;
+      if (!salidas.includes(diaDe(fecha.value))) return mostrarError('Esta experiencia no sale ese día. Fijate en los días de salida.'), false;
+      return mostrarError(''), true;
+    };
+    fecha.addEventListener('change', validarFecha);
+
+    // Bookings start tomorrow; pick up what the visitor chose in the search bar.
+    const manana = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    fecha.min = new Date(manana.getTime() - manana.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
     const consulta = new URLSearchParams(location.search);
     const pedida = consulta.get('fecha') ?? '';
     if (/^\d{4}-\d{2}-\d{2}$/.test(pedida) && pedida >= fecha.min) fecha.value = pedida;
     pintar(Number(consulta.get('personas')) || Number(salida.value));
+
+    // Reader discount. Cacao Media's widget links here with the reader's token in the URL fragment
+    // (never sent to a server by the browser). Keep it for the session and ask our API if it counts.
+    const LECTOR = 'ct-lector';
+    const llegada = new URLSearchParams(location.hash.slice(1)).get('lector');
+    if (llegada) {
+      try {
+        sessionStorage.setItem(LECTOR, llegada);
+      } catch {}
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+    let tokenLector = llegada ?? '';
+    try {
+      tokenLector ||= sessionStorage.getItem(LECTOR) ?? '';
+    } catch {}
+    if (tokenLector) {
+      fetch('/api/lector/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: tokenLector, tour }),
+      })
+        .then((r) => (r.ok ? r.json() : { valido: false }))
+        .then((r: { valido: boolean }) => {
+          esLector = r.valido;
+          pintar(Number(salida.value));
+        })
+        .catch(() => {});
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validarFecha()) return fecha.focus();
+      boton.disabled = true;
+      boton.textContent = 'Reservando';
+      try {
+        const r = await fetch('/api/reservar/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tour, fecha: fecha.value, personas: Number(salida.value), lector: tokenLector || undefined }),
+        });
+        const reserva = await r.json();
+        if (!r.ok) throw new Error(reserva.error ?? 'No se pudo reservar.');
+
+        // No accounts: the confirmation lives in this browser. See /reservas/.
+        try {
+          const previas = JSON.parse(localStorage.getItem('ct-reservas') ?? '[]');
+          localStorage.setItem('ct-reservas', JSON.stringify([reserva, ...(Array.isArray(previas) ? previas : [])].slice(0, 30)));
+        } catch {}
+
+        const lista = caja.querySelector<HTMLElement>('[data-confirmada]')!;
+        poner('[data-codigo]', reserva.codigo);
+        const cuando = new Date(`${reserva.fecha}T12:00:00`).toLocaleDateString('es-SV', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        poner('[data-resumen]', `${cuando} · ${reserva.personas} personas · ${sats(reserva.total)}`);
+        const ul = caja.querySelector<HTMLElement>('[data-lecturas-lista]')!;
+        const media = caja.closest('main')?.querySelector<HTMLElement>('[data-lecturas]')?.dataset.api ?? '';
+        const origen = media ? new URL(media).origin : '';
+        for (const l of reserva.lecturas as { slug: string; url: string }[]) {
+          if (!origen || !l.url.startsWith(origen)) continue;
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = reserva.pase ? `${l.url}#pase=${encodeURIComponent(reserva.pase)}` : l.url;
+          a.textContent = l.slug.replace(/-/g, ' ').replace(/^./, (c) => c.toUpperCase());
+          li.append(a);
+          ul.append(li);
+        }
+        caja.querySelector<HTMLElement>('[data-lecturas-reserva]')!.hidden = ul.children.length === 0;
+        form.hidden = true;
+        lista.hidden = false;
+        lista.focus();
+      } catch (err) {
+        mostrarError(err instanceof Error ? err.message : 'No se pudo reservar.');
+        boton.disabled = false;
+        boton.textContent = 'Reservar';
+      }
+    });
   }
 </script>
 

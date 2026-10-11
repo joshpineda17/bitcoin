@@ -32,6 +32,12 @@ export function personas(grupo: string): { min: number; max: number } {
   return { min: 1, max: 10 };
 }
 
+/** [lat, lng] from "13.85°N · 89.63°W". El Salvador is north and west, so longitude is negative. */
+export function coordenadas(coords: string | undefined): [number, number] | null {
+  const n = (coords ?? '').match(/\d+(?:\.\d+)?/g)?.map(Number);
+  return n && n.length >= 2 ? [n[0], -n[1]] : null;
+}
+
 /** Lowercase, no accents: for matching search text. */
 export const plano = (s: string): string =>
   s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');

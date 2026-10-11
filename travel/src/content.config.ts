@@ -4,6 +4,7 @@ import { z } from 'astro/zod';
 
 export const CATEGORIAS = ['Volcanes', 'Playa', 'Naturaleza', 'Café', 'Pueblos', 'Comida', 'Ciudad'] as const;
 export const ZONAS = ['Occidente', 'Centro', 'Oriente'] as const;
+export const DIAS_SEMANA = ['lun', 'mar', 'mie', 'jue', 'vie', 'sab', 'dom'] as const;
 
 const tours = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/tours' }),
@@ -19,6 +20,8 @@ const tours = defineCollection({
     nivel: z.enum(['Fácil', 'Moderado', 'Exigente']),
     /** Human readable group size: "2 a 8 personas". */
     grupo: z.string(),
+    /** Weekdays the experience runs. */
+    salidas: z.array(z.enum(DIAS_SEMANA)).min(1).default([...DIAS_SEMANA]),
     /** Per person, in satoshis. */
     precio: z.number().int().positive(),
     incluye: z.array(z.string()),

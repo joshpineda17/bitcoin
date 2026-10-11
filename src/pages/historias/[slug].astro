@@ -210,9 +210,9 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
 </style>
 
 <script>
-  import { estadoGate, desbloquear, type EstadoGate } from '../../lib/gate';
+  import { aceptarPase, desbloquear, estadoGate, traerCerrado } from '../../lib/gate';
 
-  const articulo = document.querySelector<HTMLElement>('[data-historia]');
+  const articulo = document.querySelector<HTMLElement>('article[data-historia]');
 
   if (articulo && articulo.dataset.gateEstado !== 'gratis') {
     const slug = articulo.dataset.historia ?? '';
@@ -222,27 +222,24 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
     const cerrado = articulo.querySelector<HTMLElement>('[data-gate-cerrado]');
     let observador: IntersectionObserver | null = null;
 
-    const pintar = (): EstadoGate => {
-      const estado = estadoGate(slug);
+    // A Cacao Travel booking links here with a reading pass in the URL fragment.
+    const pase = new URLSearchParams(location.hash.slice(1)).get('pase');
+    if (pase) {
+      aceptarPase(slug, pase);
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+
+    const pintar = (estado: 'bloqueado' | 'desbloqueado' | 'expirado') => {
       articulo.dataset.gateEstado = estado;
-
       if (pastilla) {
-        if (estado === 'bloqueado') pastilla.textContent = pastilla.dataset.precio ?? '';
-        else if (estado === 'desbloqueado') pastilla.textContent = 'Desbloqueado';
-        else pastilla.textContent = 'Expirado';
+        pastilla.textContent =
+          estado === 'bloqueado' ? (pastilla.dataset.precio ?? '') : estado === 'desbloqueado' ? 'Desbloqueado' : 'Expirado';
       }
-
-      if (vencido) {
-        if (estado === 'expirado') vencido.removeAttribute('hidden');
-        else vencido.setAttribute('hidden', '');
-      }
-
+      if (vencido) vencido.hidden = estado !== 'expirado';
       if (boton) {
-        boton.textContent =
-          estado === 'expirado' ? 'Desbloquear de nuevo' : (boton.dataset.textoNormal ?? '');
+        boton.disabled = false;
+        boton.textContent = estado === 'expirado' ? 'Desbloquear de nuevo' : (boton.dataset.textoNormal ?? '');
       }
-
-      return estado;
     };
 
     const observar = () => {
@@ -256,17 +253,39 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
       observador.observe(cerrado);
     };
 
-    boton?.addEventListener('click', () => {
-      desbloquear(slug);
-      pintar();
-      if (cerrado) {
-        cerrado.tabIndex = -1;
-        cerrado.focus();
-      }
+    // The locked text is not in the page. Fetch it with the stored token; the server decides.
+    const abrir = async (): Promise<boolean> => {
+      if (!cerrado) return false;
+      const html = await traerCerrado(slug);
+      if (html === null) return false;
+      // Our own server's rendering of our own story.
+      cerrado.innerHTML = html;
+      pintar('desbloqueado');
+      // Tell the Cacao Travel widget the reader now holds a token it can pass along.
+      document.dispatchEvent(new CustomEvent('cacao:desbloqueada', { detail: { slug } }));
       observar();
+      return true;
+    };
+
+    boton?.addEventListener('click', async () => {
+      boton.disabled = true;
+      boton.textContent = 'Desbloqueando';
+      try {
+        await desbloquear(slug);
+        if (await abrir()) {
+          cerrado!.tabIndex = -1;
+          cerrado!.focus();
+          return;
+        }
+      } catch {
+        // fall through to the locked state
+      }
+      pintar(estadoGate(slug) === 'expirado' ? 'expirado' : 'bloqueado');
     });
 
-    if (pintar() === 'desbloqueado') observar();
+    const inicial = estadoGate(slug);
+    pintar(inicial === 'desbloqueado' ? 'bloqueado' : inicial);
+    if (inicial === 'desbloqueado') abrir().catch(() => {});
   }
 </script>
 

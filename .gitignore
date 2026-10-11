@@ -14,3 +14,4 @@ travel/node_modules/
 travel/dist/
 travel/.astro/
 travel/.vercel
+src/data/cerrado.json

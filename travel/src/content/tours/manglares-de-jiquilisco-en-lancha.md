@@ -8,6 +8,7 @@ coords: 13.22°N · 88.60°W
 duracion: Día completo
 nivel: Fácil
 grupo: 2 a 8 personas
+salidas: [sab, dom]
 precio: 95000
 incluye:
   - Recorrido en lancha por canales y esteros

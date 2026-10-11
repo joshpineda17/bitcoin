@@ -8,6 +8,7 @@ coords: 13.83°N · 89.94°W
 duracion: Día completo
 nivel: Exigente
 grupo: 2 a 6 personas
+salidas: [sab, dom]
 precio: 95000
 incluye:
   - Guía local autorizado todo el día

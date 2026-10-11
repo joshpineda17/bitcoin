@@ -8,6 +8,7 @@ coords: 13.70°N · 89.19°W
 duracion: 3 horas
 nivel: Fácil
 grupo: 2 a 10 personas
+salidas: [mar, mie, jue, vie, sab]
 precio: 25000
 incluye:
   - Guía local durante todo el recorrido

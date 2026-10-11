@@ -8,6 +8,7 @@ coords: 13.49°N · 89.32°W
 duracion: 4 horas
 nivel: Fácil
 grupo: 2 a 8 personas
+salidas: [vie, sab, dom]
 precio: 40000
 incluye:
   - Guía local para recorrer el puerto

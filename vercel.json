@@ -1,11 +1,10 @@
 {
   "framework": "astro",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
   "trailingSlash": true,
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/historias.json",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",

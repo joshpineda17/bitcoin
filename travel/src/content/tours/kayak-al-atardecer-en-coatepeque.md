@@ -8,6 +8,7 @@ coords: 13.86°N · 89.55°W
 duracion: 3 horas
 nivel: Fácil
 grupo: 2 a 8 personas
+salidas: [jue, vie, sab, dom]
 precio: 35000
 incluye:
   - Kayak doble o individual, con remos

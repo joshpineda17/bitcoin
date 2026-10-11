@@ -8,6 +8,7 @@ coords: 13.19°N · 88.13°W
 duracion: 2 días, 1 noche
 nivel: Fácil
 grupo: 2 a 8 personas
+salidas: [sab]
 precio: 250000
 incluye:
   - Transporte de ida y vuelta desde San Miguel

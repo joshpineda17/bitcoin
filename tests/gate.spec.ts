@@ -5,9 +5,22 @@ const GRATIS = '/historias/como-pedir-un-cafe-de-altura/';
 const CLAVE = 'cacao-gate:la-ola-que-cambio-un-pueblo';
 const DIA = 24 * 60 * 60 * 1000;
 
+const TRAVEL = 'https://cacaotravel.vercel.app';
+const TOUR = {
+  id: 'prueba',
+  titulo: 'Experiencia de prueba',
+  lugar: 'El Zonte',
+  duracion: '3 horas',
+  nivel: 'Fácil',
+  precio: 45000,
+  url: `${TRAVEL}/experiencias/prueba/`,
+  foto: `${TRAVEL}/fotos/prueba.jpg`,
+  historias: ['la-ola-que-cambio-un-pueblo'],
+};
+
 test('paid story starts locked', async ({ page }) => {
   await page.goto(PAGA);
-  await expect(page.locator('[data-historia]')).toHaveAttribute('data-gate-estado', 'bloqueado');
+  await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'bloqueado');
   await expect(page.locator('[data-gate-cerrado]')).toBeHidden();
   await expect(page.locator('[data-gate-muro]')).toBeVisible();
   await expect(page.locator('[data-gate-pastilla]')).toHaveText('120 sats');
@@ -32,15 +45,15 @@ test('reading the unlocked part sets the state to leyendo', async ({ page }) => 
   await page.goto(PAGA);
   await page.locator('[data-gate-boton]').click();
   await page.locator('[data-gate-cerrado]').scrollIntoViewIfNeeded();
-  await expect(page.locator('[data-historia]')).toHaveAttribute('data-gate-estado', 'leyendo');
+  await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'leyendo');
   await expect(page.locator('[data-gate-pastilla]')).toHaveText('Leyendo');
 });
 
 test('an expired unlock locks the story again', async ({ page }) => {
   await page.goto(PAGA);
-  await page.evaluate((k) => localStorage.setItem(k, JSON.stringify({ expira: Date.now() - 1000 })), CLAVE);
+  await page.evaluate((k) => localStorage.setItem(k, JSON.stringify({ token: 'viejo', expira: Date.now() - 1000 })), CLAVE);
   await page.reload();
-  await expect(page.locator('[data-historia]')).toHaveAttribute('data-gate-estado', 'expirado');
+  await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'expirado');
   await expect(page.locator('[data-gate-cerrado]')).toBeHidden();
   await expect(page.locator('[data-gate-vencido]')).toBeVisible();
   await expect(page.locator('[data-gate-boton]')).toHaveText('Desbloquear de nuevo');
@@ -48,6 +61,59 @@ test('an expired unlock locks the story again', async ({ page }) => {
 
   await page.locator('[data-gate-boton]').click();
   await expect(page.locator('[data-gate-cerrado]')).toBeVisible();
+});
+
+// A sentence that only exists after the gate in this story.
+const FRASE_CERRADA = 'Una moneda que llegó por la misma carretera';
+
+test('the locked text is not in the page and the server refuses to hand it out without a token', async ({ page, request }) => {
+  const fuente = await (await request.get(PAGA)).text();
+  expect(fuente).not.toContain(FRASE_CERRADA);
+
+  const api = '/api/contenido/la-ola-que-cambio-un-pueblo/';
+  expect((await request.get(api)).status()).toBe(401);
+  expect((await request.get(api, { headers: { Authorization: 'Bearer abc.def' } })).status()).toBe(401);
+
+  // A real token, but issued for a different story, does not open this one.
+  const otra = await request.post('/api/desbloquear/', { data: { slug: 'lo-que-nadie-te-cuenta-del-tunco' } });
+  const { token } = await otra.json();
+  expect((await request.get(api, { headers: { Authorization: `Bearer ${token}` } })).status()).toBe(401);
+
+  // Tampering with the payload breaks the signature.
+  const [, firma] = token.split('.');
+  const falso = Buffer.from(JSON.stringify({ tipo: 'pago', slugs: ['la-ola-que-cambio-un-pueblo'], exp: Date.now() + 1e9 })).toString('base64url');
+  expect((await request.get(api, { headers: { Authorization: `Bearer ${falso}.${firma}` } })).status()).toBe(401);
+
+  // The right token gets the text.
+  const buena = await (await request.post('/api/desbloquear/', { data: { slug: 'la-ola-que-cambio-un-pueblo' } })).json();
+  const r = await request.get(api, { headers: { Authorization: `Bearer ${buena.token}` } });
+  expect(r.status()).toBe(200);
+  expect((await r.json()).html).toContain(FRASE_CERRADA);
+});
+
+test('a free story cannot be asked for through the unlock API', async ({ request }) => {
+  expect((await request.post('/api/desbloquear/', { data: { slug: 'como-pedir-un-cafe-de-altura' } })).status()).toBe(404);
+  expect((await request.post('/api/desbloquear/', { data: { slug: '../../etc/passwd' } })).status()).toBe(404);
+});
+
+test('a device that lies about its expiry is corrected by the server', async ({ page }) => {
+  await page.goto(PAGA);
+  await page.evaluate((k) => localStorage.setItem(k, JSON.stringify({ token: 'inventado.firma', expira: Date.now() + 1e9 })), CLAVE);
+  await page.reload();
+  await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'bloqueado');
+  await expect(page.locator('[data-gate-muro]')).toBeVisible();
+  expect(await page.evaluate((k) => localStorage.getItem(k), CLAVE)).toBeNull();
+});
+
+test('an unlocked story passes the reader token to its Cacao Travel experience', async ({ page }) => {
+  await page.route(`${TRAVEL}/api/tours.json`, (r) => r.fulfill({ json: { tours: [TOUR] } }));
+  await page.route(`${TRAVEL}/fotos/**`, (r) => r.fulfill({ status: 204 }));
+  await page.goto(PAGA);
+  const enlace = page.locator('[data-widget-travel] .wt-boleto');
+  await expect(enlace).toHaveAttribute('href', TOUR.url);
+  await page.locator('[data-gate-boton]').click();
+  await expect(enlace).toHaveAttribute('href', /#lector=/);
+  await expect(page.locator('.wt__lector')).toBeVisible();
 });
 
 test('unlocking one story does not unlock another', async ({ page }) => {
@@ -59,23 +125,11 @@ test('unlocking one story does not unlock another', async ({ page }) => {
 
 test('free story has no wall', async ({ page }) => {
   await page.goto(GRATIS);
-  await expect(page.locator('[data-historia]')).toHaveAttribute('data-gate-estado', 'gratis');
+  await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'gratis');
   await expect(page.locator('[data-gate-muro]')).toHaveCount(0);
   await expect(page.locator('[data-gate-pastilla]')).toHaveText('Gratis');
 });
 
-const TRAVEL = 'https://cacaotravel.vercel.app';
-const TOUR = {
-  id: 'prueba',
-  titulo: 'Experiencia de prueba',
-  lugar: 'El Zonte',
-  duracion: '3 horas',
-  nivel: 'Fácil',
-  precio: 45000,
-  url: `${TRAVEL}/experiencias/prueba/`,
-  foto: `${TRAVEL}/fotos/prueba.jpg`,
-  historias: ['la-ola-que-cambio-un-pueblo'],
-};
 
 test('the Travel widget renders what the Cacao Travel API returns', async ({ page }) => {
   await page.route(`${TRAVEL}/api/tours.json`, (r) => r.fulfill({ json: { tours: [TOUR] } }));

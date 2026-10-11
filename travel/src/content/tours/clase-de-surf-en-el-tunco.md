@@ -8,6 +8,7 @@ coords: 13.49°N · 89.38°W
 duracion: 3 horas
 nivel: Fácil
 grupo: 2 a 6 personas
+salidas: [lun, mar, mie, jue, vie, sab, dom]
 precio: 45000
 incluye:
   - Clase de surf para principiantes

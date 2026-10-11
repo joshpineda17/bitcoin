@@ -27,6 +27,7 @@ const { historia, lugar, limite = 3 } = Astro.props;
   <header class="wt__cabeza">
     <a class="wt__marca" href={`${TRAVEL_URL}/`}><b>cacao</b>travel</a>
     <p>{historia ? 'Experiencias para ir a verlo.' : 'Experiencias en El Salvador, pagadas en bitcoin.'}</p>
+    {historia && <p class="wt__lector">Desbloqueaste esta historia: tenés 10% de descuento.</p>}
     <a class="pastilla wt__todas" href={`${TRAVEL_URL}/`}>Ver todas las experiencias</a>
   </header>
   <div class="wt__celdas" data-widget-celdas></div>
@@ -52,6 +53,8 @@ const { historia, lugar, limite = 3 } = Astro.props;
   .wt__marca b { font-weight: 800; }
   .wt__marca:hover { color: inherit; text-decoration: underline; }
   .wt__cabeza p { color: var(--tinta-suave); }
+  .wt__lector { display: none; font-weight: 800; color: var(--criollo) !important; }
+  .wt[data-widget-lector] .wt__lector { display: block; }
   .wt__todas { justify-self: start; white-space: normal; background: var(--tostado); color: var(--pulpa); }
   @media (min-width: 800px) {
     .wt--inicio .wt__cabeza { grid-template-columns: auto 1fr auto; }
@@ -111,6 +114,8 @@ const { historia, lugar, limite = 3 } = Astro.props;
 </style>
 
 <script>
+  import { tokenDe } from '../lib/gate';
+
   interface TourApi {
     id: string;
     titulo: string;
@@ -188,6 +193,21 @@ const { historia, lugar, limite = 3 } = Astro.props;
       if (tarjetas.length === 0) continue;
       celdas.append(...tarjetas);
       widget.hidden = false;
+
+      // A reader who unlocked this story gets a discount on its experience. The token rides in the
+      // URL fragment, which browsers do not send to servers; Cacao Travel verifies its signature.
+      if (slug) {
+        const destinos = tarjetas.map((a) => a.href);
+        const firmarEnlaces = () => {
+          const token = tokenDe(slug);
+          tarjetas.forEach((a, i) => {
+            a.href = token ? `${destinos[i]}#lector=${encodeURIComponent(token)}` : destinos[i];
+          });
+          widget.toggleAttribute('data-widget-lector', Boolean(token));
+        };
+        firmarEnlaces();
+        document.addEventListener('cacao:desbloqueada', firmarEnlaces);
+      }
     } catch {
       // Cacao Travel unreachable: the story reads fine without the widget.
     }
