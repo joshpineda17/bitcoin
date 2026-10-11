@@ -3,6 +3,7 @@ import '@fontsource-variable/bricolage-grotesque/wght.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
+import Telon from '../components/Telon.astro';
 import { MEDIA_URL } from '../lib/tours';
 
 interface Props {
@@ -37,6 +38,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     {imagen && <meta property="og:image" content={new URL(imagen, Astro.site)} />}
   </head>
   <body>
+    <Telon />
     <a class="saltar" href="#contenido">Saltar al contenido</a>
     <p class="aviso dato">Modo demo · experiencias de muestra · todavía no se puede reservar</p>
     <header class="cabecera contenedor">
