@@ -10,3 +10,7 @@ playwright-report/
 .env*
 .hojas/
 .claude/
+travel/node_modules/
+travel/dist/
+travel/.astro/
+travel/.vercel

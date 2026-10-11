@@ -72,11 +72,11 @@ async function candidatas(consulta, extra = '') {
 }
 
 async function usadas() {
-  const dir = 'src/content/historias';
   const mapa = new Map();
-  for (const a of await readdir(dir)) {
+  for (const dir of ['src/content/historias', 'travel/src/content/tours'])
+  for (const a of await readdir(dir).catch(() => [])) {
     const m = (await readFile(`${dir}/${a}`, 'utf8')).match(/^creditoUrl:\s*'?([^'\n]+)/m);
-    if (m) mapa.set(decodeURIComponent(m[1].trim()), a.replace(/\.md$/, ''));
+    if (m) mapa.set(decodeURIComponent(m[1].trim()), (dir.endsWith('tours') ? 'tour-' : '') + a.replace(/\.md$/, ''));
   }
   return mapa;
 }

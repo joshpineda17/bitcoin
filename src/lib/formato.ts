@@ -7,4 +7,4 @@ export const fechaCorta = (f: Date): string =>
 export const fechaIso = (f: Date): string => f.toISOString().slice(0, 10);
 
 /** Prices are in satoshis: 120 sats. */
-export const precio = (p: number): string => `${p} sats`;
+export const precio = (p: number): string => `${p.toLocaleString('en-US')} sats`;

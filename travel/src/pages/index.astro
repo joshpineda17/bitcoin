@@ -1,0 +1,223 @@
+---
+import Base from '../layouts/Base.astro';
+import Boleto from '../components/Boleto.astro';
+import { MEDIA_URL, sats, todosLosTours, urlTour } from '../lib/tours';
+
+const tours = await todosLosTours();
+// Lead with the experience that has the most stories behind it.
+const principal = [...tours].sort((a, b) => b.data.historias.length - a.data.historias.length)[0];
+const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) => t.data.nivel === n));
+---
+
+<Base>
+  <section class="entrada contenedor">
+    <h1>Leés la historia.<br />Después vas.</h1>
+    <p class="entrada__bajada">
+      Cada experiencia de Cacao Travel sale de algo que <a href={`${MEDIA_URL}/`}>Cacao Media</a> ya contó:
+      un volcán, un pueblo, una taza de café. Se paga en bitcoin, sin cuenta.
+    </p>
+  </section>
+
+  {
+    principal && (
+      <section class="principal contenedor" aria-label="Experiencia destacada">
+        <a class="principal__foto" href={urlTour(principal)} tabindex="-1" aria-hidden="true">
+          <img src={principal.data.portada} alt="" width="1600" height="1000" fetchpriority="high" />
+        </a>
+        <div class="principal__boleto">
+          <p class="dato">
+            {principal.data.lugar} · {principal.data.duracion} · {principal.data.nivel}
+          </p>
+          <h2>
+            <a href={urlTour(principal)}>{principal.data.titulo}</a>
+          </h2>
+          <p>{principal.data.bajada}</p>
+          <div class="principal__talon">
+            <p class="principal__precio">
+              <span class="dato">Desde</span>
+              <strong>{sats(principal.data.precio)}</strong>
+            </p>
+            <a class="principal__boton" href={urlTour(principal)}>
+              Ver la experiencia
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="catalogo contenedor" id="experiencias">
+    <header class="catalogo__cabeza">
+      <h2>{tours.length} experiencias</h2>
+      <div class="filtros" role="group" aria-label="Filtrar por nivel">
+        <button type="button" data-filtro="" aria-pressed="true">Todas</button>
+        {NIVELES.map((n) => <button type="button" data-filtro={n} aria-pressed="false">{n}</button>)}
+      </div>
+    </header>
+    <div class="catalogo__celdas" data-catalogo>
+      {tours.map((t) => <Boleto tour={t} />)}
+    </div>
+    <p class="catalogo__vacio" data-vacio hidden>No hay experiencias con ese nivel todavía.</p>
+  </section>
+
+  <section class="pasos contenedor" id="como-funciona">
+    <h2>Cómo funciona</h2>
+    <ol>
+      <li>
+        <h3>Leés</h3>
+        <p>
+          Empezá por la historia en Cacao Media. Si te quedás con ganas de ir, al final está la
+          experiencia.
+        </p>
+      </li>
+      <li>
+        <h3>Elegís</h3>
+        <p>Cada experiencia dice cuánto dura, qué tan exigente es, qué incluye y qué tenés que llevar.</p>
+      </li>
+      <li>
+        <h3>Pagás en sats</h3>
+        <p>
+          El precio está en satoshis. El pago con bitcoin por Lightning llega pronto: por ahora el
+          catálogo es una demostración.
+        </p>
+      </li>
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .entrada { padding-block: clamp(28px, 6vw, 80px) clamp(24px, 4vw, 48px); display: grid; gap: 24px; }
+  h1 { font-size: var(--t-display); line-height: 0.9; letter-spacing: -0.04em; }
+  .entrada__bajada { font-size: clamp(1.125rem, 1.8vw, 1.375rem); line-height: 1.45; max-width: 44ch; color: var(--arena); }
+  .entrada__bajada a:hover { color: var(--mazorca); }
+
+  /* Featured: the photo, with its ticket laid over the corner. */
+  .principal { display: grid; }
+  .principal__foto { display: block; overflow: hidden; border-radius: var(--radio); grid-area: 1 / 1; }
+  .principal__foto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .principal__boleto {
+    display: grid;
+    gap: 12px;
+    padding: clamp(20px, 3vw, 36px);
+    background: var(--mazorca);
+    color: var(--tostado);
+    border-radius: var(--radio);
+    margin-top: 8px;
+  }
+  .principal__boleto h2 { font-size: var(--t-h1); overflow-wrap: anywhere; }
+  .principal__boleto h2 a { text-decoration: none; }
+  .principal__boleto h2 a:hover { text-decoration: underline; }
+  .principal__talon {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 16px;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 2px dashed var(--tostado);
+  }
+  .principal__precio { display: grid; gap: 2px; }
+  .principal__precio strong { font-family: var(--mono); font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 500; letter-spacing: -0.02em; }
+  .principal__boton {
+    display: inline-flex;
+    padding: 0.85em 1.5em;
+    border-radius: 999px;
+    background: var(--tostado);
+    color: var(--pulpa);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1;
+    text-decoration: none;
+  }
+  .principal__boton:hover { background: var(--pulpa); color: var(--tostado); }
+
+  @media (min-width: 900px) {
+    .principal__foto img { aspect-ratio: 21 / 10; }
+    .principal__boleto {
+      grid-area: 1 / 1;
+      align-self: end;
+      justify-self: start;
+      width: min(46%, 560px);
+      margin: 0 0 28px 28px;
+    }
+  }
+
+  .catalogo { margin-top: clamp(56px, 9vw, 120px); }
+  .catalogo__cabeza {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 16px 32px;
+    margin-bottom: clamp(24px, 4vw, 44px);
+  }
+  .catalogo__cabeza h2, .pasos h2 { font-size: var(--t-h1); }
+  .filtros { display: flex; flex-wrap: wrap; gap: 8px; }
+  .filtros button {
+    padding: 0.55em 1.1em;
+    border: 1.5px solid var(--pulpa);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--pulpa);
+    font: 600 0.9375rem/1 var(--fuente);
+    cursor: pointer;
+  }
+  .filtros button:hover { border-color: var(--mazorca); color: var(--mazorca); }
+  .filtros button[aria-pressed='true'] { background: var(--pulpa); color: var(--tostado); border-color: var(--pulpa); }
+  .catalogo__celdas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: clamp(24px, 3vw, 36px);
+  }
+  .catalogo__celdas :global([hidden]) { display: none; }
+
+  .pasos { margin-top: clamp(56px, 9vw, 120px); }
+  .pasos ol {
+    list-style: none;
+    margin: clamp(24px, 4vw, 44px) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 8px;
+    counter-reset: paso;
+  }
+  .pasos li {
+    counter-increment: paso;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: clamp(20px, 3vw, 32px);
+    background: var(--chocolate);
+    border-radius: 6px;
+  }
+  .pasos li:first-child { border-radius: var(--radio) 6px 6px var(--radio); }
+  .pasos li:last-child { border-radius: 6px var(--radio) var(--radio) 6px; }
+  .pasos li::before { content: counter(paso); font-family: var(--mono); font-size: 2.5rem; line-height: 1; color: var(--mazorca); }
+  .pasos h3 { font-size: var(--t-h2); }
+  .pasos p { font-size: 1rem; color: var(--arena); }
+  @media (max-width: 860px) {
+    .pasos li:first-child { border-radius: var(--radio) var(--radio) 6px 6px; }
+    .pasos li:last-child { border-radius: 6px 6px var(--radio) var(--radio); }
+  }
+</style>
+
+<script>
+  const botones = document.querySelectorAll<HTMLButtonElement>('[data-filtro]');
+  const boletos = document.querySelectorAll<HTMLElement>('[data-catalogo] [data-nivel]');
+  const vacio = document.querySelector<HTMLElement>('[data-vacio]');
+
+  for (const boton of botones) {
+    boton.addEventListener('click', () => {
+      const nivel = boton.dataset.filtro ?? '';
+      let visibles = 0;
+      for (const b of boletos) {
+        const ver = !nivel || b.dataset.nivel === nivel;
+        b.hidden = !ver;
+        if (ver) visibles++;
+      }
+      for (const otro of botones) otro.setAttribute('aria-pressed', String(otro === boton));
+      if (vacio) vacio.hidden = visibles > 0;
+    });
+  }
+</script>

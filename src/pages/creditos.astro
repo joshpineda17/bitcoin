@@ -2,7 +2,10 @@
 import Base from '../layouts/Base.astro';
 import { todasLasHistorias, urlHistoria } from '../lib/historias';
 
-const conCredito = (await todasLasHistorias()).filter((h) => h.data.credito);
+// Stories and tours share one list: title, link, and the photo's credit.
+const conCredito = [
+  ...(await todasLasHistorias()).map((h) => ({ url: urlHistoria(h), data: h.data })),
+].filter((x) => x.data.credito);
 ---
 
 <Base titulo="Créditos de fotos" descripcion="Autoría y licencias de las fotos de Cacao Media.">
@@ -16,7 +19,7 @@ const conCredito = (await todasLasHistorias()).filter((h) => h.data.credito);
       {
         conCredito.map((h) => (
           <li>
-            <a href={urlHistoria(h)}>{h.data.titulo}</a>
+            <a href={h.url}>{h.data.titulo}</a>
             <span class="etiqueta">
               {h.data.creditoUrl ? <a href={h.data.creditoUrl} rel="noopener">{h.data.credito}</a> : h.data.credito}
               {h.data.licencia && ` · ${h.data.licencia}`}

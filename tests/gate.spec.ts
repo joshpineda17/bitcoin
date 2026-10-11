@@ -64,6 +64,46 @@ test('free story has no wall', async ({ page }) => {
   await expect(page.locator('[data-gate-pastilla]')).toHaveText('Gratis');
 });
 
+const TRAVEL = 'https://cacaotravel.vercel.app';
+const TOUR = {
+  id: 'prueba',
+  titulo: 'Experiencia de prueba',
+  lugar: 'El Zonte',
+  duracion: '3 horas',
+  nivel: 'Fácil',
+  precio: 45000,
+  url: `${TRAVEL}/experiencias/prueba/`,
+  foto: `${TRAVEL}/fotos/prueba.jpg`,
+  historias: ['la-ola-que-cambio-un-pueblo'],
+};
+
+test('the Travel widget renders what the Cacao Travel API returns', async ({ page }) => {
+  await page.route(`${TRAVEL}/api/tours.json`, (r) => r.fulfill({ json: { tours: [TOUR] } }));
+  await page.route(`${TRAVEL}/fotos/**`, (r) => r.fulfill({ status: 204 }));
+  await page.goto(PAGA);
+  const widget = page.locator('[data-widget-travel]');
+  await expect(widget).toBeVisible();
+  await expect(widget.locator('[data-widget-precio]')).toHaveText('45,000 sats');
+  await expect(widget.locator('.wt-boleto')).toHaveAttribute('href', TOUR.url);
+});
+
+test('the Travel widget stays hidden when the story has no experience or the API fails', async ({ page }) => {
+  await page.route(`${TRAVEL}/api/tours.json`, (r) => r.fulfill({ json: { tours: [TOUR] } }));
+  await page.goto(GRATIS);
+  await expect(page.locator('[data-widget-travel]')).toBeHidden();
+
+  await page.route(`${TRAVEL}/api/tours.json`, (r) => r.abort());
+  await page.goto(PAGA);
+  await expect(page.locator('[data-widget-travel]')).toBeHidden();
+});
+
+test('the widget ignores entries that point outside Cacao Travel', async ({ page }) => {
+  const falso = { ...TOUR, url: 'https://example.com/phish/' };
+  await page.route(`${TRAVEL}/api/tours.json`, (r) => r.fulfill({ json: { tours: [falso] } }));
+  await page.goto(PAGA);
+  await expect(page.locator('[data-widget-travel]')).toBeHidden();
+});
+
 for (const ruta of ['/', '/cronicas/', '/archivo/', '/acerca/', PAGA]) {
   test(`no horizontal scroll at 375px on ${ruta}`, async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 });

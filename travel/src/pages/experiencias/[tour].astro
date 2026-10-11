@@ -1,0 +1,237 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { MEDIA_URL, sats, todosLosTours, type Tour } from '../../lib/tours';
+
+export async function getStaticPaths() {
+  return (await todosLosTours()).map((tour) => ({ params: { tour: tour.id }, props: { tour } }));
+}
+
+interface Props {
+  tour: Tour;
+}
+const { tour } = Astro.props;
+const d = tour.data;
+const { Content } = await render(tour);
+const datos = [
+  ['Lugar', d.lugar],
+  ['Duración', d.duracion],
+  ['Nivel', d.nivel],
+  ['Grupo', d.grupo],
+];
+---
+
+<Base titulo={d.titulo} descripcion={d.bajada} imagen={d.portada}>
+  <article class="exp">
+    <header class="exp__cabeza contenedor">
+      <p class="dato"><a href="/#experiencias">Experiencias</a> · {d.lugar}</p>
+      <h1>{d.titulo}</h1>
+      <p class="exp__bajada">{d.bajada}</p>
+    </header>
+
+    <figure class="exp__foto contenedor">
+      <img src={d.portada} alt={d.alt} width="1600" height="1000" fetchpriority="high" />
+      {
+        d.credito && (
+          <figcaption class="dato">
+            Foto: {d.creditoUrl ? <a href={d.creditoUrl} rel="noopener">{d.credito}</a> : d.credito}
+            {d.licencia && ` · ${d.licencia}`}
+          </figcaption>
+        )
+      }
+    </figure>
+
+    <div class="exp__dos contenedor">
+      <div class="exp__texto">
+        <div class="prosa"><Content /></div>
+
+        <section class="exp__listas">
+          <div>
+            <h2>Incluye</h2>
+            <ul>{d.incluye.map((i) => <li>{i}</li>)}</ul>
+          </div>
+          {
+            d.llevar.length > 0 && (
+              <div>
+                <h2>Qué llevar</h2>
+                <ul>{d.llevar.map((i) => <li>{i}</li>)}</ul>
+              </div>
+            )
+          }
+        </section>
+      </div>
+
+      <aside class="boleto" aria-label="Datos y precio">
+        <dl>
+          {
+            datos.map(([k, v]) => (
+              <div>
+                <dt class="dato">{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <div class="boleto__talon">
+          <p class="boleto__precio">
+            <span class="dato">Desde</span>
+            <strong data-precio>{sats(d.precio)}</strong>
+            <span class="dato">por persona</span>
+          </p>
+          <span class="boton" role="link" aria-disabled="true">Reservar con bitcoin</span>
+          <p class="dato boleto__nota">Próximamente · experiencia de muestra</p>
+        </div>
+      </aside>
+    </div>
+  </article>
+
+  {
+    d.historias.length > 0 && (
+      <section
+        class="lecturas contenedor"
+        data-lecturas
+        data-api={`${MEDIA_URL}/api/historias.json`}
+        data-slugs={d.historias.join(',')}
+        hidden
+      >
+        <h2>Leé antes de ir</h2>
+        <p class="lecturas__bajada">Las historias de Cacao Media de donde sale esta experiencia.</p>
+        <div class="lecturas__celdas" data-lecturas-celdas />
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .exp__cabeza { display: grid; gap: 18px; padding-block: clamp(20px, 4vw, 56px) clamp(24px, 4vw, 48px); }
+  .exp__cabeza .dato { color: var(--arena-oscura); }
+  .exp__cabeza a:hover { color: var(--mazorca); }
+  h1 { font-size: clamp(2.75rem, 8vw, 6.5rem); line-height: 0.9; letter-spacing: -0.04em; max-width: 16ch; overflow-wrap: anywhere; }
+  .exp__bajada { font-size: clamp(1.125rem, 1.8vw, 1.375rem); line-height: 1.45; max-width: 46ch; color: var(--arena); }
+
+  .exp__foto img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--radio); }
+  .exp__foto figcaption { margin-top: 10px; color: var(--arena-oscura); overflow-wrap: anywhere; }
+  @media (min-width: 900px) {
+    .exp__foto img { aspect-ratio: 21 / 9; }
+  }
+
+  .exp__dos { display: grid; gap: clamp(28px, 5vw, 72px); margin-top: clamp(32px, 5vw, 72px); align-items: start; }
+  @media (min-width: 960px) {
+    .exp__dos { grid-template-columns: minmax(0, 1fr) minmax(300px, 400px); }
+    .boleto { position: sticky; top: 24px; }
+  }
+  .exp__texto { min-width: 0; max-width: 42rem; }
+
+  .prosa :global(p) { margin-block: 0 1.2em; font-size: 1.1875rem; line-height: 1.65; color: var(--arena); }
+  .prosa > :global(p:first-child) { font-size: 1.5rem; line-height: 1.4; font-weight: 600; color: var(--pulpa); letter-spacing: -0.01em; }
+  .prosa :global(h2) { margin-block: 1.8em 0.6em; font-size: var(--t-h2); }
+  .prosa :global(ol),
+  .prosa :global(ul) { padding-left: 1.3em; margin-block: 0 1.2em; color: var(--arena); }
+  .prosa :global(li) { margin: 0.5em 0; }
+  .prosa :global(li::marker) { color: var(--mazorca); font-family: var(--mono); }
+
+  .exp__listas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .exp__listas > div { padding: clamp(18px, 2.4vw, 28px); background: var(--chocolate); border-radius: var(--radio-chico); }
+  .exp__listas h2 { font-size: var(--t-h2); margin-bottom: 10px; }
+  .exp__listas ul { margin: 0; padding-left: 1.2em; font-size: 1rem; }
+  .exp__listas li { margin: 0.4em 0; }
+
+  /* The ticket: facts on the body, price on the stub, a perforation between. */
+  .boleto { --muesca: 24px; background: var(--pulpa); color: var(--tostado); border-radius: var(--radio); }
+  .boleto dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; margin: 0; padding: 26px 26px 24px; }
+  .boleto dt { color: var(--tinta-suave); }
+  .boleto dd { margin: 2px 0 0; font-weight: 600; overflow-wrap: anywhere; }
+  .boleto__talon {
+    position: relative;
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+    padding: 24px 26px 26px;
+    border-top: 2px dashed var(--arena-oscura);
+  }
+  .boleto__talon::before,
+  .boleto__talon::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--muesca) / -2 - 1px);
+    width: var(--muesca);
+    height: var(--muesca);
+    border-radius: 50%;
+    background: var(--tostado);
+  }
+  .boleto__talon::before { left: calc(var(--muesca) / -2); }
+  .boleto__talon::after { right: calc(var(--muesca) / -2); }
+  .boleto__precio { display: grid; gap: 2px; }
+  .boleto__precio strong { font-family: var(--mono); font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; }
+  .boleto__precio .dato, .boleto__nota { color: var(--tinta-suave); }
+
+  .lecturas { margin-top: clamp(56px, 9vw, 120px); }
+  .lecturas h2 { font-size: var(--t-h1); }
+  .lecturas__bajada { color: var(--arena); margin-top: 10px; }
+  .lecturas__celdas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: clamp(24px, 3vw, 36px);
+    margin-top: clamp(24px, 4vw, 44px);
+  }
+  /* Cards are built by the script below, so they are styled globally. */
+  .lecturas :global(.lectura) { display: grid; gap: 10px; align-content: start; min-width: 0; text-decoration: none; }
+  .lecturas :global(.lectura img) { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--radio-chico); }
+  .lecturas :global(.lectura strong) { font-size: var(--t-h2); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
+  .lecturas :global(.lectura span) { color: var(--arena-oscura); }
+  .lecturas :global(.lectura:hover strong) { text-decoration: underline; }
+</style>
+
+<script>
+  // Related reading comes from Cacao Media's public API. If it is unreachable the section stays hidden.
+  interface Lectura {
+    id: string;
+    titulo: string;
+    seccion: string;
+    lugar: string;
+    minutos: number;
+    url: string;
+    foto: string;
+  }
+
+  const seccion = document.querySelector<HTMLElement>('[data-lecturas]');
+  const celdas = seccion?.querySelector<HTMLElement>('[data-lecturas-celdas]');
+  if (seccion && celdas) {
+    const slugs = (seccion.dataset.slugs ?? '').split(',');
+    try {
+      const r = await fetch(seccion.dataset.api ?? '');
+      if (r.ok) {
+        const { historias } = (await r.json()) as { historias: Lectura[] };
+        const elegidas = slugs
+          .map((s) => historias.find((h) => h.id === s))
+          .filter((h): h is Lectura => Boolean(h));
+        for (const h of elegidas) {
+          const a = document.createElement('a');
+          a.className = 'lectura';
+          a.href = h.url;
+          const img = document.createElement('img');
+          img.src = h.foto;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.width = 1600;
+          img.height = 1000;
+          const dato = document.createElement('span');
+          dato.className = 'dato';
+          dato.textContent = `${h.seccion} · ${h.lugar} · ${h.minutos} min`;
+          const titulo = document.createElement('strong');
+          titulo.textContent = h.titulo;
+          a.append(img, dato, titulo);
+          celdas.append(a);
+        }
+        seccion.hidden = elegidas.length === 0;
+      }
+    } catch {
+      // Offline or blocked: leave the section hidden.
+    }
+  }
+</script>

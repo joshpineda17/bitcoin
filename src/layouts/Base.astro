@@ -4,6 +4,7 @@ import '@fontsource/jetbrains-mono/latin-500.css';
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import { SECCIONES, type SeccionId } from '../lib/secciones';
+import { TRAVEL_URL } from '../lib/travel';
 
 interface Props {
   titulo?: string;
@@ -59,6 +60,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
               </a>
             ))
           }
+          <a class="pastilla cabecera__travel" href={`${TRAVEL_URL}/`}>Travel</a>
         </nav>
         <a class="cabecera__logo" href="/" aria-label="Cacao Media, inicio"><Logo /></a>
         <div class="cabecera__extra">
@@ -77,6 +79,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
       <p>Historias de El Salvador, grano a grano.</p>
       <nav aria-label="Pie">
         <a href="/archivo/">Archivo</a>
+        <a href={`${TRAVEL_URL}/`}>Cacao Travel</a>
         <a href="/acerca/">Acerca</a>
         <a href="/acerca/#linea-editorial">Línea editorial</a>
         <a href="/creditos/">Créditos de fotos</a>
@@ -114,6 +117,8 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
   }
   .cabecera__nav { display: flex; flex-wrap: wrap; gap: 6px; }
   .cabecera__nav .pastilla[aria-current='page'] { background: var(--tostado); color: var(--pulpa); }
+  .cabecera__travel { background: var(--tostado); color: var(--pulpa); }
+  .cabecera__travel:hover { background: var(--mazorca) !important; color: var(--tostado) !important; }
   .cabecera__logo { text-decoration: none; justify-self: center; }
   .cabecera__extra { display: flex; gap: 18px; justify-self: end; }
   .cabecera__extra a { text-decoration: none; }

@@ -1,0 +1,82 @@
+---
+// An experience as a ticket: photo and name on the body, price on the stub,
+// a perforation between them. The tear line is the split bean's gap.
+import { sats, urlTour, type Tour } from '../lib/tours';
+
+interface Props {
+  tour: Tour;
+}
+const { tour } = Astro.props;
+const d = tour.data;
+const url = urlTour(tour);
+---
+
+<article class="boleto" data-nivel={d.nivel}>
+  <a class="boleto__foto" href={url} tabindex="-1" aria-hidden="true">
+    <img src={d.portada} alt="" width="1600" height="1000" loading="lazy" />
+  </a>
+  <div class="boleto__cuerpo">
+    <p class="dato">{d.lugar}</p>
+    <h3><a href={url}>{d.titulo}</a></h3>
+    <p class="boleto__bajada">{d.bajada}</p>
+  </div>
+  <div class="boleto__talon">
+    <p class="boleto__precio">
+      <span class="dato">Desde</span>
+      <strong>{sats(d.precio)}</strong>
+    </p>
+    <p class="dato boleto__ficha">{d.duracion}<br />{d.nivel}</p>
+  </div>
+</article>
+
+<style>
+  .boleto {
+    --muesca: 22px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-width: 0;
+    background: var(--pulpa);
+    color: var(--tostado);
+    border-radius: var(--radio);
+  }
+  .boleto__foto { display: block; overflow: hidden; border-radius: var(--radio) var(--radio) 0 0; }
+  .boleto__foto img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+  .boleto__cuerpo { display: grid; gap: 8px; align-content: start; padding: 20px 22px 22px; }
+  .boleto__cuerpo .dato { color: var(--tinta-suave); }
+  h3 { font-size: var(--t-h2); overflow-wrap: anywhere; }
+  h3 a { text-decoration: none; }
+  h3 a:hover { text-decoration: underline; }
+  .boleto__bajada { font-size: 1rem; line-height: 1.45; color: var(--tinta-suave); }
+
+  /* Stub: dashed tear line, with a notch punched out of each edge. */
+  .boleto__talon {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 12px;
+    padding: 18px 22px 20px;
+    border-top: 2px dashed var(--arena-oscura);
+  }
+  .boleto__talon::before,
+  .boleto__talon::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--muesca) / -2 - 1px);
+    width: var(--muesca);
+    height: var(--muesca);
+    border-radius: 50%;
+    background: var(--tostado);
+  }
+  .boleto__talon::before { left: calc(var(--muesca) / -2); }
+  .boleto__talon::after { right: calc(var(--muesca) / -2); }
+  .boleto__precio { display: grid; gap: 2px; }
+  .boleto__precio strong { font-family: var(--mono); font-size: 1.375rem; font-weight: 500; letter-spacing: -0.02em; }
+  .boleto__precio .dato, .boleto__ficha { color: var(--tinta-suave); }
+  .boleto__ficha { text-align: right; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .boleto__foto img { transition: transform 0.5s ease; }
+    .boleto:hover .boleto__foto img { transform: scale(1.04); }
+  }
+</style>

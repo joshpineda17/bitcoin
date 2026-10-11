@@ -5,6 +5,7 @@ import Portada from '../components/Portada.astro';
 import PromoBoletin from '../components/PromoBoletin.astro';
 import PromoGate from '../components/PromoGate.astro';
 import RielSeccion from '../components/RielSeccion.astro';
+import WidgetTravel from '../components/WidgetTravel.astro';
 import { todasLasHistorias } from '../lib/historias';
 import { SECCIONES } from '../lib/secciones';
 
@@ -40,6 +41,8 @@ const rieles = SECCIONES.map((seccion) => ({
   <div class="promo contenedor"><PromoGate /></div>
 
   {rieles.map((r) => <RielSeccion seccion={r.seccion} historias={r.historias} />)}
+
+  <WidgetTravel limite={3} />
 
   <div class="promo contenedor"><PromoBoletin /></div>
 
