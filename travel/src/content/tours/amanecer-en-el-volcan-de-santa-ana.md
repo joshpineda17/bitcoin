@@ -2,6 +2,8 @@
 titulo: Amanecer en el volcán de Santa Ana
 bajada: Subida guiada al cráter más alto del país, con la laguna turquesa abajo y Coatepeque al fondo.
 lugar: Santa Ana
+categoria: Volcanes
+zona: Occidente
 coords: 13.85°N · 89.63°W
 duracion: 6 horas
 nivel: Moderado

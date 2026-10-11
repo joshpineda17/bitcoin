@@ -2,6 +2,8 @@
 titulo: Caminata en el Imposible
 bajada: Un día entero a pie por uno de los bosques protegidos más grandes del país, en el occidente de El Salvador.
 lugar: Parque Nacional El Imposible
+categoria: Naturaleza
+zona: Occidente
 coords: 13.83°N · 89.94°W
 duracion: Día completo
 nivel: Exigente

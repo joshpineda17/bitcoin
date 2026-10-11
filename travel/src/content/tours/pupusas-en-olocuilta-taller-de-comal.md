@@ -2,6 +2,8 @@
 titulo: Pupusas en Olocuilta, taller de comal
 bajada: Una tarde para aprender a amasar, rellenar y cocer pupusas de maíz y de arroz en el pueblo que las hizo famosas.
 lugar: Olocuilta
+categoria: Comida
+zona: Centro
 coords: 13.57°N · 89.11°W
 duracion: 3 horas
 nivel: Fácil

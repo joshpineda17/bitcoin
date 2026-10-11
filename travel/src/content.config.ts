@@ -2,16 +2,22 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
+export const CATEGORIAS = ['Volcanes', 'Playa', 'Naturaleza', 'Café', 'Pueblos', 'Comida', 'Ciudad'] as const;
+export const ZONAS = ['Occidente', 'Centro', 'Oriente'] as const;
+
 const tours = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/tours' }),
   schema: z.object({
     titulo: z.string(),
     bajada: z.string(),
     lugar: z.string(),
+    categoria: z.enum(CATEGORIAS),
+    zona: z.enum(ZONAS),
     coords: z.string().optional(),
     /** Human readable: "4 horas", "Día completo". */
     duracion: z.string(),
     nivel: z.enum(['Fácil', 'Moderado', 'Exigente']),
+    /** Human readable group size: "2 a 8 personas". */
     grupo: z.string(),
     /** Per person, in satoshis. */
     precio: z.number().int().positive(),
@@ -22,7 +28,7 @@ const tours = defineCollection({
     credito: z.string().optional(),
     licencia: z.string().optional(),
     creditoUrl: z.url().optional(),
-    /** Slugs of the Cacao Media stories this experience brings to life. */
+    /** Slugs of the Cacao Media stories about this place or activity. */
     historias: z.array(z.string()).default([]),
   }),
 });

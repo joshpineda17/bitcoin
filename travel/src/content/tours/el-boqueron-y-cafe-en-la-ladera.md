@@ -2,6 +2,8 @@
 titulo: El Boquerón y café en la ladera
 bajada: Media mañana en el cráter del volcán de San Salvador y una parada para tomar café de altura en su ladera.
 lugar: Volcán de San Salvador
+categoria: Volcanes
+zona: Centro
 coords: 13.74°N · 89.29°W
 duracion: 4 horas
 nivel: Fácil

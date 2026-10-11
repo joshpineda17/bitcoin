@@ -1,7 +1,7 @@
 ---
-// An experience as a ticket: photo and name on the body, price on the stub,
-// a perforation between them. The tear line is the split bean's gap.
-import { sats, urlTour, type Tour } from '../lib/tours';
+// A listing as a ticket: photo and name on the body, price on the stub, a perforation between.
+// The data-* attributes are what the search, filters and sort on the home page read.
+import { horas, plano, sats, urlTour, type Tour } from '../lib/tours';
 
 interface Props {
   tour: Tour;
@@ -11,51 +11,75 @@ const d = tour.data;
 const url = urlTour(tour);
 ---
 
-<article class="boleto" data-nivel={d.nivel}>
+<article
+  class="boleto"
+  data-boleto
+  data-texto={plano(`${d.titulo} ${d.lugar} ${d.categoria} ${d.bajada}`)}
+  data-categoria={d.categoria}
+  data-zona={d.zona}
+  data-nivel={d.nivel}
+  data-precio={d.precio}
+  data-horas={horas(d.duracion)}
+>
   <a class="boleto__foto" href={url} tabindex="-1" aria-hidden="true">
     <img src={d.portada} alt="" width="1600" height="1000" loading="lazy" />
+    <span class="boleto__categoria">{d.categoria}</span>
   </a>
   <div class="boleto__cuerpo">
-    <p class="dato">{d.lugar}</p>
+    <p class="boleto__lugar">{d.lugar}</p>
     <h3><a href={url}>{d.titulo}</a></h3>
-    <p class="boleto__bajada">{d.bajada}</p>
+    <p class="boleto__ficha">{d.duracion} · {d.nivel} · {d.grupo}</p>
   </div>
   <div class="boleto__talon">
     <p class="boleto__precio">
-      <span class="dato">Desde</span>
+      <span>Desde</span>
       <strong>{sats(d.precio)}</strong>
+      <span>por persona</span>
     </p>
-    <p class="dato boleto__ficha">{d.duracion}<br />{d.nivel}</p>
+    <a class="boleto__ver" href={url} aria-label={`Ver ${d.titulo}`}>Ver</a>
   </div>
 </article>
 
 <style>
   .boleto {
-    --muesca: 22px;
+    --muesca: 20px;
     display: grid;
     grid-template-rows: auto 1fr auto;
     min-width: 0;
     background: var(--pulpa);
     color: var(--tostado);
-    border-radius: var(--radio);
+    border-radius: var(--radio-chico);
   }
-  .boleto__foto { display: block; overflow: hidden; border-radius: var(--radio) var(--radio) 0 0; }
-  .boleto__foto img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
-  .boleto__cuerpo { display: grid; gap: 8px; align-content: start; padding: 20px 22px 22px; }
-  .boleto__cuerpo .dato { color: var(--tinta-suave); }
-  h3 { font-size: var(--t-h2); overflow-wrap: anywhere; }
+  .boleto[hidden] { display: none; }
+  .boleto__foto { position: relative; display: block; overflow: hidden; border-radius: var(--radio-chico) var(--radio-chico) 0 0; }
+  .boleto__foto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .boleto__categoria {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    padding: 0.35em 0.8em;
+    border-radius: 999px;
+    background: var(--tostado);
+    color: var(--pulpa);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .boleto__cuerpo { display: grid; gap: 6px; align-content: start; padding: 16px 18px 18px; }
+  .boleto__lugar { font-size: 0.875rem; font-weight: 600; color: var(--tinta-suave); }
+  h3 { font-size: 1.25rem; line-height: 1.15; letter-spacing: -0.02em; overflow-wrap: anywhere; }
   h3 a { text-decoration: none; }
   h3 a:hover { text-decoration: underline; }
-  .boleto__bajada { font-size: 1rem; line-height: 1.45; color: var(--tinta-suave); }
+  .boleto__ficha { font-size: 0.875rem; color: var(--tinta-suave); }
 
-  /* Stub: dashed tear line, with a notch punched out of each edge. */
+  /* Stub: dashed tear line with a notch punched out of each edge. */
   .boleto__talon {
     position: relative;
     display: flex;
     justify-content: space-between;
-    align-items: end;
+    align-items: center;
     gap: 12px;
-    padding: 18px 22px 20px;
+    padding: 14px 18px 16px;
     border-top: 2px dashed var(--arena-oscura);
   }
   .boleto__talon::before,
@@ -70,13 +94,23 @@ const url = urlTour(tour);
   }
   .boleto__talon::before { left: calc(var(--muesca) / -2); }
   .boleto__talon::after { right: calc(var(--muesca) / -2); }
-  .boleto__precio { display: grid; gap: 2px; }
-  .boleto__precio strong { font-family: var(--mono); font-size: 1.375rem; font-weight: 500; letter-spacing: -0.02em; }
-  .boleto__precio .dato, .boleto__ficha { color: var(--tinta-suave); }
-  .boleto__ficha { text-align: right; }
+  .boleto__precio { display: grid; }
+  .boleto__precio span { font-size: 0.75rem; color: var(--tinta-suave); }
+  .boleto__precio strong { font-family: var(--mono); font-size: 1.25rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
+  .boleto__ver {
+    padding: 0.6em 1.2em;
+    border-radius: 999px;
+    background: var(--tostado);
+    color: var(--pulpa);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 1;
+    text-decoration: none;
+  }
+  .boleto__ver:hover { background: var(--mazorca); color: var(--tostado); }
 
   @media (prefers-reduced-motion: no-preference) {
-    .boleto__foto img { transition: transform 0.5s ease; }
+    .boleto__foto img { transition: transform 0.4s ease; }
     .boleto:hover .boleto__foto img { transform: scale(1.04); }
   }
 </style>

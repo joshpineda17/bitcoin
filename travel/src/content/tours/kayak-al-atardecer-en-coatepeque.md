@@ -2,6 +2,8 @@
 titulo: Kayak al atardecer en Coatepeque
 bajada: Tres horas remando dentro de una caldera, con las lomas del borde alrededor y el lago cambiando de luz.
 lugar: Lago de Coatepeque
+categoria: Naturaleza
+zona: Occidente
 coords: 13.86°N · 89.55°W
 duracion: 3 horas
 nivel: Fácil

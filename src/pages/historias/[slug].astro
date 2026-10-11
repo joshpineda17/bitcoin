@@ -70,7 +70,10 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
       {!d.gratis && <CacaoGate tipo={tipo} precio={precio(d.precio)} />}
     </div>
 
-    <WidgetTravel historia={historia.id} />
+    <WidgetTravel
+      historia={historia.id}
+      lugar={d.seccion === 'cronica' || d.seccion === 'guia' ? d.lugar : undefined}
+    />
 
     {
       autor && (

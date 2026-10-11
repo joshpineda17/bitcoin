@@ -2,6 +2,8 @@
 titulo: Ruta del café en Apaneca
 bajada: Una mañana entre cafetales de la Ruta de las Flores, de la mata a la taza, con cata guiada al final.
 lugar: Apaneca
+categoria: Café
+zona: Occidente
 coords: 13.86°N · 89.80°W
 duracion: 5 horas
 nivel: Fácil

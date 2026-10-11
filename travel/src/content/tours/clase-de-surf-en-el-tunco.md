@@ -2,6 +2,8 @@
 titulo: Clase de surf en El Tunco
 bajada: Tu primera ola en una de las playas más conocidas de la costa de La Libertad, con clase en tierra y práctica en el agua.
 lugar: El Tunco
+categoria: Playa
+zona: Centro
 coords: 13.49°N · 89.38°W
 duracion: 3 horas
 nivel: Fácil

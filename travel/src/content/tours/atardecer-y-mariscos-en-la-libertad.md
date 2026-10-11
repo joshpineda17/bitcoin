@@ -2,6 +2,8 @@
 titulo: Atardecer y mariscos en La Libertad
 bajada: 'Una tarde en el puerto más visitado de la costa: muelle, malecón, un coctel de conchas y el sol cayendo al Pacífico.'
 lugar: Puerto de La Libertad
+categoria: Playa
+zona: Centro
 coords: 13.49°N · 89.32°W
 duracion: 4 horas
 nivel: Fácil

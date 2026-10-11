@@ -1,6 +1,6 @@
 // Public catalogue. Cacao Media's story pages call this to show the experience that goes with a story.
 import type { APIContext } from 'astro';
-import { todosLosTours, urlTour } from '../../lib/tours';
+import { personas, todosLosTours, urlTour } from '../../lib/tours';
 
 export async function GET({ site }: APIContext) {
   const absoluta = (ruta: string) => new URL(ruta, site).href;
@@ -9,15 +9,17 @@ export async function GET({ site }: APIContext) {
     titulo: t.data.titulo,
     bajada: t.data.bajada,
     lugar: t.data.lugar,
+    categoria: t.data.categoria,
+    zona: t.data.zona,
     coords: t.data.coords ?? null,
     duracion: t.data.duracion,
     nivel: t.data.nivel,
-    grupo: t.data.grupo,
+    grupo: personas(t.data.grupo),
     precio: t.data.precio,
     url: absoluta(urlTour(t)),
     foto: absoluta(t.data.portada),
     alt: t.data.alt,
     historias: t.data.historias,
   }));
-  return Response.json({ version: 1, moneda: 'sats', demo: true, tours });
+  return Response.json({ version: 2, moneda: 'sats', demo: true, tours });
 }

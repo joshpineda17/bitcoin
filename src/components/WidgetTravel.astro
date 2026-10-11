@@ -1,14 +1,17 @@
 ---
 // Cacao Travel inside Cacao Media. Nothing about the experiences lives in this site: the widget
 // calls Cacao Travel's public API in the reader's browser and renders what comes back.
-// With `historia` it shows the experiences for that story; without it, the first `limite`.
+// With `historia` it shows only experiences that qualify for that story (see `califica` below);
+// without it, the first `limite`.
 import { TRAVEL_API, TRAVEL_URL } from '../lib/travel';
 
 interface Props {
   historia?: string;
+  /** Place of the story, when it is a place story (crónica or guía). Lets it match by location. */
+  lugar?: string;
   limite?: number;
 }
-const { historia, limite = 3 } = Astro.props;
+const { historia, lugar, limite = 3 } = Astro.props;
 ---
 
 <section
@@ -16,13 +19,14 @@ const { historia, limite = 3 } = Astro.props;
   data-widget-travel
   data-api={TRAVEL_API}
   data-widget-historia={historia}
+  data-widget-lugar={lugar}
   data-limite={limite}
   aria-label="Cacao Travel"
   hidden
 >
   <header class="wt__cabeza">
     <a class="wt__marca" href={`${TRAVEL_URL}/`}><b>cacao</b>travel</a>
-    <p>{historia ? 'Leíste la historia. Ahora andá.' : 'Leés la historia, después vas.'}</p>
+    <p>{historia ? 'Experiencias para ir a verlo.' : 'Experiencias en El Salvador, pagadas en bitcoin.'}</p>
     <a class="pastilla wt__todas" href={`${TRAVEL_URL}/`}>Ver todas las experiencias</a>
   </header>
   <div class="wt__celdas" data-widget-celdas></div>
@@ -119,6 +123,17 @@ const { historia, limite = 3 } = Astro.props;
     historias: string[];
   }
 
+  const plano = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  // Which experiences belong under a story. Explicit links win; otherwise the story's place has to
+  // be the experience's place ("Coatepeque" matches "Lago de Coatepeque").
+  function califica(tours: TourApi[], slug: string, lugar: string): TourApi[] {
+    const enlazados = tours.filter((t) => t.historias.includes(slug));
+    if (enlazados.length > 0 || !lugar) return enlazados.slice(0, 2);
+    const aqui = plano(lugar);
+    return tours.filter((t) => plano(t.lugar).includes(aqui) || aqui.includes(plano(t.lugar))).slice(0, 2);
+  }
+
   const etiqueta = (texto: string, clase = 'etiqueta') => {
     const el = document.createElement('span');
     el.className = clase;
@@ -166,7 +181,7 @@ const { historia, limite = 3 } = Astro.props;
       const { tours } = (await r.json()) as { tours: TourApi[] };
       const slug = widget.dataset.widgetHistoria;
       const elegidos = slug
-        ? tours.filter((t) => t.historias.includes(slug)).slice(0, 1)
+        ? califica(tours, slug, widget.dataset.widgetLugar ?? '')
         : tours.slice(0, Number(widget.dataset.limite) || 3);
       const origen = new URL(api).origin;
       const tarjetas = elegidos.map((t) => boleto(t, origen)).filter((el) => el !== null);

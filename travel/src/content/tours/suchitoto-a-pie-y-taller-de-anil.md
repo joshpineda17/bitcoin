@@ -2,6 +2,8 @@
 titulo: Suchitoto a pie y taller de añil
 bajada: Caminata por el empedrado de Suchitoto y un taller para teñir tela con añil y verla pasar de verde a azul.
 lugar: Suchitoto
+categoria: Pueblos
+zona: Centro
 coords: 13.94°N · 89.02°W
 duracion: 5 horas
 nivel: Fácil

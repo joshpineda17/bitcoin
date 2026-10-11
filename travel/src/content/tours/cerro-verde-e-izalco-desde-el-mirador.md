@@ -2,6 +2,8 @@
 titulo: Cerro Verde e Izalco desde el mirador
 bajada: Una mañana de caminata corta por el parque de los volcanes, con el cono de Izalco enfrente y el bosque alrededor.
 lugar: Cerro Verde
+categoria: Volcanes
+zona: Occidente
 coords: 13.82°N · 89.64°W
 duracion: 5 horas
 nivel: Fácil

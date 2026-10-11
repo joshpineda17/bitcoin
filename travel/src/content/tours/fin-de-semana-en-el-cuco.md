@@ -2,6 +2,8 @@
 titulo: Fin de semana en El Cuco
 bajada: Dos días en la costa oriental de San Miguel, con playa ancha, mar tranquilo y tiempo para no hacer casi nada.
 lugar: El Cuco
+categoria: Playa
+zona: Oriente
 coords: 13.19°N · 88.13°W
 duracion: 2 días, 1 noche
 nivel: Fácil

@@ -2,6 +2,8 @@
 titulo: Manglares de Jiquilisco en lancha
 bajada: Un día entre canales, islas y raíces de mangle en la bahía de Jiquilisco, con la marea marcando el ritmo.
 lugar: Bahía de Jiquilisco
+categoria: Naturaleza
+zona: Oriente
 coords: 13.22°N · 88.60°W
 duracion: Día completo
 nivel: Fácil

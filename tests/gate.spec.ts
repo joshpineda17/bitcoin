@@ -97,6 +97,20 @@ test('the Travel widget stays hidden when the story has no experience or the API
   await expect(page.locator('[data-widget-travel]')).toBeHidden();
 });
 
+test('a place story with no linked experience still gets one from the same place', async ({ page }) => {
+  const enElPuerto = { ...TOUR, lugar: 'Puerto de La Libertad', historias: [] };
+  await page.route(`${TRAVEL}/api/tours.json`, (r) => r.fulfill({ json: { tours: [enElPuerto] } }));
+  await page.route(`${TRAVEL}/fotos/**`, (r) => r.fulfill({ status: 204 }));
+  await page.goto('/historias/punta-roca-la-derecha/');
+  await expect(page.locator('[data-widget-travel]')).toBeVisible();
+
+  // A coffee how-to in the same city does not qualify: it is not a place story.
+  const enLaCapital = { ...TOUR, lugar: 'San Salvador', historias: [] };
+  await page.route(`${TRAVEL}/api/tours.json`, (r) => r.fulfill({ json: { tours: [enLaCapital] } }));
+  await page.goto(GRATIS);
+  await expect(page.locator('[data-widget-travel]')).toBeHidden();
+});
+
 test('the widget ignores entries that point outside Cacao Travel', async ({ page }) => {
   const falso = { ...TOUR, url: 'https://example.com/phish/' };
   await page.route(`${TRAVEL}/api/tours.json`, (r) => r.fulfill({ json: { tours: [falso] } }));

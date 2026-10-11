@@ -2,6 +2,8 @@
 titulo: Centro Histórico caminado con guía
 bajada: "Tres horas a pie por el corazón de San Salvador: plazas, catedral, teatro y la luz de colores de El Rosario."
 lugar: Centro Histórico de San Salvador
+categoria: Ciudad
+zona: Centro
 coords: 13.70°N · 89.19°W
 duracion: 3 horas
 nivel: Fácil
