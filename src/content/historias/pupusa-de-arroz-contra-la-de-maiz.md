@@ -3,7 +3,7 @@ titulo: La pupusa de arroz contra la de maíz
 bajada: Dos masas, un mismo relleno y una pregunta de sobremesa sobre cuál es la verdadera. Qué cambia al partirla.
 seccion: cultura
 fecha: 2026-02-02
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Olocuilta
 coords: 13.54°N · 89.08°W
 minutos: 3

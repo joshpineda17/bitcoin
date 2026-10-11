@@ -3,7 +3,7 @@ titulo: "Bourbon, pacas y pacamara: las variedades que nacieron aquí"
 bajada: La pacas y la pacamara nacieron en El Salvador, y cada una tiene su manera de crecer y de llegar a la taza.
 seccion: cafe
 fecha: 2025-10-13
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Santa Ana
 coords: 13.99°N · 89.56°W
 minutos: 3

@@ -3,7 +3,7 @@ titulo: La Palma, el pueblo que pintó Fernando Llort
 bajada: Un pueblo de Chalatenango donde el estilo de Fernando Llort se volvió oficio, con consejos para mirar y comprar.
 seccion: cultura
 fecha: 2026-03-16
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: La Palma
 coords: 14.35°N · 88.95°W
 minutos: 3

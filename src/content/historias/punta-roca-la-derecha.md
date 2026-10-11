@@ -3,7 +3,7 @@ titulo: Punta Roca, la derecha que puso a La Libertad en el mapa
 bajada: Una ola que empieza en una tormenta lejana y termina en una marca de país. A quién pertenece es otra pregunta.
 seccion: cronica
 fecha: 2026-08-10
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: La Libertad
 coords: 13.49°N · 89.38°W
 minutos: 7

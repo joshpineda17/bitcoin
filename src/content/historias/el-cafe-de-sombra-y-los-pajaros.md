@@ -3,7 +3,7 @@ titulo: El café de sombra y los pájaros
 bajada: En las fincas de Apaneca, los árboles de sombra sostienen el café y también a las aves que viven entre sus ramas.
 seccion: cafe
 fecha: 2025-08-18
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Apaneca
 coords: 13.87°N · 89.79°W
 minutos: 3

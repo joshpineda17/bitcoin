@@ -3,7 +3,7 @@ titulo: Cómo pedir un café de altura sin pasar pena
 bajada: Cuatro preguntas y una frase para pedir un café de altura en San Salvador sin sentirte perdido.
 seccion: cafe
 fecha: 2026-09-04
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Salvador
 coords: 13.69°N · 89.19°W
 minutos: 3

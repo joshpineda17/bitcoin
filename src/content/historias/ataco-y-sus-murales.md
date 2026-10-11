@@ -3,7 +3,7 @@ titulo: Ataco y sus murales
 bajada: Un pueblo del occidente donde las paredes cuentan historias, con consejos para caminar, mirar y no apurarte.
 seccion: cultura
 fecha: 2026-03-23
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Concepción de Ataco
 coords: 13.97°N · 89.84°W
 minutos: 3

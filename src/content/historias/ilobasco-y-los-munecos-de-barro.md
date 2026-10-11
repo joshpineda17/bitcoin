@@ -3,7 +3,7 @@ titulo: Ilobasco y los muñecos de barro
 bajada: 'Barro, pintura y manos pacientes: un recorrido por el pueblo de Cabañas donde nacen figuras de barro, con consejos para comprar.'
 seccion: cultura
 fecha: 2026-03-09
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Ilobasco
 coords: 13.99°N · 88.82°W
 minutos: 3

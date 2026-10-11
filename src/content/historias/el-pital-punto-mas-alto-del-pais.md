@@ -3,7 +3,7 @@ titulo: El Pital, el punto más alto del país
 bajada: Cerro El Pital, en Chalatenango, es el punto más alto del país. Frío, neblina y una subida que pide calma.
 seccion: guia
 fecha: 2026-04-20
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Chalatenango
 coords: 14.44°N · 88.99°W
 minutos: 3

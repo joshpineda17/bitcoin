@@ -3,7 +3,7 @@ titulo: Izalco, el faro del Pacífico
 bajada: Un volcán nació entre cacaotales en 1770 y alumbró la costa casi dos siglos. Hoy es una silueta negra.
 seccion: cronica
 fecha: 2026-05-25
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Izalco
 coords: 13.81°N · 89.63°W
 minutos: 6

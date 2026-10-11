@@ -3,7 +3,7 @@ titulo: Cerro Verde entre la neblina
 bajada: La neblina forma parte del paseo en este parque de montaña, con bosque húmedo y vistas a los volcanes del occidente.
 seccion: guia
 fecha: 2026-05-04
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Cerro Verde
 coords: 13.82°N · 89.64°W
 minutos: 3

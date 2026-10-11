@@ -3,7 +3,7 @@ titulo: Pupusas de madrugada
 bajada: Antes de que salga el sol, el comal ya está caliente y la masa lista para la primera tanda del día.
 seccion: cultura
 fecha: 2026-09-10
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Olocuilta
 coords: 13.56°N · 89.07°W
 minutos: 3

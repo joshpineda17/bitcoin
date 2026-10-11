@@ -3,7 +3,7 @@ titulo: La Barra de Santiago, donde el río llega al mar
 bajada: Una franja de arena, un estero de manglares y una comunidad que vive de leer la marea.
 seccion: cronica
 fecha: 2026-06-29
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Ahuachapán
 coords: 13.68°N · 89.90°W
 minutos: 7

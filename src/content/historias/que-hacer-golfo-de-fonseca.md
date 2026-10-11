@@ -3,7 +3,7 @@ titulo: Qué hacer en el Golfo de Fonseca
 bajada: Islas, pueblos de pescadores y una bahía que comparten tres países, para planear un día o un fin de semana en La Unión.
 seccion: guia
 fecha: 2026-07-20
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: La Unión
 coords: 13.31°N · 87.78°W
 minutos: 5

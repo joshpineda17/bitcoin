@@ -3,7 +3,7 @@ titulo: Los manglares de la Bahía de Jiquilisco
 bajada: Un bosque que vive con las raíces en el agua salada y que alimenta a media costa. Cuidarlo es un problema de cuenca, no de orilla.
 seccion: cronica
 fecha: 2026-07-27
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Jiquilisco
 coords: 13.22°N · 88.60°W
 minutos: 7

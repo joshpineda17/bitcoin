@@ -3,7 +3,7 @@ titulo: Tamales, atol y la mesa de diciembre
 bajada: En diciembre la cocina salvadoreña se llena de hojas de plátano, olor a maíz y mesas largas. Qué se come y por qué.
 seccion: cultura
 fecha: 2025-12-22
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Salvador
 coords: 13.69°N · 89.22°W
 minutos: 3

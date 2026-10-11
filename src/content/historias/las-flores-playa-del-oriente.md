@@ -3,7 +3,7 @@ titulo: Las Flores, la playa del oriente
 bajada: Arena clara, hilera de palmeras y mar de fondo, para quien busca una playa sin prisa y sin multitudes.
 seccion: guia
 fecha: 2026-07-06
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Miguel
 coords: 13.36°N · 88.19°W
 minutos: 3

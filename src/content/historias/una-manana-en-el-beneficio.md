@@ -3,7 +3,7 @@ titulo: Una mañana en el beneficio
 bajada: Antes de que salga el sol, el beneficio ya huele a café mojado, y la cosecha empieza sin prisa pero sin pausa.
 seccion: cafe
 fecha: 2026-08-17
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Santa Ana
 coords: 13.99°N · 89.56°W
 minutos: 3

@@ -3,7 +3,7 @@ titulo: Montecristo y el bosque nebuloso
 bajada: Un bosque nebuloso en la zona del Trifinio, con neblina, musgo y senderos que piden paso lento.
 seccion: guia
 fecha: 2026-04-13
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Metapán
 coords: 14.43°N · 89.37°W
 minutos: 3

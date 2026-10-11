@@ -3,7 +3,7 @@ titulo: El muelle de La Libertad al amanecer
 bajada: 'En una costa sin bahía, el muelle es el puerto: una calle que se interna en el mar y empieza a trabajar antes que el pueblo.'
 seccion: cronica
 fecha: 2026-07-13
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: La Libertad
 coords: 13.49°N · 89.32°W
 minutos: 7

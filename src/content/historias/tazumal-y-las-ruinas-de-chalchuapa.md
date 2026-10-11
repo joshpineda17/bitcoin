@@ -3,7 +3,7 @@ titulo: Tazumal y las ruinas de Chalchuapa
 bajada: Una pirámide escalonada en el occidente del país y un pueblo que merece más tiempo del que le damos. Cómo planear la visita.
 seccion: guia
 fecha: 2025-10-27
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Chalchuapa
 coords: 13.99°N · 89.67°W
 minutos: 3

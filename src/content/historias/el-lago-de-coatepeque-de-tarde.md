@@ -3,7 +3,7 @@ titulo: El lago de Coatepeque, de tarde
 bajada: Un lago nacido de una explosión, con la calma de una tarde encima y un volcán vecino que sigue vivo.
 seccion: cronica
 fecha: 2026-06-01
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Coatepeque
 coords: 13.86°N · 89.55°W
 minutos: 7

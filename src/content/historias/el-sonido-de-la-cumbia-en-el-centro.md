@@ -3,7 +3,7 @@ titulo: El sonido de la cumbia en el Centro
 bajada: Entre portones y puestos de comida, la cumbia sigue sonando en el Centro como banda sonora de todos los días.
 seccion: cultura
 fecha: 2026-08-27
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Centro Histórico
 coords: 13.70°N · 89.20°W
 minutos: 3

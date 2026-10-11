@@ -3,7 +3,7 @@ titulo: La Ruta de las Flores en un fin de semana
 bajada: Un fin de semana entre cafetales, plazas y pueblos de la Ruta de las Flores, con un plan sencillo para no correr.
 seccion: guia
 fecha: 2026-03-30
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Juayúa
 coords: 13.85°N · 89.78°W
 minutos: 5

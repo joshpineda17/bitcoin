@@ -3,7 +3,7 @@ titulo: Panchimalco, a un paso de la capital
 bajada: Un pueblo de cerros, iglesia blanca y danzas tradicionales a un paso de la capital, con un plan para un solo día.
 seccion: guia
 fecha: 2026-02-09
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Panchimalco
 coords: 13.61°N · 89.19°W
 minutos: 3

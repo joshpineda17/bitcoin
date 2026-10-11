@@ -3,7 +3,7 @@ titulo: La ola que cambió un pueblo de pescadores
 bajada: El Zonte vendió bálsamo, después olas y después una moneda. La pregunta es qué se queda cuando todo sale con otro nombre.
 seccion: cronica
 fecha: 2026-10-06
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: El Zonte
 coords: 13.49°N · 89.44°W
 minutos: 7

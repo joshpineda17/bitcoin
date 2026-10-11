@@ -6,6 +6,7 @@ import GrillaHistorias from '../../components/GrillaHistorias.astro';
 import { todasLasHistorias, type Historia } from '../../lib/historias';
 import { fechaCorta, fechaIso, precio } from '../../lib/formato';
 import { seccionPorId, slugTag } from '../../lib/secciones';
+import { autorPorNombre, urlAutor } from '../../lib/autores';
 
 export async function getStaticPaths() {
   const todas = await todasLasHistorias();
@@ -29,6 +30,7 @@ const { Content } = await render(historia);
 
 const d = historia.data;
 const seccion = seccionPorId(d.seccion);
+const autor = autorPorNombre(d.autor);
 const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónica' : 'historia';
 ---
 
@@ -40,7 +42,7 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
       <h1>{d.titulo}</h1>
       <p class="historia__bajada">{d.bajada}</p>
       <div class="historia__meta etiqueta">
-        <span>{d.autor}</span>
+        <span>Por {autor ? <a class="historia__firma" href={urlAutor(autor)}>{autor.nombre}</a> : d.autor}</span>
         <time datetime={fechaIso(d.fecha)}>{fechaCorta(d.fecha)}</time>
         <span>{d.minutos} min</span>
         {d.coords && <span>{d.coords}</span>}
@@ -66,6 +68,18 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
       </div>
       {!d.gratis && <CacaoGate tipo={tipo} precio={precio(d.precio)} />}
     </div>
+
+    {
+      autor && (
+        <aside class="historia__autor">
+          <p class="etiqueta">Escribe</p>
+          <p class="historia__autor-nombre">
+            <a href={urlAutor(autor)}>{autor.nombre}</a>
+          </p>
+          <p>{autor.bio}</p>
+        </aside>
+      )
+    }
 
     <footer class="historia__pie">
       {d.tags.map((tag) => (
@@ -136,6 +150,20 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
     width: min(100% - 2 * var(--canal), var(--ancho-lectura));
     margin: clamp(28px, 5vw, 56px) auto 0;
   }
+
+  .historia__cabeza .historia__firma { text-decoration: underline; }
+  .historia__autor {
+    width: min(100% - 2 * var(--canal), var(--ancho-lectura));
+    margin: clamp(32px, 5vw, 56px) auto 0;
+    padding: clamp(20px, 3vw, 32px);
+    display: grid;
+    gap: 6px;
+    background: var(--arena);
+    border-radius: var(--radio-chico);
+  }
+  .historia__autor-nombre { font-size: var(--t-h2); font-weight: 800; }
+  .historia__autor-nombre a { text-decoration: none; }
+  .historia__autor-nombre a:hover { color: inherit; text-decoration: underline; }
 
   .historia__pie {
     width: min(100% - 2 * var(--canal), var(--ancho-lectura));

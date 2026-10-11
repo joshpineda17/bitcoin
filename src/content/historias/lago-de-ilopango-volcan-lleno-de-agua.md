@@ -3,7 +3,7 @@ titulo: El lago de Ilopango, un volcán lleno de agua
 bajada: Hace unos mil quinientos años esta caldera cambió el mapa de la región. Hoy es un lago a las puertas de la capital.
 seccion: cronica
 fecha: 2026-04-27
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Ilopango
 coords: 13.67°N · 89.05°W
 minutos: 6

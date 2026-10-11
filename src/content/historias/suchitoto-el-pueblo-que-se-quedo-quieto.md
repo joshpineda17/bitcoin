@@ -3,7 +3,7 @@ titulo: Suchitoto, el pueblo que se quedó quieto
 bajada: Añil, un embalse y una guerra detuvieron a Suchitoto. Hoy su calma se vende bien, pero tiene una historia.
 seccion: cronica
 fecha: 2026-04-06
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Suchitoto
 coords: 13.94°N · 89.02°W
 minutos: 7

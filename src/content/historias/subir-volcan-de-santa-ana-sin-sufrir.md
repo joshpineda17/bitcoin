@@ -3,7 +3,7 @@ titulo: Subir el volcán de Santa Ana sin sufrir
 bajada: Cómo preparar la subida al volcán de Santa Ana para llegar con energía y sin sustos.
 seccion: guia
 fecha: 2026-06-08
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Santa Ana
 coords: 13.85°N · 89.63°W
 minutos: 3

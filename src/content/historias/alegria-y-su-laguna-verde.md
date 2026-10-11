@@ -3,7 +3,7 @@ titulo: Alegría y su laguna verde
 bajada: Un cráter con agua verde en la sierra Tecapa-Chinameca, en Usulután, y consejos para llegar con tiempo y sin prisa.
 seccion: guia
 fecha: 2026-02-23
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Alegría
 coords: 13.73°N · 88.50°W
 minutos: 3

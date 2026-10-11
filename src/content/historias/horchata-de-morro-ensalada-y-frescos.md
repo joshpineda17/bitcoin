@@ -3,7 +3,7 @@ titulo: Horchata de morro, ensalada y otros frescos
 bajada: Un fruto de cáscara dura que se vuelve horchata, un vaso de fruta picada y otros frescos que se toman en la capital.
 seccion: cultura
 fecha: 2026-01-12
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Salvador
 coords: 13.69°N · 89.22°W
 minutos: 3

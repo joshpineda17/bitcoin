@@ -3,7 +3,7 @@ titulo: 5 fincas de café que tenés que visitar
 bajada: Cinco cosas que mirar en una visita a una finca de Apaneca, desde el cafetal hasta la taza.
 seccion: guia
 fecha: 2026-09-24
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Apaneca
 coords: 13.87°N · 89.79°W
 minutos: 5

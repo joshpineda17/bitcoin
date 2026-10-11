@@ -3,7 +3,7 @@ titulo: "Lavado, honey o natural: qué cambia en la taza"
 bajada: Tres formas de procesar la cereza de café, y cómo cada una cambia el sabor que llega a tu taza.
 seccion: cafe
 fecha: 2025-09-29
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Apaneca
 coords: 13.87°N · 89.79°W
 minutos: 3

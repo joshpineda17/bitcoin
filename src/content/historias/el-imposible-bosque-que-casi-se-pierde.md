@@ -3,7 +3,7 @@ titulo: El Imposible, el bosque que casi se pierde
 bajada: Un bosque que sobrevivió por inaccesible y que hoy tiene que sobrevivir por acuerdo.
 seccion: cronica
 fecha: 2026-05-11
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Ahuachapán
 coords: 13.83°N · 89.87°W
 minutos: 6

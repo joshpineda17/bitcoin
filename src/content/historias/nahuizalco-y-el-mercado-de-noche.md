@@ -3,7 +3,7 @@ titulo: Nahuizalco y el mercado de noche
 bajada: En Nahuizalco el mercado se arma de noche y el tejido guarda lo que la lengua casi perdió.
 seccion: cronica
 fecha: 2026-02-16
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Nahuizalco
 coords: 13.83°N · 89.52°W
 minutos: 7

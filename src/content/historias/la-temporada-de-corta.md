@@ -3,7 +3,7 @@ titulo: La temporada de corta
 bajada: La cosecha de café en Ahuachapán se hace a mano, por pasadas, y cada decisión en el campo llega a la taza.
 seccion: cafe
 fecha: 2025-09-01
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Ahuachapán
 coords: 13.92°N · 89.85°W
 minutos: 3

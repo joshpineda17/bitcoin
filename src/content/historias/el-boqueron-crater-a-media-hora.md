@@ -3,7 +3,7 @@ titulo: El Boquerón, un cráter a media hora de la capital
 bajada: Un cráter enorme a media hora de San Salvador, con bosque, paredes de piedra y un recorrido que pide calma.
 seccion: guia
 fecha: 2026-05-18
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Salvador
 coords: 13.73°N · 89.33°W
 minutos: 3

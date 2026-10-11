@@ -3,7 +3,7 @@ titulo: Las bolas de fuego de Nejapa
 bajada: Un pueblo de agua y ceniza repite cada año la noche en que el volcán lo obligó a mudarse.
 seccion: cronica
 fecha: 2025-11-24
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Nejapa
 coords: 13.80°N · 89.25°W
 minutos: 7

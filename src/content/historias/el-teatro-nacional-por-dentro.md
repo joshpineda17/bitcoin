@@ -3,7 +3,7 @@ titulo: El Teatro Nacional por dentro
 bajada: Por fuera parece un edificio más del centro, pero adentro hay palcos, una cúpula iluminada y una sala que pide silencio.
 seccion: cultura
 fecha: 2025-07-07
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Centro Histórico
 coords: 13.70°N · 89.19°W
 minutos: 3

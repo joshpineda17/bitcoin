@@ -3,7 +3,7 @@ titulo: Leer la etiqueta de una bolsa de café
 bajada: Origen, altura, proceso y tueste son cuatro datos que cambian la taza y que casi siempre están en la parte de atrás.
 seccion: cafe
 fecha: 2025-08-04
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Salvador
 coords: 13.69°N · 89.22°W
 minutos: 3

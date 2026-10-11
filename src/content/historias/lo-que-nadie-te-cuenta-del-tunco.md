@@ -3,7 +3,7 @@ titulo: Lo que nadie te cuenta del Tunco
 bajada: 'El Tunco tiene dos relojes: el de quien llega el viernes y el de quien se queda. Entre los dos corre un río.'
 seccion: cronica
 fecha: 2026-09-16
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: El Tunco
 coords: 13.49°N · 89.38°W
 minutos: 7

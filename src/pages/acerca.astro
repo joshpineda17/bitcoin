@@ -2,9 +2,10 @@
 import Base from '../layouts/Base.astro';
 import Simbolo from '../components/Simbolo.astro';
 import { SECCIONES } from '../lib/secciones';
+import { AUTORES, urlAutor } from '../lib/autores';
 ---
 
-<Base titulo="Acerca" descripcion="Qué es Cacao Media y cómo funciona Cacao Gate.">
+<Base titulo="Acerca" descripcion="Qué es Cacao Media, su línea editorial y cómo funciona Cacao Gate.">
   <div class="columna">
     <h1 class="display">Dos mitades, una historia.</h1>
 
@@ -15,6 +16,45 @@ import { SECCIONES } from '../lib/secciones';
     <div class="simbolo">
       <Simbolo tamano={120} />
     </div>
+
+    <h2 id="linea-editorial">Línea editorial</h2>
+
+    <p>Cacao Media tiene opinión. Estas son las seis ideas desde las que se escribe todo lo demás.</p>
+
+    <ol class="linea">
+      <li>
+        <strong>El Salvador no es una postal.</strong> Tampoco es un titular de sucesos. Entre la foto del atardecer y la nota roja vive casi todo el país, y de eso escribimos.
+      </li>
+      <li>
+        <strong>Quien lee paga lo justo.</strong> Una suscripción te cobra por lo que no leés. Aquí pagás 120 satoshis por la historia que querés y nada más. Si no vale eso, no merecía cobrarse.
+      </li>
+      <li>
+        <strong>Bitcoin es una herramienta, no una bandera.</strong> Cobramos en satoshis porque permite pagar centavos sin cuenta, sin tarjeta y sin intermediario. No es una postura sobre el precio ni sobre la política.
+      </li>
+      <li>
+        <strong>Sin publicidad disfrazada.</strong> Ninguna marca, hotel o finca paga por aparecer. Si algún día hay contenido patrocinado, lo va a decir arriba y en grande.
+      </li>
+      <li>
+        <strong>Lo local primero.</strong> Preferimos el nombre que usa la gente del lugar al que usa el folleto. Recomendamos comprar en la comunidad y contratar guías de ahí.
+      </li>
+      <li>
+        <strong>Los errores se corrigen a la vista.</strong> Si algo está mal, se arregla con una nota al pie de la historia, no en silencio.
+      </li>
+    </ol>
+
+    <h2 id="quien-escribe">Quién escribe</h2>
+
+    <ul class="firmas">
+      {
+        AUTORES.map((a) => (
+          <li>
+            <a href={urlAutor(a)}>{a.nombre}</a>
+            <span class="etiqueta">{a.rol}</span>
+            <p>{a.bio}</p>
+          </li>
+        ))
+      }
+    </ul>
 
     <h2 id="cacao-gate">Cómo funciona Cacao Gate</h2>
 
@@ -51,6 +91,12 @@ import { SECCIONES } from '../lib/secciones';
 </Base>
 
 <style>
+  .linea { padding-left: 1.2em; display: grid; gap: 0.9em; }
+  .firmas { list-style: none; padding: 0; margin: 0; }
+  .firmas li { display: grid; gap: 4px; padding: 1em 1.2em; background: var(--arena); border-radius: var(--radio-chico); }
+  .firmas a { font-size: var(--t-h2); font-weight: 800; text-decoration: none; }
+  .firmas a:hover { color: inherit; text-decoration: underline; }
+
   .columna {
     width: min(100% - 2 * var(--canal), var(--ancho-lectura));
     margin-inline: auto;

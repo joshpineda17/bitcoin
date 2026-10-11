@@ -3,7 +3,7 @@ titulo: Las alfombras de Semana Santa en Sonsonate
 bajada: Se hacen en una noche y las borra una procesión en minutos. Esa es la razón de ser de las alfombras.
 seccion: cronica
 fecha: 2025-12-08
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Sonsonate
 coords: 13.72°N · 89.72°W
 minutos: 7

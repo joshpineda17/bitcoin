@@ -3,7 +3,7 @@ titulo: Cómo preparar café de altura en tu casa
 bajada: Un método sencillo con filtro, agua caliente y paciencia, para sacarle a un café de altura lo mejor que tiene.
 seccion: cafe
 fecha: 2025-09-15
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Salvador
 coords: 13.69°N · 89.22°W
 minutos: 3

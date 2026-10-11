@@ -3,7 +3,7 @@ titulo: Sopa de pata en domingo
 bajada: Patas de res, yuca, elote y un caldo rojizo que aparece en muchas mesas de domingo. Qué lleva y cómo se come.
 seccion: cultura
 fecha: 2026-01-19
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Salvador
 coords: 13.69°N · 89.22°W
 minutos: 3

@@ -3,7 +3,7 @@ titulo: Joya de Cerén, la Pompeya de América
 bajada: Una aldea sepultada por ceniza hace más de mil años, con casas, cocinas y herramientas tal como quedaron. Guía para visitarla.
 seccion: guia
 fecha: 2025-11-10
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Juan Opico
 coords: 13.84°N · 89.39°W
 minutos: 3

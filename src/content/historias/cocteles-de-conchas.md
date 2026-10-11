@@ -3,7 +3,7 @@ titulo: Cócteles de conchas y lo que se come frente al mar
 bajada: Limón, cebolla, tomate y mariscos recién sacados del agua, servidos en la costa de La Libertad.
 seccion: cultura
 fecha: 2026-06-22
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: La Libertad
 coords: 13.48°N · 89.32°W
 minutos: 3

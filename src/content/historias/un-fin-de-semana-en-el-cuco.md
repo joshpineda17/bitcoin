@@ -3,7 +3,7 @@ titulo: Un fin de semana en El Cuco
 bajada: Qué hacer en dos días en la costa de San Miguel, entre playa ancha, comida sencilla y mar de ritmo tranquilo.
 seccion: guia
 fecha: 2026-08-03
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: El Cuco
 coords: 13.19°N · 88.13°W
 minutos: 5

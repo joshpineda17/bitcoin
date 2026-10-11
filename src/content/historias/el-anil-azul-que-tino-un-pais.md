@@ -3,7 +3,7 @@ titulo: El añil, el azul que tiñó un país
 bajada: La historia de la planta y el tinte que fue riqueza del país, contada desde Suchitoto al caer la tarde.
 seccion: cultura
 fecha: 2026-03-02
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Suchitoto
 coords: 13.94°N · 89.02°W
 minutos: 3

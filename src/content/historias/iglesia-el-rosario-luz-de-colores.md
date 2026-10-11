@@ -3,7 +3,7 @@ titulo: La iglesia El Rosario y la luz de colores
 bajada: Entrar a El Rosario es pasar de la calle del centro a una nave de concreto donde la luz se vuelve de colores.
 seccion: cultura
 fecha: 2025-06-23
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Centro Histórico
 coords: 13.70°N · 89.20°W
 minutos: 3

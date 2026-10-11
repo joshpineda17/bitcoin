@@ -3,7 +3,7 @@ titulo: Los Cóbanos y el arrecife
 bajada: Piedras negras, pozas de marea y botes de pesca en una costa de Sonsonate que se entiende mejor con la marea baja.
 seccion: guia
 fecha: 2026-06-15
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Sonsonate
 coords: 13.52°N · 89.86°W
 minutos: 3

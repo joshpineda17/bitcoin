@@ -3,7 +3,7 @@ titulo: Yuca frita, pasteles y otras cosas de la tarde
 bajada: Cuando baja el sol, las calles de San Salvador se llenan de carretas, fritanga y frescos. Dónde pararse y qué pedir.
 seccion: cultura
 fecha: 2026-01-26
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: San Salvador
 coords: 13.69°N · 89.22°W
 minutos: 3

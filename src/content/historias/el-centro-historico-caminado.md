@@ -3,7 +3,7 @@ titulo: El Centro Histórico, caminado
 bajada: Un recorrido a pie por el corazón de San Salvador, entre plazas, iglesias y el ritmo de la ciudad.
 seccion: guia
 fecha: 2025-07-21
-autor: Redacción Cacao
+autor: Josh Pineda
 lugar: Centro Histórico
 coords: 13.70°N · 89.20°W
 minutos: 3
