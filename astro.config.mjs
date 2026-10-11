@@ -3,7 +3,7 @@ import { unified } from '@astrojs/markdown-remark';
 import { rehypeGate } from './src/lib/rehype-gate.mjs';
 
 export default defineConfig({
-  site: 'https://cacaomedia.sv',
+  site: 'https://cacaomedia.vercel.app',
   trailingSlash: 'always',
   markdown: {
     processor: unified({ rehypePlugins: [rehypeGate] }),
