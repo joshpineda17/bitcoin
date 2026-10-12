@@ -16,3 +16,8 @@ travel/.astro/
 travel/.vercel
 src/data/cerrado.json
 .qa/
+market/node_modules/
+market/.next/
+market/supabase/.temp/
+market/supabase/.branches/
+market/test-results/
