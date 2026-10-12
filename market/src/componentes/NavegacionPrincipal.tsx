@@ -19,9 +19,12 @@ function esActual(href: string, ruta: string | null | undefined): boolean {
 export function NavegacionPrincipal({
   actual,
   variante,
+  insignia,
 }: {
   actual?: string | null;
   variante: 'barra' | 'cabecera';
+  /** Unread notices badge, rendered over the "Órdenes" label. */
+  insignia?: React.ReactNode;
 }) {
   const enlaces = variante === 'barra' ? ENLACES : ENLACES.filter((e) => e.href !== '/carrito');
 
@@ -33,7 +36,11 @@ export function NavegacionPrincipal({
           return (
             <li key={e.href}>
               <Link href={e.href} aria-current={activo ? 'page' : undefined}>
-                {e.texto}
+                {/* The wrapper is the anchor for the badge; it does not change the label's size. */}
+                <span style={{ position: 'relative', display: 'inline-block' }}>
+                  {e.texto}
+                  {e.href === '/ordenes' && insignia}
+                </span>
               </Link>
             </li>
           );

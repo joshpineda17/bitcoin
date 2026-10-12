@@ -3,6 +3,7 @@ import 'server-only';
 import { createServerClient } from '@supabase/ssr';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { connection } from 'next/server';
 
 import type { Database } from '@/tipos/db';
 
@@ -21,6 +22,9 @@ function configuracionPublica() {
  */
 export async function clienteSesion() {
   const { url, clave } = configuracionPublica();
+  // The auth client reads the clock (token expiry). With partial prefetching, cookies() alone
+  // still counts as prerenderable, so wait for the real request before building the client.
+  await connection();
   // cookies() is async in Next 16.
   const almacen = await cookies();
   return createServerClient<Database>(url, clave, {

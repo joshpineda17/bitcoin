@@ -74,30 +74,30 @@ const TIENDAS = [
 
 // [dueño, categoría, nombre, unidad, precio en centavos de USD, stock, activo]
 const PRODUCTOS = [
-  [2, 'Verduras', 'Tomate criollo', 'libra', 80, 30, true],
-  [2, 'Verduras', 'Chile verde', 'libra', 60, 25, true],
-  [2, 'Verduras', 'Güisquil', 'unidad', 50, 40, true],
-  [2, 'Verduras', 'Pepino', 'libra', 55, 20, true],
-  [2, 'Frutas', 'Mango manila', 'libra', 70, 0, true],
-  [2, 'Frutas', 'Banano', 'docena', 150, 20, true],
-  [2, 'Frutas', 'Plátano maduro', 'docena', 200, 16, true],
-  [2, 'Hierbas y plantas', 'Albahaca', 'manojo', 50, 15, true],
-  [2, 'Hierbas y plantas', 'Culantro', 'manojo', 50, 12, true],
-  [3, 'Granos y café', 'Café tostado en grano', 'bolsa de 1 libra', 1200, 18, true],
-  [3, 'Granos y café', 'Café molido', 'bolsa de 1 libra', 1100, 22, true],
-  [3, 'Granos y café', 'Cacao en grano tostado', 'bolsa de 1 libra', 1000, 9, true],
-  [3, 'Granos y café', 'Maíz blanco', 'libra', 90, 40, true],
-  [3, 'Granos y café', 'Frijol rojo', 'libra', 110, 35, true],
-  [4, 'Lácteos y huevos', 'Queso fresco', 'libra', 650, 10, true],
-  [4, 'Lácteos y huevos', 'Huevos de gallina criolla', 'docena', 400, 30, true],
-  [4, 'Lácteos y huevos', 'Crema de leche', 'botella de 750 ml', 550, 8, true],
-  [4, 'Miel y conservas', 'Miel de abeja', 'botella de 750 ml', 1000, 12, true],
-  [4, 'Miel y conservas', 'Mermelada de nance', 'frasco de 370 ml', 550, 9, false],
-  [5, 'Hierbas y plantas', 'Hierbabuena', 'manojo', 50, 0, true],
-  [5, 'Hierbas y plantas', 'Té de flor de jamaica', 'bolsa de 1 libra', 500, 14, true],
-  [5, 'Miel y conservas', 'Conserva de chile jalapeño', 'frasco de 370 ml', 600, 10, true],
-  [5, 'Frutas', 'Maracuyá', 'docena', 300, 12, true],
-  [5, 'Frutas', 'Limón mandarina', 'libra', 50, 25, true],
+  [2, 'Verduras', 'Tomate criollo', 'libra', 80, 30, true, '/productos/tomate.jpg'],
+  [2, 'Verduras', 'Chile verde', 'libra', 60, 25, true, '/productos/chile-verde.jpg'],
+  [2, 'Verduras', 'Güisquil', 'unidad', 50, 40, true, '/productos/guisquil.jpg'],
+  [2, 'Verduras', 'Pepino', 'libra', 55, 20, true, '/productos/pepino.jpg'],
+  [2, 'Frutas', 'Mango manila', 'libra', 70, 0, true, '/productos/mango-manila.jpg'],
+  [2, 'Frutas', 'Banano', 'docena', 150, 20, true, '/productos/banano.jpg'],
+  [2, 'Frutas', 'Plátano maduro', 'docena', 200, 16, true, '/productos/platano-maduro.jpg'],
+  [2, 'Hierbas y plantas', 'Albahaca', 'manojo', 50, 15, true, '/productos/albahaca.jpg'],
+  [2, 'Hierbas y plantas', 'Culantro', 'manojo', 50, 12, true, '/productos/culantro.jpg'],
+  [3, 'Granos y café', 'Café tostado en grano', 'bolsa de 1 libra', 1200, 18, true, '/productos/cafe-tostado-en-grano.jpg'],
+  [3, 'Granos y café', 'Café molido', 'bolsa de 1 libra', 1100, 22, true, '/productos/cafe-molido.jpg'],
+  [3, 'Granos y café', 'Cacao en grano tostado', 'bolsa de 1 libra', 1000, 9, true, '/productos/cacao-en-grano-tostado.jpg'],
+  [3, 'Granos y café', 'Maíz blanco', 'libra', 90, 40, true, '/productos/maiz-blanco.jpg'],
+  [3, 'Granos y café', 'Frijol rojo', 'libra', 110, 35, true, '/productos/frijol-rojo.jpg'],
+  [4, 'Lácteos y huevos', 'Queso fresco', 'libra', 650, 10, true, '/productos/queso-fresco.jpg'],
+  [4, 'Lácteos y huevos', 'Huevos de gallina criolla', 'docena', 400, 30, true, '/productos/huevos-de-gallina-criolla.jpg'],
+  [4, 'Lácteos y huevos', 'Crema de leche', 'botella de 750 ml', 550, 8, true, '/productos/crema-de-leche.jpg'],
+  [4, 'Miel y conservas', 'Miel de abeja', 'botella de 750 ml', 1000, 12, true, '/productos/miel-de-abeja.jpg'],
+  [4, 'Miel y conservas', 'Mermelada de nance', 'frasco de 370 ml', 550, 9, false, '/productos/mermelada-de-nance.jpg'],
+  [5, 'Hierbas y plantas', 'Hierbabuena', 'manojo', 50, 0, true, '/productos/hierbabuena.jpg'],
+  [5, 'Hierbas y plantas', 'Té de flor de jamaica', 'bolsa de 1 libra', 500, 14, true, '/productos/te-de-flor-de-jamaica.jpg'],
+  [5, 'Miel y conservas', 'Conserva de chile jalapeño', 'frasco de 370 ml', 600, 10, true, '/productos/conserva-de-chile-jalapeno.jpg'],
+  [5, 'Frutas', 'Maracuyá', 'docena', 300, 12, true, '/productos/maracuya.jpg'],
+  [5, 'Frutas', 'Limón mandarina', 'libra', 50, 25, true, '/productos/limon-mandarina.jpg'],
 ];
 
 // comprador and tienda are user numbers. estado is where the order ends.
@@ -258,7 +258,7 @@ async function asegurarProductos(ids, negocioDe, categoriaDe) {
   if (error) throw error;
   const yaExisten = new Set(existentes.map((p) => `${p.negocio_id}|${p.nombre}`));
 
-  for (const [dueno, categoria, nombre, unidad, precio, stock, activo] of PRODUCTOS) {
+  for (const [dueno, categoria, nombre, unidad, precio, stock, activo, foto] of PRODUCTOS) {
     if (yaExisten.has(`${negocioDe[dueno]}|${nombre}`)) continue;
     await rpc('guardar_producto', {
       p_usuario: ids[dueno],
@@ -270,7 +270,7 @@ async function asegurarProductos(ids, negocioDe, categoriaDe) {
       p_precio: precio,
       p_stock: stock,
       p_activo: activo,
-      p_fotos: [],
+      p_fotos: foto ? [foto] : [],
     });
     nuevos.productos++;
   }

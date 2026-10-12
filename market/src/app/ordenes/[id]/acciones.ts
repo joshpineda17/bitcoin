@@ -1,0 +1,84 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+
+import { abrirDisputa, confirmarReembolso, marcarReembolso } from '@/servidor/disputas';
+import { enviarMensaje } from '@/servidor/mensajes';
+import {
+  confirmarPagoManual,
+  crearResena,
+  entregarConCodigo,
+  marcarEntregada,
+  marcarLista,
+} from '@/servidor/pedidos';
+import { fallo, type Resultado } from '@/servidor/resultado';
+import { sesionActual } from '@/servidor/sesion';
+
+import type { Mensaje } from '../tipos';
+
+// Every action re-reads the session first. The server functions then check the role and state,
+// so a direct request to this action cannot do more than the buttons offer.
+const SIN_SESION = () => fallo('NO_SESION', 'Entrá de nuevo para seguir con la orden.');
+
+async function transicion(
+  ordenId: string,
+  operacion: (usuarioId: string) => Promise<Resultado<null>>,
+): Promise<Resultado<null>> {
+  const sesion = await sesionActual();
+  if (!sesion) return SIN_SESION();
+  const resultado = await operacion(sesion.usuario.id);
+  if (resultado.ok) {
+    // Only after success, so the id is known to be a real order.
+    revalidatePath(`/ordenes/${ordenId}`);
+    revalidatePath('/ordenes');
+    revalidatePath('/mi-negocio/ordenes');
+  }
+  return resultado;
+}
+
+export async function confirmarPago(ordenId: string): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => confirmarPagoManual(ordenId, usuarioId));
+}
+
+export async function marcarOrdenLista(ordenId: string): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => marcarLista(ordenId, usuarioId));
+}
+
+export async function confirmarEntregaComprador(ordenId: string): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => marcarEntregada(ordenId, usuarioId));
+}
+
+export async function entregarConCodigoVendedor(ordenId: string, codigo: string): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => entregarConCodigo(ordenId, usuarioId, codigo));
+}
+
+export async function enviarResena(
+  ordenId: string,
+  puntuacion: number,
+  comentario: string,
+): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => crearResena(ordenId, usuarioId, puntuacion, comentario));
+}
+
+export async function abrirDisputaComprador(
+  ordenId: string,
+  motivo: string,
+  evidencia: string,
+): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => abrirDisputa(ordenId, usuarioId, motivo, evidencia));
+}
+
+export async function marcarReembolsoVendedor(ordenId: string): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => marcarReembolso(ordenId, usuarioId));
+}
+
+export async function confirmarReembolsoComprador(ordenId: string): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => confirmarReembolso(ordenId, usuarioId));
+}
+
+/** Chat: no page refresh, the message comes back and the composer adds it to the log. */
+export async function enviarMensajeAccion(ordenId: string, texto: string): Promise<Resultado<Mensaje>> {
+  const sesion = await sesionActual();
+  if (!sesion) return SIN_SESION();
+  return enviarMensaje(ordenId, sesion.usuario.id, texto);
+}
