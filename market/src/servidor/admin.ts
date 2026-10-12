@@ -319,16 +319,22 @@ export async function ordenesAdmin(
   await exigirAdminBD(actorId);
   await barrer();
 
-  let consulta = clienteServicio()
+  // Count first: the database answers an out-of-range page with an error, not an empty list.
+  const conteo = clienteServicio().from('ordenes').select('id', { count: 'exact', head: true });
+  const { count: total, error: errorConteo } = await (filtro.estado ? conteo.eq('estado', filtro.estado) : conteo);
+  if (errorConteo) throw new Error(`No pudimos contar las órdenes: ${errorConteo.message}`);
+
+  // A page past the last one shows the last page.
+  const ultima = Math.max(1, Math.ceil((total ?? 0) / POR_PAGINA));
+  const pagina = Math.min(filtro.pagina, ultima);
+  const desde = (pagina - 1) * POR_PAGINA;
+
+  const lista = clienteServicio()
     .from('ordenes')
     .select(
       'id, numero, estado, creada_en, total_usd_centavos, total_sats, negocios(nombre), comprador:usuarios!ordenes_comprador_id_fkey(nombre)',
-      { count: 'exact' },
     );
-  if (filtro.estado) consulta = consulta.eq('estado', filtro.estado);
-
-  const desde = (filtro.pagina - 1) * POR_PAGINA;
-  const { data, error, count } = await consulta
+  const { data, error } = await (filtro.estado ? lista.eq('estado', filtro.estado) : lista)
     .order('numero', { ascending: false })
     .range(desde, desde + POR_PAGINA - 1);
   if (error) throw new Error(`No pudimos leer las órdenes: ${error.message}`);
@@ -344,8 +350,8 @@ export async function ordenesAdmin(
       totalSats: f.total_sats,
       totalUsdCentavos: f.total_usd_centavos,
     })),
-    total: count ?? 0,
-    pagina: filtro.pagina,
+    total: total ?? 0,
+    pagina,
     porPagina: POR_PAGINA,
   };
 }

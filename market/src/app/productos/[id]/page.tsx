@@ -43,7 +43,12 @@ async function DetalleProducto({ params }: { params: Promise<{ id: string }> }) 
   return (
     <article className="producto">
       <figure>
-        <FotoProducto src={producto.foto} nombre={producto.nombre} categoriaId={producto.categoriaId} />
+        <FotoProducto
+          src={producto.foto}
+          nombre={producto.nombre}
+          categoriaId={producto.categoriaId}
+          prioridad
+        />
       </figure>
 
       <div className="producto__info">

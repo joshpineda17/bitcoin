@@ -1,9 +1,7 @@
 /* Header row with the account link and the cart. Pills match the cart pill.
-   On phones the logo, account link and cart do not fit one 320px row, so the group wraps to a
-   second row, aligned right. */
+   The row never wraps: on phones the logo shrinks and the pills tighten (see globals.css). */
 .fila {
-  flex-wrap: wrap;
-  row-gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .acciones {
@@ -20,7 +18,7 @@
   align-items: center;
   min-height: 44px;
   max-width: 7.5rem;
-  padding: 0 12px;
+  padding: 0 10px;
   overflow: hidden;
   border: 2px solid var(--tostado);
   border-radius: 999px;

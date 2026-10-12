@@ -1,23 +1,24 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useState } from 'react';
 
-import { cambiarEstadoNegocioAccion } from '../acciones';
 import { BotonEnvio } from '../BotonEnvio';
 import estilos from '../estilos.module.css';
 import type { EstadoNegocio } from '../etiquetas';
 
 // Approve (pending or suspended) and suspend (approved, after a confirm step).
+// The result message lives in ListaNegocios, which keeps it across the regroup.
 export function AccionesNegocio({
   negocioId,
   nombre,
   estado,
+  accion,
 }: {
   negocioId: string;
   nombre: string;
   estado: EstadoNegocio;
+  accion: (datos: FormData) => void;
 }) {
-  const [resultado, accion] = useActionState(cambiarEstadoNegocioAccion, null);
   const [confirmando, setConfirmando] = useState(false);
 
   return (
@@ -32,11 +33,7 @@ export function AccionesNegocio({
 
       {estado === 'aprobado' && !confirmando && (
         <div className={estilos.acciones}>
-          <button
-            type="button"
-            className="boton boton--secundario"
-            onClick={() => setConfirmando(true)}
-          >
+          <button type="button" className="boton boton--secundario" onClick={() => setConfirmando(true)}>
             Suspender
           </button>
         </div>
@@ -58,17 +55,6 @@ export function AccionesNegocio({
           </div>
         </form>
       )}
-
-      {resultado &&
-        (resultado.ok ? (
-          <p role="status" className={estilos.mensajeOk}>
-            {resultado.dato}
-          </p>
-        ) : (
-          <p role="alert" className={estilos.mensajeError}>
-            {resultado.mensaje}
-          </p>
-        ))}
     </div>
   );
 }

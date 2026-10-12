@@ -130,11 +130,12 @@ async function CatalogoInicio({ busqueda }: { busqueda: PageProps<'/'>['searchPa
         )
       ) : (
         <ul className="cuadricula">
-          {productos.map((p) => (
+          {productos.map((p, indice) => (
             <li key={p.id}>
               <TarjetaProducto
                 producto={p}
                 sats={cotizacion === null ? null : usdCentavosASats(p.precioUsdCentavos, cotizacion)}
+                prioridad={indice < 4}
               />
             </li>
           ))}

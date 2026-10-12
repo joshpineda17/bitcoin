@@ -1,5 +1,6 @@
 'use client';
 
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { create } from 'qrcode';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -8,6 +9,8 @@ import { Boton } from '@/componentes/Boton';
 import { EtiquetaPrecio } from '@/componentes/EtiquetaPrecio';
 import { formatoUsd } from '@/lib/dinero';
 import { clienteNavegador } from '@/lib/supabase-navegador';
+
+import { clienteEnVivo } from '../canalEnVivo';
 
 import { estadoDePagoAccion, reintentarCobroAccion, simularPagoAccion } from './acciones';
 import styles from './estilos.module.css';
@@ -133,19 +136,26 @@ export function PagoCliente({
   // Realtime on this order's row. A change only triggers a fresh read; the server decides.
   useEffect(() => {
     if (!activo) return;
-    const navegador = clienteNavegador();
-    const canal = navegador
-      .channel(`orden-${ordenId}`)
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'ordenes', filter: `id=eq.${ordenId}` },
-        () => {
-          void refrescar();
-        },
-      )
-      .subscribe();
+    let vigente = true;
+    let navegador: ReturnType<typeof clienteNavegador> | null = null;
+    let canal: RealtimeChannel | null = null;
+    void clienteEnVivo().then((cliente) => {
+      if (!vigente) return;
+      navegador = cliente;
+      canal = cliente
+        .channel(`orden-${ordenId}`)
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'ordenes', filter: `id=eq.${ordenId}` },
+          () => {
+            void refrescar();
+          },
+        )
+        .subscribe();
+    });
     return () => {
-      void navegador.removeChannel(canal);
+      vigente = false;
+      if (navegador && canal) void navegador.removeChannel(canal);
     };
   }, [activo, ordenId, refrescar]);
 

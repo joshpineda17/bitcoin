@@ -49,7 +49,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <a className="saltar" href="#contenido">
           Saltar al contenido
         </a>
-        <div className="cinta">Modo demo · datos de muestra · los pagos son simulados</div>
+        <div className="cinta">Modo demo: pagos simulados</div>
         <Cabecera />
         <main id="contenido" tabIndex={-1} className="principal">
           <div className="contenedor">{children}</div>

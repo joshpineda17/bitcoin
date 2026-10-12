@@ -2,6 +2,8 @@ import { Suspense } from 'react';
 
 import { EtiquetaPrecio } from '@/componentes/EtiquetaPrecio';
 import { Vacio } from '@/componentes/Vacio';
+import { Paginacion } from '@/app/ordenes/Paginacion';
+import { leerPagina, paginar } from '@/app/ordenes/paginado';
 import { TarjetaOrden } from '@/app/ordenes/TarjetaOrden';
 import styles from '@/app/ordenes/ordenes.module.css';
 import type { ResumenOrden } from '@/app/ordenes/tipos';
@@ -9,10 +11,10 @@ import { cobradoHoy, ventasDe } from '@/servidor/pedidos';
 import { exigirVendedor } from '@/servidor/sesion';
 import type { EstadoOrden } from '@/lib/estados';
 
-export default function PaginaVentas() {
+export default function PaginaVentas(props: PageProps<'/mi-negocio/ordenes'>) {
   return (
     <Suspense fallback={<p role="status">Cargando tus ventas…</p>}>
-      <Ventas />
+      <Ventas searchParams={props.searchParams} />
     </Suspense>
   );
 }
@@ -26,7 +28,10 @@ const GRUPOS: { id: string; titulo: string; estados: EstadoOrden[] }[] = [
   { id: 'historial', titulo: 'Historial', estados: ['entregada', 'cerrada', 'expirada'] },
 ];
 
-async function Ventas() {
+// Groups that wait for the seller are short and shown whole. Only the history grows without limit,
+// so it is the one that is paged.
+async function Ventas({ searchParams }: { searchParams: Promise<{ pagina?: string | string[] }> }) {
+  const { pagina: valorPagina } = await searchParams;
   const sesion = await exigirVendedor('/mi-negocio/ordenes');
   const negocioId = sesion.negocio.id;
   const [ordenes, hoy] = await Promise.all([ventasDe(negocioId), cobradoHoy(negocioId)]);
@@ -53,8 +58,10 @@ async function Ventas() {
         />
       ) : (
         GRUPOS.map((grupo) => {
-          const de: ResumenOrden[] = ordenes.filter((o) => grupo.estados.includes(o.estado));
-          if (de.length === 0) return null;
+          const todas: ResumenOrden[] = ordenes.filter((o) => grupo.estados.includes(o.estado));
+          if (todas.length === 0) return null;
+          const pagina = grupo.id === 'historial' ? paginar(todas, leerPagina(valorPagina)) : null;
+          const de = pagina ? pagina.items : todas;
           return (
             <section key={grupo.id} aria-labelledby={`${grupo.id}-titulo`} className={styles.grupo}>
               <h2 id={`${grupo.id}-titulo`}>{grupo.titulo}</h2>
@@ -63,6 +70,7 @@ async function Ventas() {
                   <TarjetaOrden key={orden.id} orden={orden} rol="vendedor" />
                 ))}
               </ul>
+              {pagina && <Paginacion ruta="/mi-negocio/ordenes" pagina={pagina.pagina} paginas={pagina.paginas} />}
             </section>
           );
         })

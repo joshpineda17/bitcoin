@@ -8,9 +8,12 @@ import { FotoProducto } from './FotoProducto';
 export function TarjetaProducto({
   producto,
   sats,
+  prioridad = false,
 }: {
   producto: ProductoCatalogo;
   sats: number | null;
+  /** The first row of a listing: its photo loads without waiting. */
+  prioridad?: boolean;
 }) {
   const agotado = producto.stock === 0;
 
@@ -20,6 +23,7 @@ export function TarjetaProducto({
         src={producto.foto}
         nombre={producto.nombre}
         categoriaId={producto.categoriaId}
+        prioridad={prioridad}
       />
       <div className="tarjeta__cuerpo">
         <h3 className="tarjeta__titulo">

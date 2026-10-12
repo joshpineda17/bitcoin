@@ -1,15 +1,18 @@
 // Product photo at a fixed 4:3, or a flat block in a brand colour picked from the category,
-// with the product's first letter large. Photos come from a storage URL, so plain img with lazy loading.
+// with the product's first letter large. Photos come from a storage URL, so plain img.
+// `prioridad` is for the photos above the fold: they load now, the rest load lazily.
 const COLORES = ['foto--criollo', 'foto--grano', 'foto--chocolate', 'foto--mazorca'] as const;
 
 export function FotoProducto({
   src,
   nombre,
   categoriaId,
+  prioridad = false,
 }: {
   src: string | null;
   nombre: string;
   categoriaId: number;
+  prioridad?: boolean;
 }) {
   if (src) {
     return (
@@ -19,7 +22,8 @@ export function FotoProducto({
         alt={nombre}
         width={800}
         height={600}
-        loading="lazy"
+        loading={prioridad ? 'eager' : 'lazy'}
+        fetchPriority={prioridad ? 'high' : undefined}
         decoding="async"
       />
     );

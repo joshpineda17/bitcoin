@@ -13,6 +13,8 @@ const CLAVE = 'clave-de-prueba-123';
 
 export const COTIZACION = 100000;
 
+// Rows come back from many different tables and functions; tests read their fields freely.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Fila = Record<string, any>;
 
 export type Usuario = { id: string; telefono: string; sesion?: SupabaseClient };

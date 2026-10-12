@@ -1,5 +1,6 @@
 import 'server-only';
 
+import type { ProveedorCobro } from '@/app/ordenes/[id]/pagar/tipos';
 import type {
   DetalleOrden,
   DisputaOrden,
@@ -130,11 +131,15 @@ async function disputasPorOrden(ids: string[]): Promise<Map<string, FilaDisputa>
 }
 
 // Lines and totals use the same rules as the buttons, so the lists and the detail never disagree.
-function aOrdenParaAcciones(orden: FilaOrden, disputa: FilaDisputa | null): OrdenParaAcciones {
+function aOrdenParaAcciones(
+  orden: FilaOrden,
+  disputa: FilaDisputa | null,
+  proveedor: ProveedorCobro | null,
+): OrdenParaAcciones {
   return {
     estado: orden.estado,
     entregadaEn: orden.entregada_en ? new Date(orden.entregada_en) : null,
-    // Review and payment method do not change the actions the lists group by.
+    // Review does not change the actions the lists group by.
     tieneResena: false,
     disputa: disputa
       ? {
@@ -144,16 +149,26 @@ function aOrdenParaAcciones(orden: FilaOrden, disputa: FilaDisputa | null): Orde
           reembolsoConfirmado: disputa.reembolso_confirmado_en !== null,
         }
       : null,
-    proveedor: 'manual',
+    proveedor: proveedor ?? 'manual',
   };
+}
+
+// Payment method per order: only a manual payment asks the seller to confirm by hand.
+async function proveedoresPorOrden(ids: string[]): Promise<Map<string, ProveedorCobro>> {
+  if (ids.length === 0) return new Map();
+  const db = await clienteSesion();
+  const { data, error } = await db.from('cobros').select('orden_id, proveedor').in('orden_id', ids);
+  if (error) throw new Error(`No pudimos leer los pagos: ${error.message}`);
+  return new Map((data ?? []).map((f) => [f.orden_id, f.proveedor as ProveedorCobro] as [string, ProveedorCobro]));
 }
 
 async function resumenes(filas: FilaOrden[], rol: RolOrden): Promise<ResumenOrden[]> {
   if (filas.length === 0) return [];
   const ids = filas.map((f) => f.id);
-  const [unidades, disputas, nombres] = await Promise.all([
+  const [unidades, disputas, proveedores, nombres] = await Promise.all([
     unidadesPorOrden(ids),
     disputasPorOrden(ids),
+    proveedoresPorOrden(ids),
     rol === 'comprador'
       ? nombresNegocios(filas.map((f) => f.negocio_id))
       : nombresUsuarios(filas.map((f) => f.comprador_id)),
@@ -165,9 +180,10 @@ async function resumenes(filas: FilaOrden[], rol: RolOrden): Promise<ResumenOrde
       rol === 'comprador'
         ? (nombres.get(f.negocio_id) ?? 'Tienda')
         : (nombres.get(f.comprador_id) ?? 'Comprador');
-    const necesitaAccion = accionesPosibles(aOrdenParaAcciones(f, disputa), rol).some((a) =>
-      PENDIENTES.has(a),
-    );
+    const necesitaAccion = accionesPosibles(
+      aOrdenParaAcciones(f, disputa, proveedores.get(f.id) ?? null),
+      rol,
+    ).some((a) => PENDIENTES.has(a));
     return {
       id: f.id,
       numero: f.numero,
@@ -193,7 +209,7 @@ export async function misCompras(usuarioId: string): Promise<ResumenOrden[]> {
     .select(COLUMNAS_ORDEN)
     .eq('comprador_id', usuarioId)
     .order('creada_en', { ascending: false })
-    .limit(100);
+    .limit(500); // 30 per page on screen; the lists are paged in memory after the attention split.
   if (error) throw new Error(`No pudimos leer tus órdenes: ${error.message}`);
   return resumenes((data ?? []) as unknown as FilaOrden[], 'comprador');
 }
@@ -208,7 +224,7 @@ export async function ventasDe(negocioId: string): Promise<ResumenOrden[]> {
     .select(COLUMNAS_ORDEN)
     .eq('negocio_id', negocioId)
     .order('creada_en', { ascending: false })
-    .limit(200);
+    .limit(500);
   if (error) throw new Error(`No pudimos leer las ventas: ${error.message}`);
   return resumenes((data ?? []) as unknown as FilaOrden[], 'vendedor');
 }

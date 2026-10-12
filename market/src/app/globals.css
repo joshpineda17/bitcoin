@@ -57,6 +57,8 @@ h3 {
   line-height: 1.08;
   letter-spacing: -0.02em;
   text-wrap: balance;
+  /* A long shop or product name without spaces must wrap, not push the page wider. */
+  overflow-wrap: anywhere;
 }
 
 h1 {
@@ -89,10 +91,30 @@ input {
   color: inherit;
 }
 
+/* Focus ring: Tostado on light grounds, Pulpa on dark ones (see .sobre-oscuro below).
+   The ring follows each element's own radius, so no border-radius is set here. */
 :focus-visible {
-  outline: 3px solid var(--mazorca);
+  outline: 3px solid var(--tostado);
   outline-offset: 2px;
-  border-radius: 4px;
+}
+
+/* Controls that sit on a dark ground get a Pulpa ring. */
+.boton:focus-visible,
+.chip[aria-current='true']:focus-visible,
+.saltar:focus-visible,
+.barra-inferior :focus-visible,
+.nav--cabecera a[aria-current='page']:focus-visible {
+  outline-color: var(--pulpa);
+}
+
+/* Tab bar items sit at the screen edge, so their ring is drawn inside them. */
+.barra-inferior :focus-visible {
+  outline-offset: -5px;
+}
+
+/* Inside the stepper the buttons are clipped by its rounded border, so the ring sits inside. */
+.stepper button:focus-visible {
+  outline-offset: -5px;
 }
 
 main:focus {
@@ -155,14 +177,16 @@ main:focus {
 
 .cabecera__fila {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   min-height: 60px;
   padding-block: 8px;
 }
 
 .logo-enlace {
   display: inline-flex;
+  flex: none;
   align-items: center;
   min-height: var(--alto-toque);
   color: var(--tostado);
@@ -170,14 +194,22 @@ main:focus {
   border-radius: 6px;
 }
 
+/* The wordmark is smaller below 360px so the logo, account and cart share one 320px row. */
 .logo {
   display: inline-flex;
   align-items: center;
   gap: 0.22em;
-  font-size: 21px;
+  font-size: 18px;
   line-height: 1;
   color: var(--tostado);
   white-space: nowrap;
+}
+
+@media (min-width: 360px) {
+  .logo {
+    font-size: 21px;
+    gap: 0.22em;
+  }
 }
 
 .logo__letras {
@@ -190,17 +222,30 @@ main:focus {
 }
 
 .carrito-enlace {
+  position: relative;
   margin-left: auto;
   display: inline-flex;
   flex: none;
   align-items: center;
   gap: 6px;
   min-height: var(--alto-toque);
-  padding: 0 12px;
+  padding: 0 10px;
   border: 2px solid var(--tostado);
   border-radius: 999px;
   font-weight: 600;
   text-decoration: none;
+}
+
+/* Under 360px the cart shows only its count pill. The name stays for screen readers. */
+@media (max-width: 359px) {
+  .carrito-enlace__texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
 .contador {
@@ -248,10 +293,40 @@ main:focus {
 .nav--barra a {
   position: relative;
   min-height: 56px;
-  padding: 6px 4px;
+  padding: 6px 2px;
   color: var(--pulpa);
   font-size: 0.875rem;
   line-height: 1.15;
+}
+
+/* The label is the anchor for the notices badge, which sits above its top right corner. */
+.nav__texto {
+  position: relative;
+  display: inline-block;
+}
+
+/* Unread notices count. Drawn above the label's top right corner, so it never covers a letter. */
+.insignia {
+  position: absolute;
+  top: -16px;
+  left: 100%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border: 2px solid var(--tostado);
+  border-radius: 999px;
+  background: var(--mazorca);
+  color: var(--tostado);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 .nav--barra a[aria-current='page'] {
@@ -308,7 +383,7 @@ main:focus {
 .boton:disabled {
   background: var(--arena);
   color: var(--tostado);
-  border-style: dashed;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
@@ -476,7 +551,7 @@ main:focus {
   min-height: 26px;
   padding: 2px 10px;
   border-radius: 999px;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -544,7 +619,7 @@ main:focus {
   justify-self: start;
   max-width: 100%;
   min-width: 0;
-  padding: 8px 14px 8px 36px;
+  padding: 8px 10px 8px 32px;
   background: var(--mazorca);
   color: var(--tostado);
   clip-path: polygon(16px 0, 100% 0, 100% 100%, 16px 100%, 0 50%);
@@ -565,14 +640,21 @@ main:focus {
   background: var(--sustrato, var(--arena));
 }
 
+/* The amount and the unit may wrap to a second line, but each word stays whole. A tag is never
+   clipped by its cut end, because clip-path would cut any text that ran past the box. */
 .etiqueta__principal {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.3em;
+  column-gap: 0.3em;
   max-width: 100%;
   font-family: var(--mono);
   font-weight: 700;
   line-height: 1.1;
+}
+
+.etiqueta__num,
+.etiqueta__unidad {
   white-space: nowrap;
 }
 
@@ -675,6 +757,11 @@ main:focus {
   gap: 24px;
 }
 
+.producto figure {
+  margin: 0;
+  min-width: 0;
+}
+
 .producto__info {
   display: grid;
   gap: 14px;
@@ -772,6 +859,7 @@ main:focus {
 .negocio {
   display: grid;
   gap: 32px;
+  min-width: 0;
 }
 
 .negocio__cabeza {

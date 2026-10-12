@@ -1,5 +1,6 @@
 'use client';
 
+import type { RealtimeChannel } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 
@@ -9,6 +10,7 @@ import { fechaCorta } from '../fechas';
 import type { Mensaje } from '../tipos';
 
 import { enviarMensajeAccion } from './acciones';
+import { clienteEnVivo } from './canalEnVivo';
 import styles from './orden.module.css';
 
 type Props = {
@@ -51,27 +53,43 @@ export function Chat({ ordenId, usuarioId, otraParte, soloLectura, inicial }: Pr
 
   // Live: a new message is added as it arrives; an order change refreshes the page state.
   useEffect(() => {
-    const cliente = clienteNavegador();
-    const canal = cliente
-      .channel(`orden-${ordenId}`)
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'mensajes', filter: `orden_id=eq.${ordenId}` },
-        (cambio) => {
-          const fila = cambio.new as unknown as FilaMensaje;
-          setRecibidos((previos) => combinar(previos, [desdeFila(fila)]));
-        },
-      )
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'ordenes', filter: `id=eq.${ordenId}` },
-        () => router.refresh(),
-      )
-      .subscribe();
+    let activo = true;
+    let cliente: ReturnType<typeof clienteNavegador> | null = null;
+    let canal: RealtimeChannel | null = null;
+    void clienteEnVivo().then((navegador) => {
+      if (!activo) return;
+      cliente = navegador;
+      canal = navegador
+        .channel(`orden-${ordenId}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'mensajes', filter: `orden_id=eq.${ordenId}` },
+          (cambio) => {
+            const fila = cambio.new as unknown as FilaMensaje;
+            setRecibidos((previos) => combinar(previos, [desdeFila(fila)]));
+          },
+        )
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'ordenes', filter: `id=eq.${ordenId}` },
+          () => router.refresh(),
+        )
+        // Refund steps change the dispute row, which is not live; the notice for this order says so.
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'avisos', filter: `usuario_id=eq.${usuarioId}` },
+          (cambio) => {
+            const aviso = cambio.new as { orden_id: string | null; tipo: string };
+            if (aviso.orden_id === ordenId && aviso.tipo !== 'mensaje') router.refresh();
+          },
+        )
+        .subscribe();
+    });
     return () => {
-      void cliente.removeChannel(canal);
+      activo = false;
+      if (cliente && canal) void cliente.removeChannel(canal);
     };
-  }, [ordenId, router]);
+  }, [ordenId, usuarioId, router]);
 
   // Fallback: read the latest messages every 10 seconds, in case a live event was missed.
   useEffect(() => {
@@ -186,7 +204,7 @@ export function Chat({ ordenId, usuarioId, otraParte, soloLectura, inicial }: Pr
             </p>
           )}
           <div>
-            <button type="submit" className="boton" disabled={enviando || texto.trim().length === 0}>
+            <button type="submit" className={`boton ${styles.enviar}`} disabled={enviando || texto.trim().length === 0}>
               {enviando ? 'Enviando…' : 'Enviar'}
             </button>
           </div>

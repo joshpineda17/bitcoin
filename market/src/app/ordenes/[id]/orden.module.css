@@ -311,3 +311,10 @@
     max-height: 420px;
   }
 }
+
+/* The send button is disabled while the composer is empty. The shared disabled style is dashed,
+   which reads as an empty outline, so this one keeps a solid edge and muted text. */
+.enviar:disabled {
+  border-style: solid;
+  color: var(--chocolate);
+}

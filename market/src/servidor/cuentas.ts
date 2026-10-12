@@ -35,9 +35,14 @@ function esUuid(texto: string): boolean {
 
 const NO_ENCONTRADA = fallo('NO_ENCONTRADA', 'No encontramos tu cuenta.');
 
-/** Eight digits, spaces and dashes allowed. Returns the eight digits, or null. */
+/**
+ * Eight digits, spaces and dashes allowed. The +503 prefix is accepted too, because the field
+ * already shows it and people type it anyway. Returns the eight digits, or null.
+ */
 export function normalizarCelular(texto: string): string | null {
-  const digitos = texto.replace(/[\s-]/g, '');
+  let digitos = texto.replace(/[\s-]/g, '');
+  if (/^\+503\d{8}$/.test(digitos)) digitos = digitos.slice(4);
+  else if (/^503\d{8}$/.test(digitos)) digitos = digitos.slice(3);
   return /^\d{8}$/.test(digitos) ? digitos : null;
 }
 

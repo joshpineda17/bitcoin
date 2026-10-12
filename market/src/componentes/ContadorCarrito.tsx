@@ -29,7 +29,8 @@ export function ContadorCarrito() {
 
   return (
     <Link href="/carrito" className="carrito-enlace" aria-label={etiqueta}>
-      Carrito
+      {/* Hidden visually below 360px; the link keeps its name from aria-label. */}
+      <span className="carrito-enlace__texto">Carrito</span>
       <span className="contador" aria-hidden="true">
         {cuantas}
       </span>

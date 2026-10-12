@@ -10,6 +10,13 @@ const ENLACES = [
   { href: '/mi-negocio', texto: 'Mi negocio' },
 ];
 
+// The two navs are never both announced: CSS hides the header nav on phones and the bar on
+// wide screens. Each still has its own name, so the two are told apart when both are in the DOM.
+const NOMBRE = {
+  barra: 'Navegación inferior',
+  cabecera: 'Navegación principal',
+} as const;
+
 function esActual(href: string, ruta: string | null | undefined): boolean {
   if (!ruta) return false;
   if (href === '/') return ruta === '/';
@@ -23,13 +30,13 @@ export function NavegacionPrincipal({
 }: {
   actual?: string | null;
   variante: 'barra' | 'cabecera';
-  /** Unread notices badge, rendered over the "Órdenes" label. */
+  /** Unread notices badge, drawn above the "Órdenes" label. */
   insignia?: React.ReactNode;
 }) {
   const enlaces = variante === 'barra' ? ENLACES : ENLACES.filter((e) => e.href !== '/carrito');
 
   return (
-    <nav aria-label="Principal" className={`nav nav--${variante}`}>
+    <nav aria-label={NOMBRE[variante]} className={`nav nav--${variante}`}>
       <ul>
         {enlaces.map((e) => {
           const activo = esActual(e.href, actual);
@@ -37,7 +44,7 @@ export function NavegacionPrincipal({
             <li key={e.href}>
               <Link href={e.href} aria-current={activo ? 'page' : undefined}>
                 {/* The wrapper is the anchor for the badge; it does not change the label's size. */}
-                <span style={{ position: 'relative', display: 'inline-block' }}>
+                <span className="nav__texto">
                   {e.texto}
                   {e.href === '/ordenes' && insignia}
                 </span>

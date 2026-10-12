@@ -116,9 +116,27 @@ function motivoNoDisponible(fila: FilaRevision): string | null {
  * Current name, price, stock and availability of the cart's products, plus the BTC price.
  * Public data: the cart page calls it before the buyer signs in.
  */
+// Cart lines that are not valid (a tampered cart) are left out of the check. The screen then shows
+// them as no longer available, and they are never ordered. One bad line does not block the others.
+function lineasRevisables(valor: unknown[]): LineaPedido[] {
+  const vistos = new Set<string>();
+  const salida: LineaPedido[] = [];
+  for (const item of valor.slice(0, MAX_LINEAS)) {
+    if (typeof item !== 'object' || item === null) continue;
+    const { productoId, cantidad } = item as Record<string, unknown>;
+    if (typeof productoId !== 'string' || !UUID.test(productoId) || vistos.has(productoId)) continue;
+    if (typeof cantidad !== 'number' || !Number.isInteger(cantidad) || cantidad < 1 || cantidad > MAX_CANTIDAD) {
+      continue;
+    }
+    vistos.add(productoId);
+    salida.push({ productoId, cantidad });
+  }
+  return salida;
+}
+
 export async function revisarCarrito(entrada: unknown): Promise<Resultado<RevisionCarrito>> {
-  const lineas = lineasValidas(entrada, 0);
-  if (!lineas) return fallo('DATOS_INVALIDOS', MENSAJE_DATOS);
+  if (!Array.isArray(entrada)) return fallo('DATOS_INVALIDOS', MENSAJE_DATOS);
+  const lineas = lineasRevisables(entrada);
   if (lineas.length === 0) return exito({ productos: [], cotizacion: await cotizacionSegura() });
 
   try {

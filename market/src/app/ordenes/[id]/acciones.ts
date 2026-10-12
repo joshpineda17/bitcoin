@@ -8,6 +8,7 @@ import {
   confirmarPagoManual,
   crearResena,
   entregarConCodigo,
+  esUuid,
   marcarEntregada,
   marcarLista,
 } from '@/servidor/pedidos';
@@ -19,11 +20,14 @@ import type { Mensaje } from '../tipos';
 // Every action re-reads the session first. The server functions then check the role and state,
 // so a direct request to this action cannot do more than the buttons offer.
 const SIN_SESION = () => fallo('NO_SESION', 'Entrá de nuevo para seguir con la orden.');
+const NO_ENCONTRADA = () => fallo('NO_ENCONTRADA', 'No encontramos esa orden.');
 
 async function transicion(
   ordenId: string,
   operacion: (usuarioId: string) => Promise<Resultado<null>>,
 ): Promise<Resultado<null>> {
+  // The id comes from the browser: anything that is not a UUID is not an order.
+  if (!esUuid(ordenId)) return NO_ENCONTRADA();
   const sesion = await sesionActual();
   if (!sesion) return SIN_SESION();
   const resultado = await operacion(sesion.usuario.id);
@@ -78,6 +82,7 @@ export async function confirmarReembolsoComprador(ordenId: string): Promise<Resu
 
 /** Chat: no page refresh, the message comes back and the composer adds it to the log. */
 export async function enviarMensajeAccion(ordenId: string, texto: string): Promise<Resultado<Mensaje>> {
+  if (!esUuid(ordenId)) return NO_ENCONTRADA();
   const sesion = await sesionActual();
   if (!sesion) return SIN_SESION();
   return enviarMensaje(ordenId, sesion.usuario.id, texto);
