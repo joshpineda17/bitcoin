@@ -271,8 +271,13 @@ create policy auditoria_leer on public.auditoria for select to authenticated
 -- still filters the rows) and the service role, used only by the server, gets everything.
 grant usage on schema public to anon, authenticated, service_role;
 grant select on public.categorias, public.productos, public.resenas to anon, authenticated;
-grant select on public.ordenes, public.lineas_orden, public.mensajes, public.disputas, public.avisos,
+grant select on public.lineas_orden, public.mensajes, public.disputas, public.avisos,
   public.auditoria to authenticated;
+-- Orders: every column except `codigo_entrega`. The seller can read their orders, and the delivery
+-- code is what proves the buyer received them, so only the server hands it out, and only to the buyer.
+grant select (id, numero, comprador_id, negocio_id, estado, total_usd_centavos, total_sats,
+  cotizacion_usd_btc, modo_entrega, comision_teorica_sats, creada_en, pagada_en, lista_en, entregada_en,
+  cerrada_en, expirada_en, disputada_en, resuelta_en) on public.ordenes to authenticated;
 grant all on all tables in schema public to service_role;
 grant all on all sequences in schema public to service_role;
 alter default privileges in schema public grant all on tables to service_role;
