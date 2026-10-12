@@ -11,6 +11,7 @@ precio: 0
 gratis: true
 portada: /portadas/lavado-honey-natural-que-cambia-taza.jpg
 alt: 'Cerezas de café extendidas sobre lonas azules para secarse al sol, con una tanda de granos ya secos al fondo'
+lugarFoto: Wae Rebo, Flores, Indonesia
 credito: 'Josep M. Gracia'
 licencia: 'CC BY-SA 4.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:WAE_-_Coffee_cherries_drying_in_Wae_Rebo,_Flores,_Indonesia,_2019.jpg'

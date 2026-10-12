@@ -19,6 +19,8 @@ const historias = defineCollection({
     alt: z.string(),
     credito: z.string().optional(),
     licencia: z.string().optional(),
+    /** Where the cover photo was really taken, only when it is not the story's own place. */
+    lugarFoto: z.string().optional(),
     creditoUrl: z.url().optional(),
     tags: z.array(z.string()).default([]),
     gratis: z.boolean().default(false),

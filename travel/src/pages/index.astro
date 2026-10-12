@@ -38,6 +38,7 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
   </section>
 
   <section class="catalogo contenedor" id="experiencias">
+    <h2 class="solo-lectores">Experiencias</h2>
     <div class="categorias" role="group" aria-label="Categorías">
       <button type="button" data-categoria="" aria-pressed="true">Todas</button>
       {categorias.map((c) => <button type="button" data-categoria={c} aria-pressed="false">{c}</button>)}
@@ -82,17 +83,18 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
     <ol>
       <li>
         <h3>Buscás</h3>
-        <p>Filtrá por actividad, zona, nivel y tamaño del grupo hasta dar con la salida que te sirve.</p>
+        <p>Filtrá por actividad, zona, fecha, tamaño del grupo y nivel hasta dar con la experiencia que te sirve.</p>
       </li>
       <li>
         <h3>Reservás</h3>
-        <p>Elegís fecha y cuántas personas van. El total se calcula en el momento, sin cargos escondidos.</p>
+        <p>Elegís fecha y cuántas personas van. El total se calcula en el momento. Si desbloqueaste la historia de ese lugar en Cacao Media, tenés 10% de descuento.</p>
       </li>
       <li>
         <h3>Pagás en sats</h3>
         <p>
-          El pago es con bitcoin por Lightning, sin cuenta ni tarjeta, y se reparte entre el operador, la
-          plataforma y el autor de la historia. Por ahora la reserva es de muestra y no cobra.
+          Los precios están en sats (satoshis, la unidad más chica de bitcoin). El pago será con bitcoin por
+          Lightning, sin cuenta ni tarjeta, y se reparte entre el operador, Cacao Travel y quien escribió la
+          historia. Hoy es una demo: se reserva sin cobro.
         </p>
       </li>
     </ol>
@@ -117,6 +119,7 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
   .campo input, .campo select {
     width: 100%;
     min-width: 0;
+    min-height: 36px;
     padding: 2px 0;
     border: 0;
     background: transparent;
@@ -145,6 +148,10 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
   .categorias::-webkit-scrollbar { display: none; }
   .categorias button {
     flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
     padding: 0.6em 1.15em;
     border: 1.5px solid var(--chocolate);
     border-radius: 999px;
@@ -211,8 +218,10 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
 </style>
 
 <script>
+  import { mananaEnElSalvador } from '../lib/reparto';
+
   // Search, filters and sort all run on the listings already on the page.
-  const plano = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const plano = (s: string) => s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
 
   const form = document.querySelector<HTMLFormElement>('[data-buscador]');
   const catalogo = document.querySelector<HTMLElement>('[data-catalogo]');
@@ -225,12 +234,28 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
   const vacio = document.querySelector<HTMLElement>('[data-vacio]');
   let categoria = '';
 
+  // Weekday codes in Date.getUTCDay() order: 0 is Sunday.
+  const CODIGOS_DIA = ['dom', 'lun', 'mar', 'mie', 'jue', 'vie', 'sab'];
+  const campoFecha = form?.querySelector<HTMLInputElement>('input[name="fecha"]') ?? null;
+  const campoPersonas = form?.querySelector<HTMLInputElement>('input[name="personas"]') ?? null;
+  // No past days: the earliest date that can be picked is tomorrow in El Salvador.
+  if (campoFecha) campoFecha.min = mananaEnElSalvador();
+
+  // Whole number of people, or 0 when the field holds no usable number.
+  function personasElegidas(): number {
+    const n = Number.parseInt(campoPersonas?.value ?? '', 10);
+    return n >= 1 ? n : 0;
+  }
+
   function aplicar() {
     if (!form || !catalogo) return;
     const datos = new FormData(form);
     const palabras = plano(String(datos.get('q') ?? '')).split(/\s+/).filter(Boolean);
     const zona = String(datos.get('zona') ?? '');
-    const personas = Math.max(1, Number(datos.get('personas')) || 1);
+    const fecha = String(datos.get('fecha') ?? '');
+    // Noon UTC keeps the same calendar day in every time zone.
+    const dia = fecha ? CODIGOS_DIA[new Date(fecha + 'T12:00:00Z').getUTCDay()] : '';
+    const personas = personasElegidas();
     const [campo, sentido] = (orden?.value ?? 'precio-asc').split('-');
 
     const visibles = boletos.filter((b) => {
@@ -238,7 +263,11 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
         palabras.every((p) => (b.dataset.texto ?? '').includes(p)) &&
         (!zona || b.dataset.zona === zona) &&
         (!categoria || b.dataset.categoria === categoria) &&
-        (!nivel?.value || b.dataset.nivel === nivel.value);
+        (!nivel?.value || b.dataset.nivel === nivel.value) &&
+        (!dia || (b.dataset.salidas ?? '').split(',').includes(dia)) &&
+        // Only the upper limit hides a card: a solo traveller still sees experiences that need two,
+        // and the booking box says so.
+        (!personas || personas <= Number(b.dataset.max));
       b.hidden = !ver;
       return ver;
     });
@@ -247,8 +276,20 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
       .sort((a, b) => (Number(a.dataset[campo]) - Number(b.dataset[campo])) * (sentido === 'desc' ? -1 : 1))
       .forEach((b) => catalogo.append(b));
 
+    // Say what the listing is filtered by.
+    const partes: string[] = [];
+    if (personas) partes.push(`para ${personas} ${personas === 1 ? 'persona' : 'personas'}`);
+    if (fecha) {
+      const cuando = new Date(fecha + 'T12:00:00Z').toLocaleDateString('es-SV', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        timeZone: 'UTC',
+      });
+      partes.push(`el ${cuando}`);
+    }
     if (cuenta) cuenta.textContent = String(visibles.length);
-    if (para) para.textContent = personas > 1 ? `· precios por persona, grupo de ${personas}` : '';
+    if (para) para.textContent = partes.map((p) => `· ${p}`).join(' ');
     if (vacio) vacio.hidden = visibles.length > 0;
   }
 
@@ -270,6 +311,8 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
   document.querySelector('[data-limpiar]')?.addEventListener('click', () => {
     form?.reset();
     if (nivel) nivel.value = '';
+    if (campoFecha) campoFecha.value = '';
+    if (campoPersonas) campoPersonas.value = '2';
     categoria = '';
     for (const b of categorias) b.setAttribute('aria-pressed', String(b.dataset.categoria === ''));
     aplicar();
@@ -283,7 +326,10 @@ const NIVELES = ['Fácil', 'Moderado', 'Exigente'].filter((n) => tours.some((t) 
     const url = new URL(enlace.href);
     const fecha = String(datos.get('fecha') ?? '');
     if (fecha) url.searchParams.set('fecha', fecha);
-    url.searchParams.set('personas', String(Math.max(1, Number(datos.get('personas')) || 1)));
+    url.searchParams.set('personas', String(personasElegidas() || 1));
     enlace.href = url.href;
   });
+
+  // Start from what the form shows: browsers can restore field values on reload.
+  aplicar();
 </script>

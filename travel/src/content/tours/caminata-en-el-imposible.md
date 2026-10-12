@@ -28,7 +28,6 @@ licencia: 'CC BY-SA 3.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:Flor_de_la_Reserva_Ecologica_El_Imposible..JPG'
 historias:
   - el-imposible-bosque-que-casi-se-pierde
-  - la-barra-de-santiago
 ---
 
 El Imposible no es un paseo corto. Es un día de caminata por sendero de bosque, con subidas, piedras y humedad, en un parque que protege una de las áreas de selva más extensas del país. Se sale muy temprano y se vuelve de tarde, con las piernas cansadas.

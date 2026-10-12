@@ -47,6 +47,7 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     <div class="hoja">
       <div class="barra">
       <header class="cabecera contenedor">
+        <a class="cabecera__logo" href="/" aria-label="Cacao Media, inicio"><Logo /></a>
         <nav class="cabecera__nav" aria-label="Secciones">
           {
             SECCIONES.map((s) => (
@@ -62,14 +63,13 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
           }
           <a class="pastilla cabecera__travel" href={`${TRAVEL_URL}/`}>Travel</a>
         </nav>
-        <a class="cabecera__logo" href="/" aria-label="Cacao Media, inicio"><Logo /></a>
         <div class="cabecera__extra">
           <a class="etiqueta" href="/archivo/">Archivo</a>
           <a class="etiqueta" href="/acerca/">Acerca</a>
         </div>
       </header>
       </div>
-      <main id="contenido">
+      <main id="contenido" tabindex="-1">
         <slot />
       </main>
     </div>
@@ -107,6 +107,9 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     .barra { position: sticky; top: 0; z-index: 5; }
   }
 
+  /* The skip link focuses main; no ring around the whole page. */
+  main:focus { outline: none; }
+
   .cabecera {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -115,19 +118,29 @@ const canonica = new URL(Astro.url.pathname, Astro.site);
     padding-block: 16px;
     border-bottom: 1.5px solid var(--tostado);
   }
-  .cabecera__nav { display: flex; flex-wrap: wrap; gap: 6px; }
+  /* Explicit placement, not `order`, so the DOM and Tab order read logo, pills, links. */
+  .cabecera__logo { grid-row: 1; grid-column: 2; text-decoration: none; justify-self: center; }
+  .cabecera__nav { grid-row: 1; grid-column: 1; display: flex; flex-wrap: wrap; gap: 6px; }
+  .cabecera__nav .pastilla { min-height: 36px; }
   .cabecera__nav .pastilla[aria-current='page'] { background: var(--tostado); color: var(--pulpa); }
   .cabecera__travel { background: var(--tostado); color: var(--pulpa); }
   .cabecera__travel:hover { background: var(--mazorca) !important; color: var(--tostado) !important; }
-  .cabecera__logo { text-decoration: none; justify-self: center; }
-  .cabecera__extra { display: flex; gap: 18px; justify-self: end; }
-  .cabecera__extra a { text-decoration: none; }
+  .cabecera__extra { grid-row: 1; grid-column: 3; display: flex; gap: 18px; justify-self: end; }
+  /* Padding makes the tap area 36px tall; the negative margin keeps the text where it was. */
+  .cabecera__extra a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding-inline: 8px;
+    margin-inline: -8px;
+    text-decoration: none;
+  }
 
   @media (max-width: 860px) {
-    .cabecera { grid-template-columns: 1fr auto; }
+    .cabecera { grid-template-columns: minmax(0, 1fr); }
     .cabecera__logo { grid-row: 1; grid-column: 1; justify-self: start; }
-    .cabecera__extra { grid-row: 1; grid-column: 2; }
-    .cabecera__nav { grid-row: 2; grid-column: 1 / -1; }
+    .cabecera__nav { grid-row: 2; grid-column: 1; }
+    .cabecera__extra { grid-row: 3; grid-column: 1; justify-self: start; }
   }
   @media (max-width: 480px) {
     .cabecera__logo :global(.logo) { font-size: 26px !important; }

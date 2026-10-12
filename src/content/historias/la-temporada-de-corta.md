@@ -11,6 +11,7 @@ precio: 0
 gratis: true
 portada: /portadas/la-temporada-de-corta.jpg
 alt: 'Montón de cerezas de café rojas, amarillas y verdes, con distintos grados de madurez, vistas de cerca'
+lugarFoto: Montes Anaimalai, India
 credito: 'PJeganathan'
 licencia: 'CC BY-SA 4.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:Coffee_berries_harvest_in_Anaimalai_Hills,_Southern_Western_Ghats_P1110963.jpg'

@@ -22,7 +22,8 @@ llevar:
   - Sandalias para la arena y calzado cerrado para caminar
   - Efectivo para gastos personales
 portada: /fotos/fin-de-semana-en-el-cuco.jpg
-alt: Atardecer naranja sobre el Pacífico visto desde una calle en bajada hacia el mar en Punta Mango, en la costa oriental del país
+alt: Atardecer naranja sobre el Pacífico visto desde una calle en bajada hacia el mar, con postes de luz y árboles a los costados.
+lugarFoto: Punta Mango, Usulután
 credito: 'Casa Presidencial El Salvador'
 licencia: 'CC0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:Surf_City_II.jpg'

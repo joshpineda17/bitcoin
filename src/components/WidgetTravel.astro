@@ -7,11 +7,13 @@ import { TRAVEL_API, TRAVEL_URL } from '../lib/travel';
 
 interface Props {
   historia?: string;
-  /** Place of the story, when it is a place story (crónica or guía). Lets it match by location. */
+  /** Place of the story. Lets it match experiences by location. */
   lugar?: string;
+  /** Section of the story: decides how far the widget reaches beyond explicit links. */
+  seccion?: 'cronica' | 'guia' | 'cultura' | 'cafe';
   limite?: number;
 }
-const { historia, lugar, limite = 3 } = Astro.props;
+const { historia, lugar, seccion, limite = 3 } = Astro.props;
 ---
 
 <section
@@ -20,14 +22,15 @@ const { historia, lugar, limite = 3 } = Astro.props;
   data-api={TRAVEL_API}
   data-widget-historia={historia}
   data-widget-lugar={lugar}
+  data-widget-seccion={seccion}
   data-limite={limite}
   aria-label="Cacao Travel"
   hidden
 >
   <header class="wt__cabeza">
     <a class="wt__marca" href={`${TRAVEL_URL}/`}><b>cacao</b>travel</a>
-    <p>{historia ? 'Experiencias para ir a verlo.' : 'Experiencias en El Salvador, pagadas en bitcoin.'}</p>
-    {historia && <p class="wt__lector">Desbloqueaste esta historia: tenés 10% de descuento.</p>}
+    <p>{historia ? 'Experiencias para ir a verlo.' : 'Experiencias en El Salvador, con precio en sats.'}</p>
+    {historia && <p class="wt__lector">Desbloqueaste esta historia: tenés 10% de descuento en su experiencia.</p>}
     <a class="pastilla wt__todas" href={`${TRAVEL_URL}/`}>Ver todas las experiencias</a>
   </header>
   <div class="wt__celdas" data-widget-celdas></div>
@@ -85,6 +88,7 @@ const { historia, lugar, limite = 3 } = Astro.props;
   .wt-boleto__talon {
     position: relative;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: end;
     gap: 12px;
@@ -120,6 +124,7 @@ const { historia, lugar, limite = 3 } = Astro.props;
     id: string;
     titulo: string;
     lugar: string;
+    categoria: string;
     duracion: string;
     nivel: string;
     precio: number;
@@ -128,15 +133,27 @@ const { historia, lugar, limite = 3 } = Astro.props;
     historias: string[];
   }
 
-  const plano = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const plano = (s: string) => s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
 
-  // Which experiences belong under a story. Explicit links win; otherwise the story's place has to
-  // be the experience's place ("Coatepeque" matches "Lago de Coatepeque").
-  function califica(tours: TourApi[], slug: string, lugar: string): TourApi[] {
+  // Which experiences go under a story. First rule that applies:
+  // 1. Experiences that list the story in `historias`: up to 2.
+  // 2. Else, for a crónica or guía: experiences in the story's place, up to 2.
+  // 3. Else, for a café: experiences with categoria "Café" in the story's place, up to 1.
+  // 4. Else nothing.
+  // "Same place" means one normalised place name contains the other ("Coatepeque" matches
+  // "Lago de Coatepeque"). An empty place never matches.
+  function califica(tours: TourApi[], slug: string, lugar: string, seccion: string): TourApi[] {
     const enlazados = tours.filter((t) => t.historias.includes(slug));
-    if (enlazados.length > 0 || !lugar) return enlazados.slice(0, 2);
+    if (enlazados.length > 0) return enlazados.slice(0, 2);
+
     const aqui = plano(lugar);
-    return tours.filter((t) => plano(t.lugar).includes(aqui) || aqui.includes(plano(t.lugar))).slice(0, 2);
+    const enLugar = (t: TourApi) => {
+      const alla = plano(t.lugar);
+      return aqui !== '' && alla !== '' && (alla.includes(aqui) || aqui.includes(alla));
+    };
+    if (seccion === 'cronica' || seccion === 'guia') return tours.filter(enLugar).slice(0, 2);
+    if (seccion === 'cafe') return tours.filter((t) => t.categoria === 'Café' && enLugar(t)).slice(0, 1);
+    return [];
   }
 
   const etiqueta = (texto: string, clase = 'etiqueta') => {
@@ -146,9 +163,19 @@ const { historia, lugar, limite = 3 } = Astro.props;
     return el;
   };
 
+  // Only addresses on Cacao Travel's own origin. Compared as parsed origins, so a look-alike host such
+  // as "https://cacaotravel.vercel.app.evil.com" fails; an unparsable URL fails too.
+  function enOrigen(url: string, origen: string): boolean {
+    try {
+      return new URL(url).origin === origen;
+    } catch {
+      return false;
+    }
+  }
+
   // Everything from the API goes in through textContent or validated URLs, never as HTML.
   function boleto(t: TourApi, origen: string): HTMLAnchorElement | null {
-    if (!t.url.startsWith(origen) || !t.foto.startsWith(origen)) return null;
+    if (!enOrigen(t.url, origen) || !enOrigen(t.foto, origen)) return null;
     const a = document.createElement('a');
     a.className = 'wt-boleto';
     a.href = t.url;
@@ -186,24 +213,30 @@ const { historia, lugar, limite = 3 } = Astro.props;
       const { tours } = (await r.json()) as { tours: TourApi[] };
       const slug = widget.dataset.widgetHistoria;
       const elegidos = slug
-        ? califica(tours, slug, widget.dataset.widgetLugar ?? '')
+        ? califica(tours, slug, widget.dataset.widgetLugar ?? '', widget.dataset.widgetSeccion ?? '')
         : tours.slice(0, Number(widget.dataset.limite) || 3);
       const origen = new URL(api).origin;
-      const tarjetas = elegidos.map((t) => boleto(t, origen)).filter((el) => el !== null);
+      const tarjetas = elegidos.flatMap((t) => {
+        const a = boleto(t, origen);
+        return a ? [{ a, tour: t, destino: a.href }] : [];
+      });
       if (tarjetas.length === 0) continue;
-      celdas.append(...tarjetas);
+      celdas.append(...tarjetas.map((x) => x.a));
       widget.hidden = false;
 
-      // A reader who unlocked this story gets a discount on its experience. The token rides in the
-      // URL fragment, which browsers do not send to servers; Cacao Travel verifies its signature.
+      // Only experiences that list this story give a discount, so only their links get the token.
+      // The token rides in the URL fragment, which browsers do not send to servers; Cacao Travel
+      // verifies its signature.
       if (slug) {
-        const destinos = tarjetas.map((a) => a.href);
+        const conDescuento = tarjetas.filter((x) => x.tour.historias.includes(slug));
         const firmarEnlaces = () => {
           const token = tokenDe(slug);
-          tarjetas.forEach((a, i) => {
-            a.href = token ? `${destinos[i]}#lector=${encodeURIComponent(token)}` : destinos[i];
-          });
-          widget.toggleAttribute('data-widget-lector', Boolean(token));
+          for (const x of tarjetas) {
+            x.a.href = token && x.tour.historias.includes(slug)
+              ? `${x.destino}#lector=${encodeURIComponent(token)}`
+              : x.destino;
+          }
+          widget.toggleAttribute('data-widget-lector', Boolean(token) && conDescuento.length > 0);
         };
         firmarEnlaces();
         document.addEventListener('cacao:desbloqueada', firmarEnlaces);

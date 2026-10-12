@@ -21,6 +21,7 @@ llevar:
   - Una chaqueta fina para cuando baje el sol
 portada: /fotos/atardecer-y-mariscos-en-la-libertad.jpg
 alt: Cielo de atardecer en tonos naranja y verde sobre el Pacífico, con siluetas de personas caminando por la orilla en la costa de La Libertad
+lugarFoto: El Sunzal, La Libertad
 credito: 'randreu'
 licencia: 'CC BY 3.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:El_Salvador_-_La_Libertad,_el_Sunzal_2014-2015_-_panoramio_(4).jpg'

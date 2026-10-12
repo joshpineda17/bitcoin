@@ -10,6 +10,7 @@ minutos: 6
 precio: 120
 portada: /portadas/primera-clase-de-surf.jpg
 alt: Tres palmeras de tronco blanqueado frente a una playa de arena oscura con una roca en el mar y bañistas al atardecer, en la costa de La Libertad.
+lugarFoto: El Sunzal, La Libertad
 credito: 'randreu'
 licencia: 'CC BY 3.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:El_Salvador_-_La_Libertad,_el_Sunzal_2014-2015_-_panoramio.jpg'

@@ -6,7 +6,7 @@
 import { createHash } from 'node:crypto';
 import type { APIContext } from 'astro';
 import { DIA, firmar } from '../../lib/firma';
-import { cotizar, diaDe, NOMBRE_DIA, repartir } from '../../lib/reparto';
+import { cotizar, diaDe, hoyEnElSalvador, NOMBRE_DIA, repartir } from '../../lib/reparto';
 import { MEDIA_URL, personas as limites, todosLosTours } from '../../lib/tours';
 import { esLector } from '../../lib/lector';
 
@@ -24,6 +24,8 @@ export async function POST({ request }: APIContext) {
   } catch {
     return error('Pedido inválido.');
   }
+  // JSON can also be null, a number or an array: only an object carries the booking fields.
+  if (typeof c !== 'object' || c === null || Array.isArray(c)) return error('Pedido inválido.');
 
   const tour = (await todosLosTours()).find((t) => t.id === c.tour);
   if (!tour) return error('Esa experiencia no existe.', 404);
@@ -31,7 +33,7 @@ export async function POST({ request }: APIContext) {
 
   const fecha = typeof c.fecha === 'string' ? c.fecha : '';
   const dia = diaDe(fecha);
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = hoyEnElSalvador();
   if (!dia) return error('Elegí una fecha.');
   if (fecha <= hoy) return error('La fecha tiene que ser a partir de mañana.');
   if (!d.salidas.includes(dia)) {

@@ -9,7 +9,8 @@ coords: 13.49°N · 89.38°W
 minutos: 7
 precio: 120
 portada: /portadas/punta-roca-la-derecha.jpg
-alt: Una ola verde rompe entre las hojas de varias palmeras en una playa de El Sunzal, con espuma blanca sobre la arena. Es una ola de la costa de La Libertad, cercana a Punta Roca.
+alt: Una ola verde rompe entre las hojas de varias palmeras, con espuma blanca sobre el agua y un techo de tejas en primer plano.
+lugarFoto: El Sunzal, La Libertad
 credito: 'Hermann Luyken'
 licencia: 'CC BY-SA 3.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:2010.05.05.085439_Palmeras_ola_El_Sunzal_El_Salvador.jpg'

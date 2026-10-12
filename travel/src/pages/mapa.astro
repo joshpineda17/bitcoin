@@ -26,7 +26,7 @@ const puntos = tours.flatMap((t) => {
 const categorias = CATEGORIAS.filter((c) => puntos.some((p) => p.categoria === c));
 ---
 
-<Base titulo="Mapa de experiencias" descripcion="Mapa de las experiencias en El Salvador. Precios en satoshis.">
+<Base titulo="Mapa de experiencias" descripcion="Mapa de las experiencias en El Salvador. Precios en sats.">
   <section class="contenedor cabeza">
     <h1>Mapa de experiencias</h1>
     <p>{puntos.length} experiencias en El Salvador. Tocá un punto para ver el precio.</p>
@@ -73,6 +73,10 @@ const categorias = CATEGORIAS.filter((c) => puntos.some((p) => p.categoria === c
   .filtros::-webkit-scrollbar { display: none; }
   .filtros button {
     flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
     padding: 0.6em 1.15em;
     border: 1.5px solid var(--chocolate);
     border-radius: 999px;
@@ -135,6 +139,7 @@ const categorias = CATEGORIAS.filter((c) => puntos.some((p) => p.categoria === c
   .mapa :global(.leaflet-bar) { box-shadow: none; border: 0; }
   .mapa :global(.leaflet-bar a) { background: var(--tostado); color: var(--pulpa); border-bottom-color: var(--chocolate); }
   .mapa :global(.leaflet-bar a:hover) { background: var(--chocolate); color: var(--mazorca); }
+  .mapa :global(.leaflet-control-zoom a) { width: 36px; height: 36px; line-height: 36px; }
   .mapa :global(.leaflet-control-attribution) { background: var(--tostado); color: var(--arena-oscura); }
   .mapa :global(.leaflet-control-attribution a) { color: var(--pulpa); }
 
@@ -163,7 +168,7 @@ const categorias = CATEGORIAS.filter((c) => puntos.some((p) => p.categoria === c
   .lista__boton[aria-current='true'] { border-left-color: var(--mazorca); }
   .lista__titulo { font-weight: 800; font-size: 1.0625rem; line-height: 1.2; overflow-wrap: anywhere; }
   .lista__meta { font-size: 0.9375rem; color: var(--arena); overflow-wrap: anywhere; }
-  .lista__precio { font-family: var(--mono); font-size: 0.875rem; color: var(--mazorca); }
+  .lista__precio { font-family: var(--mono); font-size: 0.875rem; color: var(--pulpa); }
 
   @media (min-width: 960px) {
     .lista { max-height: min(70vh, 640px); overflow-y: auto; padding-right: 4px; }

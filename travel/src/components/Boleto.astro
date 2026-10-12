@@ -1,7 +1,7 @@
 ---
 // A listing as a ticket: photo and name on the body, price on the stub, a perforation between.
 // The data-* attributes are what the search, filters and sort on the home page read.
-import { horas, plano, sats, urlTour, type Tour } from '../lib/tours';
+import { horas, personas, plano, sats, urlTour, type Tour } from '../lib/tours';
 
 interface Props {
   tour: Tour;
@@ -9,6 +9,7 @@ interface Props {
 const { tour } = Astro.props;
 const d = tour.data;
 const url = urlTour(tour);
+const grupo = personas(d.grupo);
 ---
 
 <article
@@ -20,6 +21,9 @@ const url = urlTour(tour);
   data-nivel={d.nivel}
   data-precio={d.precio}
   data-horas={horas(d.duracion)}
+  data-salidas={d.salidas.join(',')}
+  data-min={grupo.min}
+  data-max={grupo.max}
 >
   <a class="boleto__foto" href={url} tabindex="-1" aria-hidden="true">
     <img src={d.portada} alt="" width="1600" height="1000" loading="lazy" />
@@ -36,7 +40,7 @@ const url = urlTour(tour);
       <strong>{sats(d.precio)}</strong>
       <span>por persona</span>
     </p>
-    <a class="boleto__ver" href={url} aria-label={`Ver ${d.titulo}`}>Ver</a>
+    <a class="boleto__ver" href={url} tabindex="-1" aria-hidden="true">Ver experiencia</a>
   </div>
 </article>
 
@@ -76,6 +80,7 @@ const url = urlTour(tour);
   .boleto__talon {
     position: relative;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
@@ -98,6 +103,10 @@ const url = urlTour(tour);
   .boleto__precio span { font-size: 0.75rem; color: var(--tinta-suave); }
   .boleto__precio strong { font-family: var(--mono); font-size: 1.25rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
   .boleto__ver {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
     padding: 0.6em 1.2em;
     border-radius: 999px;
     background: var(--tostado);

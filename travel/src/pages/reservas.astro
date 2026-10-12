@@ -1,19 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
+import { MEDIA_URL } from '../lib/tours';
 ---
 
 <Base titulo="Mis reservas" descripcion="Tus reservas de muestra, guardadas solo en este navegador.">
   <div class="contenedor pagina">
     <header class="cabecera-pagina">
       <h1 tabindex="-1" data-titulo>Mis reservas</h1>
-      <p class="bajada">Las reservas se guardan solo en este navegador. No hay cuentas ni cobros: es un catálogo de muestra.</p>
+      <p class="bajada">Las reservas se guardan solo en este navegador. No hay cuentas ni cobros: el catálogo es de muestra.</p>
     </header>
 
     <noscript>
       <p class="sin-js">Esta página necesita JavaScript para leer tus reservas.</p>
     </noscript>
 
-    <div class="tickets" data-reservas></div>
+    <div class="tickets" data-reservas data-media={MEDIA_URL}></div>
 
     <div class="vacio" data-vacio hidden>
       <p>Todavía no reservaste nada.</p>
@@ -140,7 +141,6 @@ import Base from '../layouts/Base.astro';
 
 <script>
   const CLAVE = 'ct-reservas';
-  const ORIGEN_LECTURAS = 'https://cacaomedia.vercel.app/';
 
   interface Reserva {
     codigo: string;
@@ -159,6 +159,15 @@ import Base from '../layouts/Base.astro';
   const sats = (n: unknown): string => `${Number(n).toLocaleString('en-US')} sats`;
   const esObjeto = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
   const esValida = (v: unknown): v is Reserva => esObjeto(v) && texto(v.codigo) !== '' && esObjeto(v.tour);
+
+  // Story links must point at the Cacao Media site from the config. Unparsable links are skipped.
+  function esDeMedia(url: string, media: string): boolean {
+    try {
+      return new URL(url).origin === new URL(media).origin;
+    } catch {
+      return false;
+    }
+  }
 
   function leer(): unknown[] {
     try {
@@ -198,7 +207,7 @@ import Base from '../layouts/Base.astro';
       : d.toLocaleDateString('es-SV', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   }
 
-  function boleto(r: Reserva, alOlvidar: () => void): HTMLElement {
+  function boleto(r: Reserva, media: string, alOlvidar: () => void): HTMLElement {
     const tour = r.tour;
     const articulo = el('article', 'ticket');
     const cuerpo = el('div', 'ticket__cuerpo');
@@ -242,16 +251,18 @@ import Base from '../layouts/Base.astro';
     talon.append(reparto);
 
     const lecturas = (Array.isArray(r.lecturas) ? r.lecturas : []).filter(esObjeto);
-    const items = lecturas.filter((l) => texto(l.slug) !== '' && texto(l.url).startsWith(ORIGEN_LECTURAS));
+    const items = lecturas.filter((l) => texto(l.slug) !== '' && esDeMedia(texto(l.url), media));
     let bloque: HTMLElement | null = null;
     if (items.length > 0) {
       bloque = el('div', 'ticket__lecturas');
-      bloque.append(el('p', 'dato ticket__subtitulo', 'Tu reserva abre estas historias en Cacao Media'));
+      bloque.append(el('p', 'dato ticket__subtitulo', 'Tu reserva desbloquea estas historias en Cacao Media por 30 días'));
       const lista = el('ul', 'ticket__lista');
       const pase = texto(r.pase);
       for (const item of items) {
+        // Bookings made before titles were saved have none: fall back to the slug words.
         const palabras = texto(item.slug).replace(/-/g, ' ');
-        const enlace = el('a', '', palabras.charAt(0).toUpperCase() + palabras.slice(1));
+        const nombreHistoria = texto(item.titulo).trim() || palabras.charAt(0).toUpperCase() + palabras.slice(1);
+        const enlace = el('a', '', nombreHistoria);
         enlace.href = texto(item.url) + (pase ? `#pase=${encodeURIComponent(pase)}` : '');
         const li = el('li');
         li.append(enlace);
@@ -276,10 +287,11 @@ import Base from '../layouts/Base.astro';
   const vacio = document.querySelector<HTMLElement>('[data-vacio]')!;
   const titulo = document.querySelector<HTMLElement>('[data-titulo]')!;
   const crudas = leer();
+  const media = contenedor.dataset.media ?? '';
 
   function pintar() {
     const validas = crudas.filter(esValida);
-    contenedor.replaceChildren(...validas.map((r) => boleto(r, () => olvidar(r))));
+    contenedor.replaceChildren(...validas.map((r) => boleto(r, media, () => olvidar(r))));
     vacio.hidden = validas.length > 0;
   }
 

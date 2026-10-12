@@ -40,4 +40,4 @@ export function coordenadas(coords: string | undefined): [number, number] | null
 
 /** Lowercase, no accents: for matching search text. */
 export const plano = (s: string): string =>
-  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');

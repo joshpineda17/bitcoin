@@ -11,6 +11,7 @@ precio: 0
 gratis: true
 portada: /portadas/leer-la-etiqueta-bolsa-de-cafe.jpg
 alt: 'Saco de yute con letras impresas en negro que dicen arabica y coffee beans, visto de cerca'
+lugarFoto: Dülmen, Alemania
 credito: 'Dietmar Rabich'
 licencia: 'CC BY-SA 4.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Privatr%C3%B6sterei_Schr%C3%B6er,_Kaffeesack_--_2018_--_0567.jpg'

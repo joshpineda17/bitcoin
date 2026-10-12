@@ -29,7 +29,7 @@ const url = urlHistoria(historia);
         d.gratis ? 'Gratis' : precio(d.precio)
       }
     </p>
-    <a class="portada__boton" href={url}>Leer historia</a>
+    <a class="portada__boton" href={url} tabindex="-1" aria-hidden="true">Leer historia</a>
   </div>
 </article>
 

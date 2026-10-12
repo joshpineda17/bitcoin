@@ -55,10 +55,15 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
 
     <figure class="historia__portada contenedor">
       <img src={d.portada} alt={d.alt} width="1600" height="1000" />
-      {d.credito && (
+      {(d.credito || d.lugarFoto) && (
         <figcaption class="etiqueta">
-          Foto: {d.creditoUrl ? <a href={d.creditoUrl} rel="noopener">{d.credito}</a> : d.credito}
-          {d.licencia && ` · ${d.licencia}`}
+          {d.credito && (
+            <>
+              Foto: {d.creditoUrl ? <a href={d.creditoUrl} rel="noopener">{d.credito}</a> : d.credito}
+              {d.licencia && ` · ${d.licencia}`}
+            </>
+          )}
+          {d.lugarFoto && (d.credito ? ` · Tomada en ${d.lugarFoto}` : `Tomada en ${d.lugarFoto}`)}
         </figcaption>
       )}
     </figure>
@@ -70,10 +75,7 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
       {!d.gratis && <CacaoGate tipo={tipo} precio={precio(d.precio)} />}
     </div>
 
-    <WidgetTravel
-      historia={historia.id}
-      lugar={d.seccion === 'cronica' || d.seccion === 'guia' ? d.lugar : undefined}
-    />
+    <WidgetTravel historia={historia.id} lugar={d.lugar} seccion={d.seccion} />
 
     {
       autor && (
@@ -214,20 +216,35 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
 
   const articulo = document.querySelector<HTMLElement>('article[data-historia]');
 
+  // Shown in the wall when an unlock fails or a stored pass is refused.
+  const MENSAJE_DESBLOQUEAR = 'No pudimos desbloquear esta historia. Revisá tu conexión y probá de nuevo.';
+  const MENSAJE_VENCIDO = 'Tu acceso venció o ya no es válido. Desbloqueá la historia de nuevo.';
+
+  // A Cacao Travel booking links here with a reading pass in the URL fragment. Remove it on every story.
+  const pase = new URLSearchParams(location.hash.slice(1)).get('pase');
+  if (pase) history.replaceState(null, '', location.pathname + location.search);
+
   if (articulo && articulo.dataset.gateEstado !== 'gratis') {
     const slug = articulo.dataset.historia ?? '';
     const pastilla = articulo.querySelector<HTMLElement>('[data-gate-pastilla]');
     const boton = articulo.querySelector<HTMLButtonElement>('[data-gate-boton]');
     const vencido = articulo.querySelector<HTMLElement>('[data-gate-vencido]');
+    const aviso = articulo.querySelector<HTMLElement>('[data-gate-error]');
     const cerrado = articulo.querySelector<HTMLElement>('[data-gate-cerrado]');
     let observador: IntersectionObserver | null = null;
 
-    // A Cacao Travel booking links here with a reading pass in the URL fragment.
-    const pase = new URLSearchParams(location.hash.slice(1)).get('pase');
-    if (pase) {
-      aceptarPase(slug, pase);
-      history.replaceState(null, '', location.pathname + location.search);
-    }
+    if (pase) aceptarPase(slug, pase);
+
+    const mostrarAviso = (texto: string) => {
+      if (!aviso) return;
+      aviso.textContent = texto;
+      aviso.hidden = false;
+    };
+    const ocultarAviso = () => {
+      if (!aviso) return;
+      aviso.textContent = '';
+      aviso.hidden = true;
+    };
 
     const pintar = (estado: 'bloqueado' | 'desbloqueado' | 'expirado') => {
       articulo.dataset.gateEstado = estado;
@@ -242,15 +259,23 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
       }
     };
 
+    // Only the reader's first scroll starts the observer: unlocking or loading the page is not reading yet.
     const observar = () => {
       if (observador || !cerrado || typeof IntersectionObserver === 'undefined') return;
-      observador = new IntersectionObserver((entradas) => {
-        if (!entradas.some((e) => e.isIntersecting)) return;
-        articulo.dataset.gateEstado = 'leyendo';
-        if (pastilla) pastilla.textContent = 'Leyendo';
-        observador?.disconnect();
-      });
-      observador.observe(cerrado);
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (observador) return;
+          observador = new IntersectionObserver((entradas) => {
+            if (!entradas.some((e) => e.isIntersecting)) return;
+            articulo.dataset.gateEstado = 'leyendo';
+            if (pastilla) pastilla.textContent = 'Leyendo';
+            observador?.disconnect();
+          });
+          observador.observe(cerrado);
+        },
+        { once: true, passive: true },
+      );
     };
 
     // The locked text is not in the page. Fetch it with the stored token; the server decides.
@@ -261,6 +286,7 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
       // Our own server's rendering of our own story.
       cerrado.innerHTML = html;
       pintar('desbloqueado');
+      ocultarAviso();
       // Tell the Cacao Travel widget the reader now holds a token it can pass along.
       document.dispatchEvent(new CustomEvent('cacao:desbloqueada', { detail: { slug } }));
       observar();
@@ -269,23 +295,33 @@ const tipo = d.seccion === 'guia' ? 'guía' : d.seccion === 'cronica' ? 'crónic
 
     boton?.addEventListener('click', async () => {
       boton.disabled = true;
-      boton.textContent = 'Desbloqueando';
+      boton.textContent = 'Desbloqueando…';
+      ocultarAviso();
       try {
         await desbloquear(slug);
         if (await abrir()) {
           cerrado!.tabIndex = -1;
-          cerrado!.focus();
+          // Focus without scrolling: the page must not jump under the reader.
+          cerrado!.focus({ preventScroll: true });
           return;
         }
       } catch {
         // fall through to the locked state
       }
+      mostrarAviso(MENSAJE_DESBLOQUEAR);
       pintar(estadoGate(slug) === 'expirado' ? 'expirado' : 'bloqueado');
     });
 
     const inicial = estadoGate(slug);
     pintar(inicial === 'desbloqueado' ? 'bloqueado' : inicial);
-    if (inicial === 'desbloqueado') abrir().catch(() => {});
+    if (inicial === 'desbloqueado') {
+      // A stored pass the server refuses leaves the wall up and says why.
+      abrir()
+        .then((ok) => {
+          if (!ok) mostrarAviso(MENSAJE_VENCIDO);
+        })
+        .catch(() => mostrarAviso(MENSAJE_DESBLOQUEAR));
+    }
   }
 </script>
 

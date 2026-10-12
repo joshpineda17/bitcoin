@@ -44,3 +44,13 @@ export function diaDe(fecha: string): Dia | null {
   const d = new Date(`${fecha}T12:00:00Z`);
   return Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== fecha ? null : DIAS[d.getUTCDay()];
 }
+
+/** Today in El Salvador (UTC-6, no daylight saving) as YYYY-MM-DD. The server and the date picker must agree on "today". */
+export function hoyEnElSalvador(ahora: number = Date.now()): string {
+  return new Date(ahora - 6 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+/** Tomorrow in El Salvador as YYYY-MM-DD: the earliest day a booking can take. */
+export function mananaEnElSalvador(ahora: number = Date.now()): string {
+  return hoyEnElSalvador(ahora + 24 * 60 * 60 * 1000);
+}

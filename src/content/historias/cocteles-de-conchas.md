@@ -11,6 +11,7 @@ precio: 0
 gratis: true
 portada: /portadas/cocteles-de-conchas.jpg
 alt: Plato hondo blanco con sopa rojiza llena de camarones, cangrejo, mejillones, conchas y una cola de langosta, con dos gajos de limón en el plato.
+lugarFoto: El Sunzal, La Libertad
 credito: 'Hermann Luyken'
 licencia: 'CC BY-SA 3.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:2010.05.05.151853_Mariscada_El_Sunzal_El_Salvador.jpg'

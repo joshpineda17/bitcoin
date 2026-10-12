@@ -10,7 +10,8 @@ minutos: 3
 precio: 0
 gratis: true
 portada: /portadas/las-flores-playa-del-oriente.jpg
-alt: Playa de Corral de Mulas, en Usulután, en la costa oriental. No es Las Flores. Arena gris, una hilera de palmeras de coco a la derecha, mar a la izquierda y cielo despejado.
+alt: Playa de arena gris con una hilera de palmeras de coco a la derecha, mar a la izquierda y cielo despejado.
+lugarFoto: Playa Corral de Mulas, Usulután
 credito: 'kadejo'
 licencia: 'CC BY-SA 3.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:Playa_de_Corral_de_Mulas,_Usulut%C3%A1n,_El_Salvador_-_panoramio.jpg'

@@ -9,7 +9,12 @@ interface Guardado {
   expira: number;
 }
 
+// Unlocks for this page view. Keeps the story open when the browser blocks localStorage.
+const memoria = new Map<string, Guardado>();
+
 function leer(slug: string): Guardado | null {
+  const enMemoria = memoria.get(slug);
+  if (enMemoria) return enMemoria;
   try {
     const g = JSON.parse(localStorage.getItem(CLAVE + slug) ?? 'null') as Guardado | null;
     return g && typeof g.token === 'string' && typeof g.expira === 'number' ? g : null;
@@ -19,10 +24,11 @@ function leer(slug: string): Guardado | null {
 }
 
 function guardar(slug: string, g: Guardado): void {
+  memoria.set(slug, g);
   try {
     localStorage.setItem(CLAVE + slug, JSON.stringify(g));
   } catch {
-    // Storage blocked: the story stays open for this page view only.
+    // Storage blocked: the Map above still keeps the story open for this page view.
   }
 }
 
@@ -71,6 +77,7 @@ export async function traerCerrado(slug: string): Promise<string | null> {
   const r = await fetch(`/api/contenido/${slug}/`, { headers: { Authorization: `Bearer ${g.token}` } });
   if (r.status === 401) {
     // Signature or expiry rejected: forget it so the wall comes back.
+    memoria.delete(slug);
     try {
       localStorage.removeItem(CLAVE + slug);
     } catch {}

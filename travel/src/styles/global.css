@@ -70,6 +70,9 @@ a { color: inherit; text-decoration-thickness: 0.08em; text-underline-offset: 0.
   cursor: pointer;
 }
 .boton:hover { background: var(--pulpa); }
+/* Outline, not a shadow: the brand allows no shadows. */
+.boton--secundario { background: transparent; color: inherit; outline: 1.5px solid currentColor; outline-offset: -1.5px; }
+.boton--secundario:hover { background: var(--mazorca); color: var(--tostado); outline-color: transparent; }
 .boton[aria-disabled='true'] { background: var(--arena); color: var(--tinta-suave); cursor: not-allowed; }
 
 .solo-lectores {

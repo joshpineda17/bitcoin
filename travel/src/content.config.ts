@@ -28,6 +28,8 @@ const tours = defineCollection({
     llevar: z.array(z.string()).default([]),
     portada: z.string(),
     alt: z.string(),
+    /** Where the cover photo was really taken, only when it is not the tour's own place. */
+    lugarFoto: z.string().optional(),
     credito: z.string().optional(),
     licencia: z.string().optional(),
     creditoUrl: z.url().optional(),

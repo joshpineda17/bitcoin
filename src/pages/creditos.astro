@@ -13,7 +13,7 @@ const conCredito = [
     <h1>Créditos de fotos</h1>
     <p>
       Las fotos vienen de Wikimedia Commons y se usan bajo la licencia que indica cada una. Fueron
-      recortadas a 16:10.
+      recortadas para el sitio.
     </p>
     <ul>
       {
@@ -23,6 +23,7 @@ const conCredito = [
             <span class="etiqueta">
               {h.data.creditoUrl ? <a href={h.data.creditoUrl} rel="noopener">{h.data.credito}</a> : h.data.credito}
               {h.data.licencia && ` · ${h.data.licencia}`}
+              {h.data.lugarFoto && ` · Tomada en ${h.data.lugarFoto}`}
             </span>
           </li>
         ))

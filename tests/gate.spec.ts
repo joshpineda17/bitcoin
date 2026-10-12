@@ -44,9 +44,23 @@ test('unlocking reveals the story and survives a reload', async ({ page }) => {
 test('reading the unlocked part sets the state to leyendo', async ({ page }) => {
   await page.goto(PAGA);
   await page.locator('[data-gate-boton]').click();
-  await page.locator('[data-gate-cerrado]').scrollIntoViewIfNeeded();
+  await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'desbloqueado');
+  await expect(page.locator('[data-gate-pastilla]')).toHaveText('Desbloqueado');
+  await page.mouse.wheel(0, 800);
   await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'leyendo');
   await expect(page.locator('[data-gate-pastilla]')).toHaveText('Leyendo');
+});
+
+test('unlocking does not make the page jump', async ({ page }) => {
+  await page.goto(PAGA);
+  const boton = page.locator('[data-gate-boton]');
+  // Bring the button into view first, so the click itself does not scroll the page.
+  await boton.scrollIntoViewIfNeeded();
+  const antes = await page.evaluate(() => window.scrollY);
+  await boton.click();
+  await expect(page.locator('[data-gate-cerrado]')).toBeVisible();
+  const despues = await page.evaluate(() => window.scrollY);
+  expect(Math.abs(despues - antes)).toBeLessThan(5);
 });
 
 test('an expired unlock locks the story again', async ({ page }) => {
@@ -123,11 +137,37 @@ test('unlocking one story does not unlock another', async ({ page }) => {
   await expect(page.locator('[data-gate-cerrado]')).toBeHidden();
 });
 
+test('a failed unlock explains itself', async ({ page }) => {
+  await page.route('**/api/desbloquear/', (r) => r.abort());
+  await page.goto(PAGA);
+  await page.locator('[data-gate-boton]').click();
+  await expect(page.locator('[data-gate-error]')).toBeVisible();
+  await expect(page.locator('[data-gate-error]')).toContainText('No pudimos desbloquear');
+  await expect(page.locator('[data-gate-muro]')).toBeVisible();
+});
+
+test('the story opens even when the browser blocks storage', async ({ page }) => {
+  await page.addInitScript(() => {
+    Storage.prototype.setItem = () => {
+      throw new Error('blocked');
+    };
+  });
+  await page.goto(PAGA);
+  await page.locator('[data-gate-boton]').click();
+  await expect(page.locator('[data-gate-cerrado]')).toBeVisible();
+});
+
 test('free story has no wall', async ({ page }) => {
   await page.goto(GRATIS);
   await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'gratis');
   await expect(page.locator('[data-gate-muro]')).toHaveCount(0);
   await expect(page.locator('[data-gate-pastilla]')).toHaveText('Gratis');
+});
+
+test('a reading pass is removed from the address bar on a free story', async ({ page }) => {
+  await page.goto(GRATIS + '#pase=abc.def');
+  await expect(page.locator('article[data-historia]')).toHaveAttribute('data-gate-estado', 'gratis');
+  expect(page.url()).not.toContain('pase');
 });
 
 

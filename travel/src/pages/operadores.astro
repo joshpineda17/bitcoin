@@ -10,6 +10,8 @@ const ETIQUETA_DIA: Record<string, string> = {
 const NIVELES = ['Fácil', 'Moderado', 'Exigente'] as const;
 const DIAS_INICIALES: string[] = ['sab', 'dom'];
 const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
+// Without a linked story the operator also keeps the author's share.
+const OPERADOR_SIN_HISTORIA = PARTES.operador + PARTES.autor;
 ---
 
 <Base titulo="Panel de operadores" descripcion="Publicá una experiencia en Cacao Travel y mirá cuánto recibís por cada reserva.">
@@ -17,7 +19,7 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
     <header class="operadores__cabeza">
       <p class="aviso-demo dato">Modo demo: los borradores se guardan solo en este navegador y no se publican.</p>
       <h1>Publicá tu experiencia</h1>
-      <p class="operadores__bajada">Vos ponés el precio en satoshis. Cacao Travel te muestra cuánto recibís por cada reserva.</p>
+      <p class="operadores__bajada">Vos ponés el precio en sats. Cacao Travel te muestra cuánto recibís por cada reserva.</p>
     </header>
 
     <div class="operadores__dos">
@@ -82,7 +84,7 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
         <div class="campo">
           <label for="f-precio">Precio por persona en sats</label>
           <input id="f-precio" name="precio" type="number" min="1000" step="1000" inputmode="numeric" value="40000" required aria-describedby="e-precio ayuda-precio" />
-          <p class="campo__ayuda" id="ayuda-precio">Mínimo 1.000 sats por persona.</p>
+          <p class="campo__ayuda" id="ayuda-precio">Mínimo 1,000 sats por persona.</p>
           <p class="campo__error" id="e-precio" role="alert"></p>
         </div>
 
@@ -146,23 +148,19 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
           <p class="reparto__nota">Cálculo para el precio actual y el grupo máximo.</p>
           <dl class="reparto" data-reparto data-operador={PARTES.operador} data-plataforma={PARTES.plataforma} data-autor={PARTES.autor}>
             <div>
-              <dt>Vos (operador) <span>{porcentaje(PARTES.operador)}</span></dt>
+              <dt>Vos (operador) <span>{porcentaje(OPERADOR_SIN_HISTORIA)}</span></dt>
               <dd data-r-operador>Calculando</dd>
             </div>
             <div>
               <dt>Cacao Travel <span>{porcentaje(PARTES.plataforma)}</span></dt>
               <dd data-r-plataforma>Calculando</dd>
             </div>
-            <div>
-              <dt>Autor de la historia <span>{porcentaje(PARTES.autor)}</span></dt>
-              <dd data-r-autor>Calculando</dd>
-            </div>
             <div class="reparto__total">
               <dt>Total por reserva</dt>
               <dd data-r-total>Calculando</dd>
             </div>
           </dl>
-          <p class="reparto__explica">El 5% del autor solo aplica cuando una historia de Cacao Media trae al viajero. Si no, es tuyo.</p>
+          <p class="reparto__explica">Si una historia de Cacao Media trae al viajero, {porcentaje(PARTES.autor)} va para quien la escribió: vos recibís <span data-r-explica-operador>Calculando</span> ({porcentaje(PARTES.operador)}) y el autor <span data-r-explica-autor>Calculando</span>.</p>
         </section>
       </aside>
     </div>
@@ -248,8 +246,6 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
   .acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   .operadores .boton { cursor: pointer; border: 0; }
   .operadores .boton:hover { background: var(--tostado); color: var(--pulpa); }
-  .operadores .boton-secundario { background: var(--arena); color: var(--tostado); }
-  .operadores .boton-secundario:hover { background: var(--mazorca); color: var(--tostado); }
   .estado { min-height: 1.5em; font-weight: 600; color: var(--tostado); }
 
   /* Ticket preview, built like Boleto: photo on top, body, perforation and stub. */
@@ -326,6 +322,7 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
   .reparto__total dt, .reparto__total dd { font-weight: 800; }
 
   .borradores__cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+  .borradores { margin-top: clamp(16px, 3vw, 28px); }
   .lista-borradores { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
   .operadores :global(.borrador) {
     display: flex;
@@ -345,6 +342,7 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
   .operadores :global(.borrador__meta) { font-size: 0.875rem; font-family: var(--mono); overflow-wrap: anywhere; }
   .operadores :global(.borrador__acciones) { display: flex; flex-wrap: wrap; gap: 8px; }
   .operadores :global(.borrador__acciones button) {
+    min-height: 36px;
     padding: 0.55em 1.1em;
     border: 0;
     border-radius: 999px;
@@ -423,7 +421,8 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
       return v === '' ? NaN : Number(v);
     };
     const pv = (n: string) => vista.querySelector<HTMLElement>(`[data-p-${n}]`) as HTMLElement;
-    const rr = (n: string) => reparto.querySelector<HTMLElement>(`[data-r-${n}]`) as HTMLElement;
+    // The explanation line sits outside the list, so look up by name across the page.
+    const rr = (n: string) => document.querySelector<HTMLElement>(`[data-r-${n}]`) as HTMLElement;
     const mensaje = (texto: string) => {
       estado.textContent = texto;
     };
@@ -464,7 +463,7 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
         ['lugar', d.lugar ? '' : 'Indicá el lugar de salida.', campo('lugar')],
         ['duracion', d.duracion ? '' : 'Indicá la duración, por ejemplo 4 horas.', campo('duracion')],
         ['grupo', grupoError, campo('min')],
-        ['precio', Number.isInteger(d.precio) && d.precio >= 1000 ? '' : 'El precio mínimo es 1.000 sats por persona.', campo('precio')],
+        ['precio', Number.isInteger(d.precio) && d.precio >= 1000 ? '' : 'El precio mínimo es 1,000 sats por persona.', campo('precio')],
         ['dias', d.salidas.length > 0 ? '' : 'Elegí al menos un día de salida.', form.querySelector<HTMLInputElement>('input[name="salidas"]')!],
         ['bajada', d.bajada ? '' : 'Escribí una descripción corta.', campo('bajada')],
       ];
@@ -502,14 +501,17 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
         const total = d.precio * d.max;
         const plataforma = Math.floor(total * Number(reparto.dataset.plataforma));
         const autor = Math.floor(total * Number(reparto.dataset.autor));
-        // The operator takes the remainder so the three shares always add up to the total.
-        const operador = total - plataforma - autor;
-        rr('operador').textContent = sats(operador);
+        // Drafts have no linked story, so the operator takes everything but Cacao Travel's share.
+        rr('operador').textContent = sats(total - plataforma);
         rr('plataforma').textContent = sats(plataforma);
-        rr('autor').textContent = sats(autor);
         rr('total').textContent = sats(total);
+        // With a Media story the author takes a share too; the operator takes the remainder.
+        rr('explica-operador').textContent = sats(total - plataforma - autor);
+        rr('explica-autor').textContent = sats(autor);
       } else {
-        for (const n of ['operador', 'plataforma', 'autor', 'total']) rr(n).textContent = 'Pendiente';
+        for (const n of ['operador', 'plataforma', 'total', 'explica-operador', 'explica-autor']) {
+          rr(n).textContent = 'Pendiente';
+        }
       }
 
       contador.textContent = `${campo('bajada').value.length}/140`;
@@ -616,7 +618,11 @@ const porcentaje = (n: number) => `${Math.round(n * 100)}%`;
     });
 
     const alCambiar = () => {
-      if (intentado) validar(false);
+      if (intentado) {
+        validar(false);
+        // Once no field is marked, the general "Revisá..." line is stale.
+        if (!form.querySelector('.campo__error:not(:empty)')) mensaje('');
+      }
       pintarVista();
     };
     form.addEventListener('input', alCambiar);

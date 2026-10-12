@@ -9,7 +9,8 @@ coords: 13.49°N · 89.44°W
 minutos: 7
 precio: 120
 portada: /portadas/la-ola-que-cambio-un-pueblo.jpg
-alt: 'Carretera costera entre bosque y océano Pacífico al atardecer, en Punta Mango, en el oriente del país. No es El Zonte: no encontramos una foto libre y buena de esta cala.'
+alt: 'Carretera costera entre bosque y océano Pacífico al atardecer, con el sol bajo sobre la costa.'
+lugarFoto: Punta Mango, Usulután
 credito: 'Casa Presidencial El Salvador'
 licencia: 'CC0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:Punta_Mango_de_El_Salvador.jpg'

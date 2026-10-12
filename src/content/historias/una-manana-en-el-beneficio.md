@@ -11,6 +11,7 @@ precio: 0
 gratis: true
 portada: /portadas/una-manana-en-el-beneficio.jpg
 alt: 'Montón de cerezas de café maduras, verdes y oscuras mezcladas, con una hoja grande en el centro'
+lugarFoto: Coorg, Karnataka, India
 credito: 'Timothy A. Gonsalves'
 licencia: 'CC BY-SA 4.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:Beans_Drying_Coffee_Robusta_Balamuri_Coorg_Feb24_A7C_09491.jpg'

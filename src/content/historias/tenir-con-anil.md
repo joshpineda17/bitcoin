@@ -9,7 +9,8 @@ coords: 13.94°N · 89.02°W
 minutos: 5
 precio: 120
 portada: /portadas/tenir-con-anil.jpg
-alt: Tres paños de tela teñida con índigo y técnica de amarre colgados junto a una ventana, con un jardín al fondo, en una casa de Japón
+alt: Tres paños de tela teñida con índigo y técnica de amarre colgados junto a una ventana, con un jardín al fondo.
+lugarFoto: Japón
 credito: 'Katie'
 licencia: 'CC BY-SA 2.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:Sunlight_filters_through_tied-and-indigo-dyed_(shibori)_fabric.jpg'

@@ -1,6 +1,6 @@
 ---
 titulo: Las tortugas que vuelven a Jiquilisco
-bajada: Cada año, hembras de varias especies cruzan el Pacífico para poner huevos en las playas y los esteros de El Salvador. Así se cuida ese regreso.
+bajada: Cada año, hembras de varias especies cruzan el Pacífico para poner huevos en playas y esteros de El Salvador. Así se cuida ese regreso.
 seccion: cronica
 fecha: 2026-10-08
 autor: Josh Pineda
@@ -9,7 +9,8 @@ coords: 13.22°N · 88.60°W
 minutos: 6
 precio: 120
 portada: /portadas/las-tortugas-que-vuelven-a-jiquilisco.jpg
-alt: Tortuga golfina sobre la arena al atardecer, con otras tortugas detrás y el sol sobre el mar. La foto fue tomada en la playa Escobilla, en Oaxaca, México, y ilustra el tema, no el lugar.
+alt: Tortuga golfina sobre la arena al atardecer, con otras tortugas detrás, el sol sobre el mar y dos personas a lo lejos.
+lugarFoto: Escobilla, Oaxaca, México
 credito: 'Claudio Giovenzana'
 licencia: 'CC BY-SA 3.0'
 creditoUrl: 'https://commons.wikimedia.org/wiki/File:Turtle_golfina_escobilla_Oaxaca_Mexico_Claudio_Giovenzana_2010.jpg'
