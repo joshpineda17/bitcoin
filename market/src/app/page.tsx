@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { Boton } from '@/componentes/Boton';
 import { Chip } from '@/componentes/Chip';
+import { Puertas } from '@/componentes/Puertas';
 import { TarjetaProducto } from '@/componentes/TarjetaProducto';
 import { Vacio } from '@/componentes/Vacio';
 import { usdCentavosASats } from '@/lib/dinero';
@@ -12,6 +13,8 @@ import { categorias, cotizacionSegura, productosDelCatalogo } from '@/servidor/c
 export default function Inicio(props: PageProps<'/'>) {
   return (
     <>
+      <Puertas actual="supermercado" />
+
       <section className="encabezado">
         <h1>Del huerto a tu mesa, pagado en sats.</h1>
         <p>

@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { formatoUsd } from '@/lib/dinero';
+import { necesidadAbierta } from '@/lib/servicios';
 import { porcentajeTexto } from '@/app/admin/etiquetas';
-import { resumenAdmin } from '@/servidor/admin';
+import { resumenAdmin, serviciosAdmin, necesidadesAdmin, trabajosSinPagar } from '@/servidor/admin';
 import { exigirAdmin } from '@/servidor/sesion';
 
 import { Monto } from './Monto';
@@ -16,7 +17,12 @@ export const metadata: Metadata = {
 
 export default async function ResumenAdmin() {
   const sesion = await exigirAdmin();
-  const resumen = await resumenAdmin(sesion.usuario.id);
+  const [resumen, servicios, necesidades, sinPagar] = await Promise.all([
+    resumenAdmin(sesion.usuario.id),
+    serviciosAdmin(sesion.usuario.id),
+    necesidadesAdmin(sesion.usuario.id),
+    trabajosSinPagar(sesion.usuario.id),
+  ]);
   const red = resumen.circularidad;
   const cotizacion = resumen.cotizacionUsdBtc;
 
@@ -34,6 +40,21 @@ export default async function ResumenAdmin() {
             href="/admin/ordenes?estado=esperando_pago"
             cifra={resumen.esperandoPago}
             texto="Órdenes esperando pago"
+          />
+          <Contador
+            href="/admin/servicios"
+            cifra={servicios.filter((s) => s.activo && !s.oculto).length}
+            texto="Servicios publicados"
+          />
+          <Contador
+            href="/admin/servicios#necesidades"
+            cifra={necesidades.filter((n) => necesidadAbierta(n)).length}
+            texto="Necesidades abiertas"
+          />
+          <Contador
+            href="/admin/ordenes?tipo=servicio#sin-pagar"
+            cifra={sinPagar.length}
+            texto="Trabajos sin pagar hace más de 48 horas"
           />
         </ul>
       </section>
@@ -87,6 +108,7 @@ export default async function ResumenAdmin() {
           }))}
         />
         {red.porNegocio.length === 0 && <p className={estilos.vacio}>Todavía no hay negocios.</p>}
+        <p className={estilos.ayuda}>Cuenta productos y servicios: toda orden pagada suma.</p>
       </section>
 
       <section className={estilos.bloque} aria-labelledby="titulo-comision">

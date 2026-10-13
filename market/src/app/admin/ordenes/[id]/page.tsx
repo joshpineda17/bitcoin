@@ -31,16 +31,28 @@ export default async function PaginaOrden(props: { params: Promise<{ id: string 
   const orden = await ordenDetalleAdmin(sesion.usuario.id, id);
   if (!orden) notFound();
 
-  const fechas: [string, string | null][] = [
-    ['Creada', orden.creadaEn],
-    ['Pagada', orden.pagadaEn],
-    ['Lista', orden.listaEn],
-    ['Entregada', orden.entregadaEn],
-    ['Cerrada', orden.cerradaEn],
-    ['Expirada', orden.expiradaEn],
-    ['Disputada', orden.disputadaEn],
-    ['Resuelta', orden.resueltaEn],
-  ];
+  const esTrabajo = orden.tipo === 'servicio';
+
+  // A job is agreed (created as `acordada`), done, paid or cancelled. It has no delivery step.
+  const fechas: [string, string | null][] = esTrabajo
+    ? [
+        ['Acordada', orden.creadaEn],
+        ['Hecha', orden.hechaEn],
+        ['Pagada', orden.pagadaEn],
+        ['Cancelada', orden.canceladaEn],
+        ['Disputada', orden.disputadaEn],
+        ['Resuelta', orden.resueltaEn],
+      ]
+    : [
+        ['Creada', orden.creadaEn],
+        ['Pagada', orden.pagadaEn],
+        ['Lista', orden.listaEn],
+        ['Entregada', orden.entregadaEn],
+        ['Cerrada', orden.cerradaEn],
+        ['Expirada', orden.expiradaEn],
+        ['Disputada', orden.disputadaEn],
+        ['Resuelta', orden.resueltaEn],
+      ];
 
   return (
     <article className={estilos.bloque} aria-labelledby="titulo-orden">
@@ -50,7 +62,7 @@ export default async function PaginaOrden(props: { params: Promise<{ id: string 
 
       <div className={estilos.cabeceraTarjeta}>
         <h2 id="titulo-orden" className={estilos.subtitulo}>
-          Orden {orden.numero}
+          {esTrabajo ? `Trabajo ${orden.numero}` : `Orden ${orden.numero}`}
         </h2>
         <span className={estilos.estado}>{ETIQUETA_ESTADO[orden.estado]}</span>
       </div>
@@ -72,10 +84,18 @@ export default async function PaginaOrden(props: { params: Promise<{ id: string 
             <dt>Comprador</dt>
             <dd>{nombreVisible(orden.comprador)}</dd>
           </div>
-          <div>
-            <dt>Entrega</dt>
-            <dd>{orden.modoEntrega === null ? '—' : (ETIQUETA_MODO[orden.modoEntrega] ?? orden.modoEntrega)}</dd>
-          </div>
+          {!esTrabajo && (
+            <div>
+              <dt>Entrega</dt>
+              <dd>{orden.modoEntrega === null ? '—' : (ETIQUETA_MODO[orden.modoEntrega] ?? orden.modoEntrega)}</dd>
+            </div>
+          )}
+          {esTrabajo && orden.motivoCancelacion !== null && (
+            <div className={estilos.ancho}>
+              <dt>Motivo de la cancelación</dt>
+              <dd className={estilos.textoLargo}>{orden.motivoCancelacion}</dd>
+            </div>
+          )}
           <div className={estilos.ancho}>
             <dt>Total</dt>
             <dd className={estilos.dato}>{montoExacto(orden.totalSats, orden.totalUsdCentavos)}</dd>
@@ -93,17 +113,19 @@ export default async function PaginaOrden(props: { params: Promise<{ id: string 
 
       <section aria-labelledby="productos-orden" className={estilos.bloque}>
         <h3 id="productos-orden" className={estilos.subtitulo}>
-          Productos
+          {esTrabajo ? 'Detalle del trabajo' : 'Productos'}
         </h3>
         {orden.lineas.length === 0 ? (
-          <p className={estilos.vacio}>Esta orden no tiene productos.</p>
+          <p className={estilos.vacio}>{esTrabajo ? 'Este trabajo no tiene detalle.' : 'Esta orden no tiene productos.'}</p>
         ) : (
           <ul className={estilos.listaLineas}>
             {orden.lineas.map((l, i) => (
               <li key={i} className={estilos.tarjeta}>
                 <span className={estilos.tarjetaTitulo}>{l.nombre}</span>
                 <span>
-                  {l.cantidad} × {l.unidad} · {formatoUsd(l.precioUsdCentavos)} por unidad
+                  {esTrabajo
+                    ? formatoUsd(l.precioUsdCentavos)
+                    : `${l.cantidad} × ${l.unidad} · ${formatoUsd(l.precioUsdCentavos)} por unidad`}
                 </span>
               </li>
             ))}

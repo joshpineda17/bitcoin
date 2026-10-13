@@ -3,7 +3,7 @@
 // Entry points the payment screen calls. Each reads the session itself; the buyer check
 // happens in src/servidor/pagos.ts.
 
-import { estadoDePago, reintentarCobro, simularPago } from '@/servidor/pagos';
+import { estadoDePago, reiniciarCobro, reintentarCobro, simularPago } from '@/servidor/pagos';
 import { fallo, type Resultado } from '@/servidor/resultado';
 import { sesionActual } from '@/servidor/sesion';
 
@@ -24,6 +24,14 @@ export async function reintentarCobroAccion(ordenId: string): Promise<Resultado<
   const sesion = await sesionActual();
   if (!sesion) return fallo('NO_ENCONTRADA', MENSAJE_NO_ENCONTRADA);
   return reintentarCobro(ordenId, sesion.usuario.id);
+}
+
+// "Generar otra solicitud" for a job: its lapsed request is replaced by a new one, at today's quote.
+export async function reiniciarCobroAccion(ordenId: string): Promise<Resultado<EstadoPago>> {
+  if (!UUID.test(ordenId)) return fallo('NO_ENCONTRADA', MENSAJE_NO_ENCONTRADA);
+  const sesion = await sesionActual();
+  if (!sesion) return fallo('NO_ENCONTRADA', MENSAJE_NO_ENCONTRADA);
+  return reiniciarCobro(ordenId, sesion.usuario.id);
 }
 
 export async function simularPagoAccion(ordenId: string): Promise<Resultado<null>> {

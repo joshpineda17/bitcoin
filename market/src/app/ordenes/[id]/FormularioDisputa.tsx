@@ -8,7 +8,8 @@ import { useAccion } from './useAccion';
 
 // The buyer's dispute form. It sits behind a disclosure, so it does not compete with the main
 // action. The text says who reviews it and who pays a refund, because the app holds no money.
-export function FormularioDisputa({ ordenId }: { ordenId: string }) {
+// A job not paid yet is disputed before payment: the review decides whether it is owed.
+export function FormularioDisputa({ ordenId, trabajoSinPagar = false }: { ordenId: string; trabajoSinPagar?: boolean }) {
   const [abierto, setAbierto] = useState(false);
   const [motivo, setMotivo] = useState('');
   const [evidencia, setEvidencia] = useState('');
@@ -37,16 +38,20 @@ export function FormularioDisputa({ ordenId }: { ordenId: string }) {
         aria-controls="formulario-disputa"
         onClick={() => setAbierto((v) => !v)}
       >
-        Tengo un problema
+        {trabajoSinPagar ? 'No estoy de acuerdo con el trabajo' : 'Tengo un problema'}
       </button>
 
       {abierto && (
         <form id="formulario-disputa" className={styles.formulario} onSubmit={enviar} noValidate>
-          <p className={styles.ayuda}>
-            Un administrador de CacaoMarket revisa cada disputa. CacaoMarket nunca tiene el dinero,
-            así que si corresponde un reembolso, lo paga el vendedor fuera de la app y vos lo confirmás
-            después.
-          </p>
+          {trabajoSinPagar ? (
+            <p className={styles.ayuda}>Una persona de CacaoMarket revisa el caso y decide si corresponde pagar.</p>
+          ) : (
+            <p className={styles.ayuda}>
+              Un administrador de CacaoMarket revisa cada disputa. CacaoMarket nunca tiene el dinero,
+              así que si corresponde un reembolso, lo paga el vendedor fuera de la app y vos lo confirmás
+              después.
+            </p>
+          )}
 
           <div className={styles.campoGrupo}>
             <label htmlFor="disputa-motivo" className="campo-etiqueta">

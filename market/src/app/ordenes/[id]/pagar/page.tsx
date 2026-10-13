@@ -12,6 +12,8 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // States that still belong on this screen. Anything later means the order was paid.
 const ESTADOS_DE_PAGO: EstadoOrden[] = ['creada', 'esperando_pago', 'expirada'];
+// A job is payable once its work is done ('hecha'); its request is made here, when the screen opens.
+const ESTADOS_DE_TRABAJO: EstadoOrden[] = ['hecha', 'esperando_pago'];
 
 export const metadata: Metadata = { title: 'Pagar la orden' };
 
@@ -38,7 +40,10 @@ async function PagoOrden({ params }: { params: Promise<{ id: string }> }) {
   let estado = lectura.dato;
   let problema: string | null = null;
   // The order exists but its payment request failed earlier: try again on load.
-  if (estado.estado === 'creada') {
+  // A job's request is made here too, so its sats are fixed when the client opens the screen.
+  const trabajo = estado.tipo === 'servicio';
+  const pidesCobro = estado.estado === 'creada' || (trabajo && estado.estado === 'hecha');
+  if (pidesCobro) {
     const cobro = await asegurarCobro(id);
     if (cobro.ok) {
       const relectura = await estadoDePago(id, sesion.usuario.id);
@@ -48,7 +53,8 @@ async function PagoOrden({ params }: { params: Promise<{ id: string }> }) {
     }
   }
 
-  if (!ESTADOS_DE_PAGO.includes(estado.estado)) redirect(`/ordenes/${id}`);
+  const pagable = trabajo ? ESTADOS_DE_TRABAJO.includes(estado.estado) : ESTADOS_DE_PAGO.includes(estado.estado);
+  if (!pagable) redirect(`/ordenes/${id}`);
 
   return <PagoCliente ordenId={id} inicial={estado} errorCobro={problema} />;
 }

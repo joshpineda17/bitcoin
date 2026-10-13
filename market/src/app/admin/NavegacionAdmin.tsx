@@ -6,6 +6,7 @@ import estilos from './estilos.module.css';
 const ENLACES = [
   { href: '/admin', texto: 'Resumen' },
   { href: '/admin/negocios', texto: 'Negocios' },
+  { href: '/admin/servicios', texto: 'Servicios' },
   { href: '/admin/ordenes', texto: 'Órdenes' },
   { href: '/admin/disputas', texto: 'Disputas' },
   { href: '/admin/auditoria', texto: 'Auditoría' },

@@ -5,12 +5,19 @@ import { type FormEvent, startTransition, useActionState, useEffect, useId, useS
 
 import { resolverDisputaAccion } from '../acciones';
 import estilos from '../estilos.module.css';
-import { ETIQUETA_RESULTADO, formatoFecha, montoExacto, nombreVisible, RESULTADOS_DISPUTA } from '../etiquetas';
+import { ETIQUETA_RESULTADO, formatoFecha, montoExacto, nombreVisible, type ResultadoDisputa } from '../etiquetas';
 import type { DisputaAdmin } from '@/servidor/admin';
+
+// A dispute with the results its order allows. Open ones carry them; resolved ones do not need them.
+export type DisputaParaResolver = DisputaAdmin & {
+  resultados: ResultadoDisputa[];
+  // A job never paid: its two results mean owed or not owed, and the form explains that.
+  sinPagar: boolean;
+};
 
 // One action state for the list. A resolved dispute moves to the bottom of the list and its card
 // is remounted, so the answer is kept here and shown in the card that was submitted.
-export function ListaDisputas({ disputas }: { disputas: DisputaAdmin[] }) {
+export function ListaDisputas({ disputas }: { disputas: DisputaParaResolver[] }) {
   const [resultado, accion, enCurso] = useActionState(resolverDisputaAccion, null);
   const [ordenEnviada, setOrdenEnviada] = useState<string | null>(null);
 
@@ -48,7 +55,7 @@ function TarjetaDisputa({
   aviso,
   onEnviar,
 }: {
-  disputa: DisputaAdmin;
+  disputa: DisputaParaResolver;
   enCurso: boolean;
   aviso: Aviso | null;
   onEnviar: (ordenId: string, datos: FormData) => void;
@@ -94,7 +101,14 @@ function TarjetaDisputa({
       </dl>
 
       {abierta ? (
-        <FormularioResolver ordenId={d.ordenId} enCurso={enCurso} aviso={aviso} onEnviar={onEnviar} />
+        <FormularioResolver
+          ordenId={d.ordenId}
+          resultados={d.resultados}
+          sinPagar={d.sinPagar}
+          enCurso={enCurso}
+          aviso={aviso}
+          onEnviar={onEnviar}
+        />
       ) : (
         <>
           {aviso && <Mensaje aviso={aviso} id={`aviso-${d.ordenId}`} />}
@@ -111,7 +125,7 @@ function TarjetaDisputa({
               <dt>Nota de resolución</dt>
               <dd className={estilos.textoLargo}>{d.notaResolucion || '—'}</dd>
             </div>
-            {d.resultado !== 'sin_reembolso' && (
+            {(d.resultado === 'reembolso_total' || d.resultado === 'reembolso_parcial') && (
               <>
                 <div className={estilos.ancho}>
                   <dt>Reembolso marcado por el vendedor</dt>
@@ -145,11 +159,15 @@ function Mensaje({ aviso, id }: { aviso: Aviso; id: string }) {
 // Resolves an open dispute. The server checks the admin role, the result and the note length.
 function FormularioResolver({
   ordenId,
+  resultados,
+  sinPagar,
   enCurso,
   aviso,
   onEnviar,
 }: {
   ordenId: string;
+  resultados: ResultadoDisputa[];
+  sinPagar: boolean;
   enCurso: boolean;
   aviso: Aviso | null;
   onEnviar: (ordenId: string, datos: FormData) => void;
@@ -167,7 +185,7 @@ function FormularioResolver({
 
       <fieldset className={estilos.opciones}>
         <legend>Resultado</legend>
-        {RESULTADOS_DISPUTA.map((r) => (
+        {resultados.map((r) => (
           <label key={r} className={estilos.opcion}>
             <input type="radio" name="resultado" value={r} />
             {ETIQUETA_RESULTADO[r]}
@@ -193,8 +211,9 @@ function FormularioResolver({
       </div>
 
       <p className={estilos.explicacion}>
-        CacaoMarket no mueve dinero. Si la resolución pide reembolso, el vendedor lo paga desde su billetera y el
-        comprador lo confirma.
+        {sinPagar
+          ? 'Si corresponde pagar, el trabajo vuelve a quedar por cobrar. Si no corresponde, el trabajo se cancela.'
+          : 'CacaoMarket no mueve dinero. Si la resolución pide reembolso, el vendedor lo paga desde su billetera y el comprador lo confirma.'}
       </p>
 
       {aviso && <Mensaje aviso={aviso} id={`aviso-${ordenId}`} />}

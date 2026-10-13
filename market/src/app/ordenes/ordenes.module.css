@@ -42,9 +42,31 @@
   gap: 8px;
 }
 
+.titulo {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* Small tag above the title: what kind of order the card is. */
+.tipo {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .numero {
   font-size: 1.125rem;
   font-weight: 800;
+}
+
+.enlaceSeccion {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alto-toque);
+  color: var(--tostado);
+  font-weight: 700;
 }
 
 .linea {

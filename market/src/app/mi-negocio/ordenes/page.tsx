@@ -9,7 +9,7 @@ import styles from '@/app/ordenes/ordenes.module.css';
 import type { ResumenOrden } from '@/app/ordenes/tipos';
 import { cobradoHoy, ventasDe } from '@/servidor/pedidos';
 import { exigirVendedor } from '@/servidor/sesion';
-import type { EstadoOrden } from '@/lib/estados';
+import type { EstadoOrden, TipoOrden } from '@/lib/estados';
 
 export default function PaginaVentas(props: PageProps<'/mi-negocio/ordenes'>) {
   return (
@@ -20,12 +20,15 @@ export default function PaginaVentas(props: PageProps<'/mi-negocio/ordenes'>) {
 }
 
 // Each group is one step the seller can take next. Orders in the history group need nothing.
-const GRUPOS: { id: string; titulo: string; estados: EstadoOrden[] }[] = [
-  { id: 'por-preparar', titulo: 'Por preparar', estados: ['pagada'] },
-  { id: 'listas', titulo: 'Listas para entregar', estados: ['lista'] },
-  { id: 'esperando', titulo: 'Esperando pago', estados: ['creada', 'esperando_pago'] },
+// `tipo` keeps a group to one kind of order; without it a group takes both.
+const GRUPOS: { id: string; titulo: string; tipo?: TipoOrden; estados: EstadoOrden[] }[] = [
+  { id: 'trabajos-acordados', titulo: 'Trabajos acordados', tipo: 'servicio', estados: ['acordada'] },
+  { id: 'trabajos-cobrar', titulo: 'Trabajos por cobrar', tipo: 'servicio', estados: ['hecha', 'esperando_pago'] },
+  { id: 'por-preparar', titulo: 'Por preparar', tipo: 'productos', estados: ['pagada'] },
+  { id: 'listas', titulo: 'Listas para entregar', tipo: 'productos', estados: ['lista'] },
+  { id: 'esperando', titulo: 'Esperando pago', tipo: 'productos', estados: ['creada', 'esperando_pago'] },
   { id: 'disputa', titulo: 'En disputa', estados: ['disputada', 'resuelta'] },
-  { id: 'historial', titulo: 'Historial', estados: ['entregada', 'cerrada', 'expirada'] },
+  { id: 'historial', titulo: 'Historial', estados: ['entregada', 'cerrada', 'expirada', 'cancelada'] },
 ];
 
 // Groups that wait for the seller are short and shown whole. Only the history grows without limit,
@@ -58,7 +61,9 @@ async function Ventas({ searchParams }: { searchParams: Promise<{ pagina?: strin
         />
       ) : (
         GRUPOS.map((grupo) => {
-          const todas: ResumenOrden[] = ordenes.filter((o) => grupo.estados.includes(o.estado));
+          const todas: ResumenOrden[] = ordenes.filter(
+            (o) => grupo.estados.includes(o.estado) && (!grupo.tipo || o.tipo === grupo.tipo),
+          );
           if (todas.length === 0) return null;
           const pagina = grupo.id === 'historial' ? paginar(todas, leerPagina(valorPagina)) : null;
           const de = pagina ? pagina.items : todas;

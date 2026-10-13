@@ -347,7 +347,7 @@ function validarCampos(datos: DatosServicio): Resultado<CamposServicio> {
     !datos.fotos.every((f): f is string => typeof f === 'string') ||
     datos.fotos.length > LIMITES.fotosServicio.maximo
   ) {
-    return fallo('DATOS_INVALIDOS', `Un servicio puede tener hasta ${LIMITES.fotosServicio.maximo} fotos.`);
+    return fallo('DATOS_INVALIDOS', `Un servicio puede tener una sola foto.`);
   }
 
   // A quoted service stores no price and no unit: the price comes from each job.

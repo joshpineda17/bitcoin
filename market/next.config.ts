@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
     return [
       { source: `/productos/:id(${ID_NO_UUID})`, destination: '/no-existe' },
       { source: `/negocios/:id(${ID_NO_UUID})`, destination: '/no-existe' },
+      { source: `/servicios/:id(${ID_NO_UUID})`, destination: '/no-existe' },
+      { source: `/necesito/:id((?!nuevo$)${ID_NO_UUID})`, destination: '/no-existe' },
     ];
   },
 };

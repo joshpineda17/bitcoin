@@ -18,6 +18,8 @@ type Props = {
   usuarioId: string;
   otraParte: string;
   soloLectura: boolean;
+  // Why the chat is read only; the product wording is the default.
+  motivoSoloLectura?: string;
   inicial: Mensaje[];
 };
 
@@ -41,7 +43,14 @@ function combinar(...listas: Mensaje[][]): Mensaje[] {
 const INTERVALO_SONDEO_MS = 10_000;
 
 // Chat for one order. New messages arrive by Realtime; a 10 second read is the fallback.
-export function Chat({ ordenId, usuarioId, otraParte, soloLectura, inicial }: Props) {
+export function Chat({
+  ordenId,
+  usuarioId,
+  otraParte,
+  soloLectura,
+  motivoSoloLectura = 'La orden expiró. El chat quedó en solo lectura.',
+  inicial,
+}: Props) {
   const router = useRouter();
   const [recibidos, setRecibidos] = useState<Mensaje[]>([]);
   const [texto, setTexto] = useState('');
@@ -172,7 +181,7 @@ export function Chat({ ordenId, usuarioId, otraParte, soloLectura, inicial }: Pr
       </div>
 
       {soloLectura ? (
-        <p className={styles.ayuda}>La orden expiró. El chat quedó en solo lectura.</p>
+        <p className={styles.ayuda}>{motivoSoloLectura}</p>
       ) : (
         <form
           className={styles.formulario}

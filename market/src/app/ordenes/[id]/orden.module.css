@@ -16,6 +16,26 @@
   font-weight: 600;
 }
 
+/* A job's reminder: who pays and when, always in view while the job is agreed or done. */
+.recordatorio {
+  padding: 14px 16px;
+  border-radius: var(--radio-chico);
+  background: var(--arena);
+  color: var(--tostado);
+  font-weight: 600;
+}
+
+/* Sats before payment are an estimate; the note sits under the price tag. */
+.aproximado {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+.motivo {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 .bloque {
   display: grid;
   gap: 14px;
@@ -189,7 +209,8 @@
   color: var(--tostado);
 }
 
-.pendiente {
+.pendiente,
+.omitido {
   border-left-style: dashed;
   border-left-color: var(--chocolate);
 }

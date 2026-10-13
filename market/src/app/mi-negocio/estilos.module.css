@@ -87,15 +87,41 @@
   gap: 8px;
 }
 
+/* Quotes waiting for an answer: a bordered line that links to the quotes page. */
+.avisoEnlace {
+  padding: 12px 14px;
+  border: 2px solid var(--tostado);
+  border-radius: var(--radio-chico);
+  background: var(--blanco);
+  font-weight: 700;
+}
+
+.avisoEnlace a {
+  min-height: var(--alto-toque);
+  display: inline-flex;
+  align-items: center;
+}
+
 /* Sub-navigation: a row of pills, the current section filled. */
 .subnav {
+  min-width: 0;
   margin-bottom: 24px;
+  /* Five sections do not fit a 320px phone: the row scrolls inside its own box, never the page. */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
 .subnav ul {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
+  width: max-content;
+  /* Room for the focus ring, which the scroll box would otherwise cut off. */
+  padding: 4px 3px;
+}
+
+.subnav li {
+  flex: none;
 }
 
 .subnav a {
@@ -103,6 +129,7 @@
   align-items: center;
   min-height: 44px;
   padding: 0 16px;
+  white-space: nowrap;
   border: 2px solid var(--tostado);
   border-radius: 999px;
   font-weight: 600;

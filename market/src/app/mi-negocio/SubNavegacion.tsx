@@ -8,7 +8,9 @@ import estilos from './estilos.module.css';
 const SECCIONES = [
   { href: '/mi-negocio', texto: 'Resumen' },
   { href: '/mi-negocio/productos', texto: 'Productos' },
+  { href: '/mi-negocio/servicios', texto: 'Servicios' },
   { href: '/mi-negocio/ordenes', texto: 'Órdenes' },
+  { href: '/mi-negocio/cotizaciones', texto: 'Cotizaciones' },
 ];
 
 // Only the summary matches exactly; the others also match their own sub-pages.

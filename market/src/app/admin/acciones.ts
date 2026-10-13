@@ -2,7 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { cambiarEstadoNegocio, resolverDisputa } from '@/servidor/admin';
+import {
+  cambiarEstadoNegocio,
+  ocultarNecesidad,
+  ocultarServicio,
+  resolverDisputa,
+} from '@/servidor/admin';
 import { exigirAdmin } from '@/servidor/sesion';
 import { exito, fallo, type Resultado } from '@/servidor/resultado';
 
@@ -67,4 +72,48 @@ export async function resolverDisputaAccion(
 
   revalidatePath('/admin', 'layout');
   return exito('Disputa resuelta. Si corresponde un reembolso, el vendedor lo paga y lo marca.');
+}
+
+// Hiding only removes a listing from other people's view. The database writes the audit row.
+export async function ocultarServicioAccion(
+  _previo: Resultado<string> | null,
+  datos: FormData,
+): Promise<Resultado<string>> {
+  const sesion = await exigirAdmin();
+  const servicio = texto(datos.get('id'));
+  const oculto = texto(datos.get('oculto'));
+
+  if (!UUID.test(servicio)) return fallo('NO_ENCONTRADA', 'No encontramos ese servicio.');
+  if (oculto !== 'si' && oculto !== 'no') {
+    return fallo('DATOS_INVALIDOS', 'Elegí si el servicio se oculta o se vuelve a mostrar.');
+  }
+
+  const resultado = await ocultarServicio(sesion.usuario.id, servicio, oculto === 'si');
+  if (!resultado.ok) return resultado;
+
+  // The catalogue is public: its cached pages must drop or regain the service.
+  revalidatePath('/admin', 'layout');
+  revalidatePath('/servicios', 'layout');
+  return exito(oculto === 'si' ? 'Servicio oculto. Ya no se ve en el catálogo.' : 'Servicio visible otra vez.');
+}
+
+export async function ocultarNecesidadAccion(
+  _previo: Resultado<string> | null,
+  datos: FormData,
+): Promise<Resultado<string>> {
+  const sesion = await exigirAdmin();
+  const necesidad = texto(datos.get('id'));
+  const oculta = texto(datos.get('oculta'));
+
+  if (!UUID.test(necesidad)) return fallo('NO_ENCONTRADA', 'No encontramos esa necesidad.');
+  if (oculta !== 'si' && oculta !== 'no') {
+    return fallo('DATOS_INVALIDOS', 'Elegí si la necesidad se oculta o se vuelve a mostrar.');
+  }
+
+  const resultado = await ocultarNecesidad(sesion.usuario.id, necesidad, oculta === 'si');
+  if (!resultado.ok) return resultado;
+
+  revalidatePath('/admin', 'layout');
+  revalidatePath('/necesito', 'layout');
+  return exito(oculta === 'si' ? 'Necesidad oculta. Ya no se ve en el tablón.' : 'Necesidad visible otra vez.');
 }

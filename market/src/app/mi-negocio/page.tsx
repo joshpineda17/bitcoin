@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
 
 import { Boton } from '@/componentes/Boton';
 import { miNegocio, type DatosNegocio, type Negocio } from '@/servidor/cuentas';
+import { cotizacionesDelNegocio } from '@/servidor/cotizaciones';
 import { exigirSesion } from '@/servidor/sesion';
 
 import { FormularioNegocio } from './FormularioNegocio';
@@ -89,12 +91,22 @@ function Aprobado({ negocio }: { negocio: Negocio }) {
 
       <InterruptorAbierto abierto={negocio.abierto} />
 
+      <Suspense fallback={null}>
+        <CotizacionesPorResponder negocioId={negocio.id} />
+      </Suspense>
+
       <nav aria-label="Enlaces de mi negocio" className={estilos.accesos}>
         <Boton href="/mi-negocio/productos" variante="secundario">
           Productos
         </Boton>
+        <Boton href="/mi-negocio/servicios" variante="secundario">
+          Servicios
+        </Boton>
         <Boton href="/mi-negocio/ordenes" variante="secundario">
           Órdenes
+        </Boton>
+        <Boton href="/mi-negocio/cotizaciones" variante="secundario">
+          Cotizaciones
         </Boton>
         <Boton href={`/negocios/${negocio.id}`} variante="secundario">
           Ver tu página pública
@@ -103,6 +115,23 @@ function Aprobado({ negocio }: { negocio: Negocio }) {
 
       <FormularioNegocio modo="editar" valores={aValores(negocio)} />
     </div>
+  );
+}
+
+// Quotes waiting for the shop's answer. Silent when there are none.
+async function CotizacionesPorResponder({ negocioId }: { negocioId: string }) {
+  const cotizaciones = await cotizacionesDelNegocio(negocioId);
+  const pendientes = cotizaciones.filter((c) => c.estado === 'solicitada').length;
+  if (pendientes === 0) return null;
+
+  return (
+    <p className={estilos.avisoEnlace}>
+      <Link href="/mi-negocio/cotizaciones">
+        {pendientes === 1
+          ? 'Tenés 1 cotización por responder'
+          : `Tenés ${pendientes} cotizaciones por responder`}
+      </Link>
+    </p>
   );
 }
 

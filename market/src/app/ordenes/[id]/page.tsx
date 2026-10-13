@@ -43,8 +43,23 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
   // The buttons are exactly what the state machine allows for this role.
   const acciones = accionesPosibles(paraAcciones(detalle), detalle.rol);
   const esComprador = detalle.rol === 'comprador';
+  const trabajo = detalle.tipo === 'servicio';
+  // A job's sats are set when the client's payment request is made, not when it is agreed.
+  const satsFijos = detalle.pagadaEn !== null || detalle.estado === 'esperando_pago';
+  const satsAproximados = trabajo && !satsFijos && detalle.estado !== 'cancelada';
   const cotizacionTexto = `1 BTC = ${formatoUsd(Math.round(detalle.cotizacionUsdBtc * 100))}`;
   const modoTexto = detalle.modoEntrega === 'recogida' ? 'Recogida en punto' : 'Entrega por el vendedor';
+  const parte = trabajo
+    ? `${esComprador ? 'Quien trabaja' : 'Cliente'}: ${detalle.otraParte}`
+    : `${esComprador ? 'Tienda' : 'Comprador'}: ${detalle.otraParte}`;
+  const descripcion = descripcionDeEstado(detalle.estado, detalle.rol, detalle.tipo);
+  // A job's reminder while agreed or done: who pays and when.
+  const recordatorio =
+    trabajo && (detalle.estado === 'acordada' || detalle.estado === 'hecha')
+      ? esComprador
+        ? 'Pagás cuando el trabajo esté hecho. CacaoMarket no guarda tu dinero.'
+        : 'Cobrás al terminar. Coordiná bien antes de ir.'
+      : null;
 
   return (
     <article className={styles.orden} aria-labelledby="orden-titulo">
@@ -54,20 +69,26 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
             ← Volver a {esComprador ? 'mis compras' : 'mis ventas'}
           </Link>
         </p>
-        <h1 id="orden-titulo">Orden {detalle.numero}</h1>
-        <p className={styles.parte}>
-          {esComprador ? 'Tienda' : 'Comprador'}: {detalle.otraParte}
-        </p>
+        <h1 id="orden-titulo">{trabajo ? `Trabajo ${detalle.numero}` : `Orden ${detalle.numero}`}</h1>
+        <p className={styles.parte}>{parte}</p>
         <p>
           <EstadoOrden estado={detalle.estado} />
         </p>
-        <p>{descripcionDeEstado(detalle.estado, detalle.rol, detalle.tipo)}</p>
+        {/* The provider's agreed sentence is the same text as the reminder: show it once. */}
+        {descripcion !== recordatorio && <p>{descripcion}</p>}
       </header>
+
+      {recordatorio !== null && <p className={styles.recordatorio}>{recordatorio}</p>}
 
       {acciones.length > 0 && (
         <section aria-labelledby="que-sigue" className={styles.bloque}>
           <h2 id="que-sigue">Qué sigue</h2>
-          <AccionesOrden ordenId={detalle.id} acciones={acciones} />
+          <AccionesOrden
+            ordenId={detalle.id}
+            acciones={acciones}
+            trabajo={trabajo}
+            pagada={detalle.pagadaEn !== null}
+          />
         </section>
       )}
 
@@ -79,25 +100,58 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
         </section>
       )}
 
+      {/* A job's steps: agreed, done, paid (the entregada step), closed. */}
       <Cronologia
+        tipo={detalle.tipo}
         estado={detalle.estado}
-        fechas={{
-          pagada: detalle.pagadaEn,
-          lista: detalle.listaEn,
-          entregada: detalle.entregadaEn,
-          cerrada: detalle.cerradaEn,
-          expirada: detalle.expiradaEn,
-          disputada: detalle.disputadaEn,
-          resuelta: detalle.resueltaEn,
-        }}
+        motivo={detalle.motivoCancelacion}
+        fechas={
+          trabajo
+            ? {
+                acordada: detalle.creadaEn,
+                hecha: detalle.hechaEn,
+                entregada: detalle.pagadaEn,
+                cerrada: detalle.cerradaEn,
+                cancelada: detalle.canceladaEn,
+                disputada: detalle.disputadaEn,
+                resuelta: detalle.resueltaEn,
+              }
+            : {
+                pagada: detalle.pagadaEn,
+                lista: detalle.listaEn,
+                entregada: detalle.entregadaEn,
+                cerrada: detalle.cerradaEn,
+                expirada: detalle.expiradaEn,
+                disputada: detalle.disputadaEn,
+                resuelta: detalle.resueltaEn,
+              }
+        }
       />
 
       <section aria-labelledby="productos-titulo" className={styles.bloque}>
-        <h2 id="productos-titulo">Productos y total</h2>
+        <h2 id="productos-titulo">{trabajo ? 'Qué se acordó' : 'Productos y total'}</h2>
         <ul className={styles.lineas}>
           {detalle.lineas.map((linea) => {
             const subtotal = linea.precioUsdCentavos * linea.cantidad;
             const sats = usdCentavosASats(subtotal, detalle.cotizacionUsdBtc);
+            if (trabajo) {
+              // The unit reads like the service price ("por persona"); a need's job has the unit "trabajo".
+              const precio = formatoUsd(linea.precioUsdCentavos);
+              const unidad = linea.unidad === 'trabajo' ? '' : ` ${linea.unidad}`;
+              return (
+                <li key={linea.id} className={styles.linea}>
+                  <span className={styles.lineaNombre}>{linea.nombre}</span>
+                  <span className="dato">
+                    {linea.cantidad > 1 ? `${linea.cantidad} × ` : ''}
+                    {precio}
+                    {unidad}
+                  </span>
+                  <span className={styles.totales}>
+                    {formatoSats(sats)} · {formatoUsd(subtotal)}
+                  </span>
+                </li>
+              );
+            }
             return (
               <li key={linea.id} className={styles.linea}>
                 <span className={styles.lineaNombre}>{linea.nombre}</span>
@@ -116,12 +170,16 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
             <dt>Total</dt>
             <dd>
               <EtiquetaPrecio usdCentavos={detalle.totalUsdCentavos} sats={detalle.totalSats} />
+              {satsAproximados && <p className={styles.aproximado}>Aproximado. Los sats se fijan cuando pagás.</p>}
             </dd>
           </div>
-          <div>
-            <dt>Cotización usada</dt>
-            <dd className="dato">{cotizacionTexto}</dd>
-          </div>
+          {/* A job shows its quote once the sats are fixed. */}
+          {(!trabajo || satsFijos) && (
+            <div>
+              <dt>Cotización usada</dt>
+              <dd className="dato">{cotizacionTexto}</dd>
+            </div>
+          )}
           {/* A job has no delivery mode. */}
           {detalle.modoEntrega !== null && (
             <div>
@@ -201,7 +259,12 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
           ordenId={detalle.id}
           usuarioId={sesion.usuario.id}
           otraParte={detalle.otraParte}
-          soloLectura={detalle.estado === 'expirada'}
+          soloLectura={detalle.estado === 'expirada' || detalle.estado === 'cancelada'}
+          motivoSoloLectura={
+            detalle.estado === 'cancelada'
+              ? 'El trabajo se canceló. El chat quedó en solo lectura.'
+              : undefined
+          }
           inicial={mensajes}
         />
       </section>

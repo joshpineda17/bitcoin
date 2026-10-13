@@ -13,19 +13,45 @@ import {
   entregarConCodigoVendedor,
   marcarOrdenLista,
   marcarReembolsoVendedor,
+  marcarTrabajoHecho,
 } from './acciones';
+import { FormularioCancelar } from './FormularioCancelar';
 import { FormularioDisputa } from './FormularioDisputa';
 import { FormularioResena } from './FormularioResena';
 import styles from './orden.module.css';
 import { useAccion } from './useAccion';
 
 // Renders exactly the actions the state machine returned. Nothing here decides who may act.
-export function AccionesOrden({ ordenId, acciones }: { ordenId: string; acciones: Accion[] }) {
+// `trabajo` and `pagada` only change the wording: a job says "trabajo" where a product says "orden".
+export function AccionesOrden({
+  ordenId,
+  acciones,
+  trabajo = false,
+  pagada = true,
+}: {
+  ordenId: string;
+  acciones: Accion[];
+  trabajo?: boolean;
+  pagada?: boolean;
+}) {
   const tiene = (accion: Accion) => acciones.includes(accion);
 
   return (
     <div className={styles.bloque}>
-      {tiene('pagar') && <Boton href={`/ordenes/${ordenId}/pagar`}>Pagar la orden</Boton>}
+      {tiene('pagar') && (
+        <Boton href={`/ordenes/${ordenId}/pagar`}>{trabajo ? 'Pagar el trabajo' : 'Pagar la orden'}</Boton>
+      )}
+
+      {tiene('marcar_hecha') && (
+        <BotonConConfirmacion
+          etiqueta="Marcar trabajo hecho"
+          pregunta="El cliente va a recibir el aviso para pagar."
+          etiquetaConfirmar="Sí, está hecho"
+          operacion={() => marcarTrabajoHecho(ordenId)}
+        />
+      )}
+
+      {tiene('cancelar') && <FormularioCancelar ordenId={ordenId} />}
 
       {tiene('confirmar_pago') && (
         <Paso descripcion="El pago no llega solo a la app cuando la Lightning Address no avisa. Confirmalo a mano.">
@@ -86,7 +112,9 @@ export function AccionesOrden({ ordenId, acciones }: { ordenId: string; acciones
         </section>
       )}
 
-      {tiene('abrir_disputa') && <FormularioDisputa ordenId={ordenId} />}
+      {tiene('abrir_disputa') && (
+        <FormularioDisputa ordenId={ordenId} trabajoSinPagar={trabajo && !pagada} />
+      )}
     </div>
   );
 }

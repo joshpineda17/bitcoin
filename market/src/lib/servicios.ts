@@ -33,7 +33,7 @@ export const LIMITES = {
   descripcionServicio: { minimo: 0, maximo: 600 },
   zona: { minimo: 0, maximo: 160 },
   unidad: { minimo: 1, maximo: 40 },
-  fotosServicio: { minimo: 0, maximo: 6 },
+  fotosServicio: { minimo: 0, maximo: 1 },
   tituloNecesidad: { minimo: 4, maximo: 100 },
   descripcionNecesidad: { minimo: 0, maximo: 1000 },
   // The text a client writes when asking a shop for a price.

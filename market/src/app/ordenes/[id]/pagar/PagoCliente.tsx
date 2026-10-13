@@ -12,7 +12,12 @@ import { clienteNavegador } from '@/lib/supabase-navegador';
 
 import { clienteEnVivo } from '../canalEnVivo';
 
-import { estadoDePagoAccion, reintentarCobroAccion, simularPagoAccion } from './acciones';
+import {
+  estadoDePagoAccion,
+  reiniciarCobroAccion,
+  reintentarCobroAccion,
+  simularPagoAccion,
+} from './acciones';
 import styles from './estilos.module.css';
 import type { EstadoPago } from './tipos';
 
@@ -23,6 +28,9 @@ const ZONA_SILENCIO = 4;
 
 const TEXTO_VENCIDA =
   'El tiempo para pagar se acabó. No pagués esta factura: el pedido se canceló y los productos volvieron al inventario.';
+// A job is not cancelled when its request lapses: it stays agreed and done, and gets a new request.
+const TEXTO_VENCIDA_TRABAJO =
+  'El tiempo de esta solicitud de pago se acabó. No pagués esa factura. Generá otra para pagar el trabajo.';
 
 // Turns the server's remaining seconds into a deadline on this device's clock. The phone clock
 // may be wrong; only the difference matters.
@@ -53,12 +61,21 @@ export function PagoCliente({
   const [vence, setVence] = useState<number | null>(() => anclar(inicial.segundosRestantes));
   // Null until mounted, so the server render and the first client render match.
   const [ahora, setAhora] = useState<number | null>(null);
+  // A job whose request lapsed goes back to 'hecha'; this tells that apart from a job never asked for one.
+  const [expiroTrabajo, setExpiroTrabajo] = useState(false);
+  const estadoPrevio = useRef<EstadoPago['estado']>(inicial.estado);
   const enVuelo = useRef(false);
   const facturaRef = useRef<HTMLTextAreaElement>(null);
   const destinoRef = useRef<HTMLInputElement>(null);
   const montoRef = useRef<HTMLInputElement>(null);
 
   const aplicar = useCallback((dato: EstadoPago) => {
+    if (dato.tipo === 'servicio') {
+      const vencio = dato.estado === 'hecha' || dato.estado === 'expirada';
+      if (vencio && estadoPrevio.current === 'esperando_pago') setExpiroTrabajo(true);
+      if (dato.estado === 'esperando_pago') setExpiroTrabajo(false);
+    }
+    estadoPrevio.current = dato.estado;
     setEstado(dato);
     setVence(anclar(dato.segundosRestantes));
     setSinConexion(false);
@@ -79,6 +96,10 @@ export function PagoCliente({
   const plazoCumplido = esperando && restante === 0;
   // Expired on the server, or the countdown reached zero here: no more paying this request.
   const vencida = estado.estado === 'expirada' || plazoCumplido;
+  // A job's lapsed request is not a cancelled order: it gets a new request instead of the product message.
+  const trabajo = estado.tipo === 'servicio';
+  const vencidaTrabajo = trabajo && (expiroTrabajo || vencida);
+  const vencidaProducto = !trabajo && vencida;
   const quedaUnMinuto = esperando && !vencida && restante !== null && restante <= 60;
   const activo = !vencida && (estado.estado === 'creada' || esperando);
 
@@ -159,12 +180,31 @@ export function PagoCliente({
     };
   }, [activo, ordenId, refrescar]);
 
+  // The server page makes a job's request on load. A page that arrives without one (for example a
+  // prefetched copy) asks once from here. Deferred to a timer, as the countdown check above.
+  const pidioCobro = useRef(false);
+  useEffect(() => {
+    if (!trabajo || estado.estado !== 'hecha') return;
+    // The flag is set when the request is sent, so a cleanup before that does not lose it.
+    const id = setTimeout(() => {
+      if (pidioCobro.current) return;
+      pidioCobro.current = true;
+      void reintentar();
+    }, 0);
+    return () => clearTimeout(id);
+    // reintentar reads the latest props; the effect only needs the state it watches.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trabajo, estado.estado]);
+
+  // A job goes from waiting for payment straight to entregada: that is the paid state for a job.
+  const pagado = estado.estado === 'pagada' || (trabajo && (estado.estado === 'entregada' || estado.estado === 'cerrada'));
+
   // "Pago recibido" stays for a second, then the buyer lands on the order.
   useEffect(() => {
-    if (estado.estado !== 'pagada') return;
+    if (!pagado) return;
     const id = setTimeout(() => router.replace(`/ordenes/${ordenId}`), 1000);
     return () => clearTimeout(id);
-  }, [estado.estado, ordenId, router]);
+  }, [pagado, ordenId, router]);
 
   async function copiar(valor: string, campo: HTMLInputElement | HTMLTextAreaElement | null) {
     try {
@@ -184,10 +224,11 @@ export function PagoCliente({
     }
   }
 
+  // A job asks for its request again through its own action; a product order only retries a failed one.
   async function reintentar() {
     setOcupado(true);
     try {
-      const r = await reintentarCobroAccion(ordenId);
+      const r = trabajo ? await reiniciarCobroAccion(ordenId) : await reintentarCobroAccion(ordenId);
       if (r.ok) aplicar(r.dato);
       else setProblema(r.mensaje);
     } catch {
@@ -211,9 +252,12 @@ export function PagoCliente({
   }
 
   let textoEstado: string;
-  if (estado.estado === 'pagada') textoEstado = 'Pago recibido';
-  else if (vencida) textoEstado = TEXTO_VENCIDA;
+  if (pagado) textoEstado = 'Pago recibido';
+  else if (vencidaTrabajo) textoEstado = TEXTO_VENCIDA_TRABAJO;
+  else if (vencidaProducto) textoEstado = TEXTO_VENCIDA;
   else if (estado.estado === 'creada') textoEstado = 'Estamos registrando tu orden. Esperá un momento.';
+  // A job waiting for its first request: shown when the request could not be made.
+  else if (estado.estado === 'hecha') textoEstado = 'Todavía no hay una solicitud de pago para este trabajo.';
   else if (quedaUnMinuto) textoEstado = 'Queda menos de un minuto para pagar.';
   else textoEstado = 'Esperando tu pago. Esta pantalla se actualiza sola.';
 
@@ -228,8 +272,10 @@ export function PagoCliente({
   return (
     <article className={styles.pago} aria-labelledby="titulo-pago">
       <header className={styles.cabecera}>
-        <h1 id="titulo-pago">Orden {estado.numero}</h1>
-        <p className={styles.negocio}>Pagás a {estado.negocioNombre}</p>
+        <h1 id="titulo-pago">{trabajo ? `Pagar el trabajo ${estado.numero}` : `Orden ${estado.numero}`}</h1>
+        <p className={styles.negocio}>
+          {trabajo ? `Le pagás a ${estado.negocioNombre}` : `Pagás a ${estado.negocioNombre}`}
+        </p>
       </header>
 
       <EtiquetaPrecio usdCentavos={estado.totalUsdCentavos} sats={estado.totalSats} tamano="grande" />
@@ -258,7 +304,7 @@ export function PagoCliente({
           {problema}
         </p>
       )}
-      {estado.estado === 'creada' && problema && (
+      {(estado.estado === 'creada' || (trabajo && estado.estado === 'hecha')) && problema && !vencidaTrabajo && (
         <div className={styles.acciones}>
           <Boton onClick={() => void reintentar()} disabled={ocupado}>
             Intentar de nuevo
@@ -266,7 +312,18 @@ export function PagoCliente({
         </div>
       )}
 
-      {vencida && (
+      {vencidaTrabajo && (
+        <div className={styles.acciones}>
+          <Boton onClick={() => void reintentar()} disabled={ocupado}>
+            Generar otra solicitud
+          </Boton>
+          <Boton href={`/ordenes/${ordenId}`} variante="secundario">
+            Volver al trabajo
+          </Boton>
+        </div>
+      )}
+
+      {vencidaProducto && (
         <div className={styles.acciones}>
           <Boton href="/carrito" variante="secundario">
             Volver al carrito

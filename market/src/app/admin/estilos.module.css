@@ -557,3 +557,39 @@
   font-size: 0.9375rem;
   font-weight: 600;
 }
+
+/* Status marks on a card (paused, hidden), next to its title. */
+.marcas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Jobs waiting for payment: the block above the order table. */
+.sinPagarTarjeta {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 2px solid var(--criollo);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  min-width: 0;
+}
+
+.filtros {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.filtrosGrupo {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.filtrosGrupo > p {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}

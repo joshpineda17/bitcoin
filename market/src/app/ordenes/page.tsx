@@ -43,6 +43,11 @@ async function Compras({ searchParams }: { searchParams: Promise<{ pagina?: stri
       <div className={styles.encabezado}>
         <h1>Mis compras</h1>
         <p>Seguí cada pedido, desde el pago hasta la entrega.</p>
+        <p>
+          <Link href="/cotizaciones" className={styles.enlaceSeccion}>
+            Mis cotizaciones y necesidades
+          </Link>
+        </p>
       </div>
 
       {avisos.length > 0 && (
@@ -51,11 +56,7 @@ async function Compras({ searchParams }: { searchParams: Promise<{ pagina?: stri
           <ul className={styles.avisos}>
             {avisos.map((aviso) => (
               <li key={aviso.id} className={styles.avisoItem}>
-                {aviso.ordenId ? (
-                  <Link href={`/ordenes/${aviso.ordenId}`}>{aviso.texto}</Link>
-                ) : (
-                  <span>{aviso.texto}</span>
-                )}
+                <Link href={aviso.ruta}>{aviso.texto}</Link>
                 <span className="dato">{fechaCorta(aviso.creadoEn)}</span>
               </li>
             ))}

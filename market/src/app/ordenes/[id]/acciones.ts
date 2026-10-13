@@ -5,11 +5,13 @@ import { revalidatePath } from 'next/cache';
 import { abrirDisputa, confirmarReembolso, marcarReembolso } from '@/servidor/disputas';
 import { enviarMensaje } from '@/servidor/mensajes';
 import {
+  cancelarOrden,
   confirmarPagoManual,
   crearResena,
   entregarConCodigo,
   esUuid,
   marcarEntregada,
+  marcarHecha,
   marcarLista,
 } from '@/servidor/pedidos';
 import { fallo, type Resultado } from '@/servidor/resultado';
@@ -46,6 +48,14 @@ export async function confirmarPago(ordenId: string): Promise<Resultado<null>> {
 
 export async function marcarOrdenLista(ordenId: string): Promise<Resultado<null>> {
   return transicion(ordenId, (usuarioId) => marcarLista(ordenId, usuarioId));
+}
+
+export async function marcarTrabajoHecho(ordenId: string): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => marcarHecha(ordenId, usuarioId));
+}
+
+export async function cancelarTrabajo(ordenId: string, motivo: string): Promise<Resultado<null>> {
+  return transicion(ordenId, (usuarioId) => cancelarOrden(ordenId, usuarioId, motivo));
 }
 
 export async function confirmarEntregaComprador(ordenId: string): Promise<Resultado<null>> {
