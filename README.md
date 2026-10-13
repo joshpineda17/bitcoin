@@ -4,8 +4,8 @@ Dos sitios que funcionan juntos. Cacao Media es una publicación editorial sobre
 
 Sitios en vivo:
 
-- https://cacaomedia.vercel.app
-- https://cacaotravel.vercel.app
+- https://cacao-media.vercel.app
+- https://cacao-travel.vercel.app
 
 ## La idea
 
@@ -141,7 +141,7 @@ Abrí http://localhost:4322. Cacao Media usa el puerto 4321 y Cacao Travel el 43
 
 **Sin `CACAO_SECRET`.** En desarrollo, cada proyecto usa un secreto fijo definido en `src/lib/firma.ts`. Como los dos archivos son iguales, los tokens entre los dos sitios locales funcionan sin configurar nada.
 
-**Los sitios locales hablan con producción por defecto.** Cacao Media local muestra las experiencias de https://cacaotravel.vercel.app y Cacao Travel local muestra las historias de https://cacaomedia.vercel.app. Para que se hablen entre sí en local, definí `PUBLIC_TRAVEL_URL=http://localhost:4322` en Cacao Media y `PUBLIC_MEDIA_URL=http://localhost:4321` en Cacao Travel, por ejemplo en un archivo `.env` dentro de cada carpeta de proyecto. Los `.env` están en `.gitignore`.
+**Los sitios locales hablan con producción por defecto.** Cacao Media local muestra las experiencias de https://cacao-travel.vercel.app y Cacao Travel local muestra las historias de https://cacao-media.vercel.app. Para que se hablen entre sí en local, definí `PUBLIC_TRAVEL_URL=http://localhost:4322` en Cacao Media y `PUBLIC_MEDIA_URL=http://localhost:4321` en Cacao Travel, por ejemplo en un archivo `.env` dentro de cada carpeta de proyecto. Los `.env` están en `.gitignore`.
 
 ## Pruebas
 

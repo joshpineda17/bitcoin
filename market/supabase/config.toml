@@ -438,12 +438,12 @@ enabled = true
 # The hosted project behind the public demo. `supabase config push --project-ref <id>` applies the
 # file above with these overrides. The project id is public (it is part of the API address).
 [remotes.produccion]
-project_id = "olmrwzbxluwdezycirks"
+project_id = "sxlbkarwsitgplqbtgju"
 
 [remotes.produccion.auth]
-site_url = "https://cacaomarket.vercel.app"
+site_url = "https://cacao-market.vercel.app"
 # The email link returns to /auth/confirmar, with the destination as a query parameter.
-additional_redirect_urls = ["https://cacaomarket.vercel.app/**"]
+additional_redirect_urls = ["https://cacao-market.vercel.app/**"]
 
 # Demo accounts are shared by everyone who opens the demo, and every sign-in is made by the
 # server from the same address, so the per-hour and per-address limits are raised.

@@ -164,7 +164,7 @@ const { historia, lugar, seccion, limite = 3 } = Astro.props;
   };
 
   // Only addresses on Cacao Travel's own origin. Compared as parsed origins, so a look-alike host such
-  // as "https://cacaotravel.vercel.app.evil.com" fails; an unparsable URL fails too.
+  // as "https://cacao-travel.vercel.app.evil.com" fails; an unparsable URL fails too.
   function enOrigen(url: string, origen: string): boolean {
     try {
       return new URL(url).origin === origen;

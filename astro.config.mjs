@@ -4,7 +4,7 @@ import { unified } from '@astrojs/markdown-remark';
 import { rehypeGate } from './src/lib/rehype-gate.mjs';
 
 export default defineConfig({
-  site: 'https://cacaomedia.vercel.app',
+  site: 'https://cacao-media.vercel.app',
   trailingSlash: 'always',
   // Pages are static. Only the routes that sign or check tokens (src/pages/api) run on the server.
   adapter: vercel(),

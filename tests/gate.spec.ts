@@ -5,7 +5,7 @@ const GRATIS = '/historias/como-pedir-un-cafe-de-altura/';
 const CLAVE = 'cacao-gate:la-ola-que-cambio-un-pueblo';
 const DIA = 24 * 60 * 60 * 1000;
 
-const TRAVEL = 'https://cacaotravel.vercel.app';
+const TRAVEL = 'https://cacao-travel.vercel.app';
 const TOUR = {
   id: 'prueba',
   titulo: 'Experiencia de prueba',

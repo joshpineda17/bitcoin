@@ -3,7 +3,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 export type Tour = CollectionEntry<'tours'>;
 
 /** Sister publication. Its stories are fetched from its public API. */
-export const MEDIA_URL = (import.meta.env.PUBLIC_MEDIA_URL ?? 'https://cacaomedia.vercel.app').replace(/\/$/, '');
+export const MEDIA_URL = (import.meta.env.PUBLIC_MEDIA_URL ?? 'https://cacao-media.vercel.app').replace(/\/$/, '');
 
 /** All experiences, cheapest first. */
 export async function todosLosTours(): Promise<Tour[]> {
