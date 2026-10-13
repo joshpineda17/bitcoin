@@ -6,7 +6,7 @@ import { EstadoOrden } from '@/componentes/EstadoOrden';
 import { EtiquetaPrecio } from '@/componentes/EtiquetaPrecio';
 import { Estrellas } from '@/componentes/Estrellas';
 import { formatoSats, formatoUsd, usdCentavosASats } from '@/lib/dinero';
-import { accionesPosibles, DESCRIPCION_ESTADO } from '@/lib/estados';
+import { accionesPosibles, descripcionDeEstado, ETIQUETA_RESULTADO } from '@/lib/estados';
 import { mensajesDe } from '@/servidor/mensajes';
 import { detalleDeOrden, paraAcciones } from '@/servidor/pedidos';
 import { exigirSesion } from '@/servidor/sesion';
@@ -27,12 +27,6 @@ export default function PaginaOrden(props: PageProps<'/ordenes/[id]'>) {
     </Suspense>
   );
 }
-
-const RESULTADO_TEXTO = {
-  reembolso_total: 'Reembolso total',
-  reembolso_parcial: 'Reembolso parcial',
-  sin_reembolso: 'Sin reembolso',
-} as const;
 
 // Groups the delivery code in threes: "482 913".
 function partirCodigo(codigo: string): string {
@@ -67,7 +61,7 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
         <p>
           <EstadoOrden estado={detalle.estado} />
         </p>
-        <p>{DESCRIPCION_ESTADO[detalle.estado][detalle.rol]}</p>
+        <p>{descripcionDeEstado(detalle.estado, detalle.rol, detalle.tipo)}</p>
       </header>
 
       {acciones.length > 0 && (
@@ -128,10 +122,13 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
             <dt>Cotización usada</dt>
             <dd className="dato">{cotizacionTexto}</dd>
           </div>
-          <div>
-            <dt>Entrega</dt>
-            <dd>{modoTexto}</dd>
-          </div>
+          {/* A job has no delivery mode. */}
+          {detalle.modoEntrega !== null && (
+            <div>
+              <dt>Entrega</dt>
+              <dd>{modoTexto}</dd>
+            </div>
+          )}
         </dl>
       </section>
 
@@ -160,7 +157,7 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
             {detalle.disputa.resultado && (
               <div>
                 <dt>Resultado</dt>
-                <dd>{RESULTADO_TEXTO[detalle.disputa.resultado]}</dd>
+                <dd>{ETIQUETA_RESULTADO[detalle.disputa.resultado]}</dd>
               </div>
             )}
             {detalle.disputa.notaResolucion && (

@@ -19,6 +19,10 @@ const COLOR_POR_ESTADO: Record<Estado, (typeof PARES)[keyof typeof PARES]> = {
   resuelta: PARES.hecha,
   expirada: PARES.problema,
   disputada: PARES.problema,
+  // Jobs: agreed and waiting for the work, done and waiting for payment, cancelled.
+  acordada: PARES.espera,
+  hecha: PARES.preparada,
+  cancelada: PARES.problema,
 };
 
 /** The order state as a chip: the Spanish label on a brand colour. */

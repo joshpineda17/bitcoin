@@ -74,7 +74,7 @@ export default async function PaginaOrden(props: { params: Promise<{ id: string 
           </div>
           <div>
             <dt>Entrega</dt>
-            <dd>{ETIQUETA_MODO[orden.modoEntrega] ?? orden.modoEntrega}</dd>
+            <dd>{orden.modoEntrega === null ? '—' : (ETIQUETA_MODO[orden.modoEntrega] ?? orden.modoEntrega)}</dd>
           </div>
           <div className={estilos.ancho}>
             <dt>Total</dt>

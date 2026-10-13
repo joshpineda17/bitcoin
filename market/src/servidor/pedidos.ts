@@ -35,12 +35,13 @@ const NO_ENCONTRADA = () => fallo('NO_ENCONTRADA', 'No encontramos esa orden.');
 
 // Columns are named on purpose: `select *` is refused on orders. The delivery code is not listed.
 const COLUMNAS_ORDEN =
-  'id, numero, comprador_id, negocio_id, estado, total_usd_centavos, total_sats, cotizacion_usd_btc, modo_entrega, creada_en, pagada_en, lista_en, entregada_en, cerrada_en, expirada_en, disputada_en, resuelta_en';
+  'id, numero, tipo, comprador_id, negocio_id, estado, total_usd_centavos, total_sats, cotizacion_usd_btc, modo_entrega, creada_en, pagada_en, lista_en, entregada_en, cerrada_en, expirada_en, disputada_en, resuelta_en, hecha_en, cancelada_en, motivo_cancelacion';
 
 type FilaOrden = Pick<
   Tabla<'ordenes'>,
   | 'id'
   | 'numero'
+  | 'tipo'
   | 'comprador_id'
   | 'negocio_id'
   | 'estado'
@@ -56,6 +57,9 @@ type FilaOrden = Pick<
   | 'expirada_en'
   | 'disputada_en'
   | 'resuelta_en'
+  | 'hecha_en'
+  | 'cancelada_en'
+  | 'motivo_cancelacion'
 >;
 
 type FilaDisputa = Pick<
@@ -81,6 +85,8 @@ const PENDIENTES = new Set([
   'entregar_con_codigo',
   'marcar_reembolso',
   'confirmar_reembolso',
+  // A job waiting for the provider to mark it done.
+  'marcar_hecha',
 ]);
 
 // Shop and buyer names come from the service role. A suspended shop is hidden from session reads,
@@ -137,7 +143,9 @@ function aOrdenParaAcciones(
   proveedor: ProveedorCobro | null,
 ): OrdenParaAcciones {
   return {
+    tipo: orden.tipo,
     estado: orden.estado,
+    pagada: orden.pagada_en !== null,
     entregadaEn: orden.entregada_en ? new Date(orden.entregada_en) : null,
     // Review does not change the actions the lists group by.
     tieneResena: false,
@@ -187,12 +195,16 @@ async function resumenes(filas: FilaOrden[], rol: RolOrden): Promise<ResumenOrde
     return {
       id: f.id,
       numero: f.numero,
+      tipo: f.tipo,
       estado: f.estado,
       otraParte,
       totalUsdCentavos: f.total_usd_centavos,
       totalSats: f.total_sats,
       creadaEn: f.creada_en,
       pagadaEn: f.pagada_en,
+      hechaEn: f.hecha_en,
+      canceladaEn: f.cancelada_en,
+      motivoCancelacion: f.motivo_cancelacion,
       productos: unidades.get(f.id) ?? 0,
       necesitaAccion,
     };
@@ -359,6 +371,7 @@ export async function detalleDeOrden(ordenId: string, sesion: Sesion): Promise<D
   const detalle: DetalleOrden = {
     id: orden.id,
     numero: orden.numero,
+    tipo: orden.tipo,
     estado: orden.estado,
     rol,
     otraParte,
@@ -374,6 +387,9 @@ export async function detalleDeOrden(ordenId: string, sesion: Sesion): Promise<D
     expiradaEn: orden.expirada_en,
     disputadaEn: orden.disputada_en,
     resueltaEn: orden.resuelta_en,
+    hechaEn: orden.hecha_en,
+    canceladaEn: orden.cancelada_en,
+    motivoCancelacion: orden.motivo_cancelacion,
     lineas: lineasOrden,
     pago,
     resena: resenaOrden,
@@ -381,8 +397,13 @@ export async function detalleDeOrden(ordenId: string, sesion: Sesion): Promise<D
   };
 
   // The delivery code proves the buyer has the goods, so only the buyer gets it, and only
-  // while the order can still be delivered. Read with the service role after the role check.
-  if (rol === 'comprador' && (orden.estado === 'pagada' || orden.estado === 'lista')) {
+  // while the order can still be delivered. A job has no code: the payment is the confirmation.
+  // Read with the service role after the role check.
+  if (
+    rol === 'comprador' &&
+    orden.tipo === 'productos' &&
+    (orden.estado === 'pagada' || orden.estado === 'lista')
+  ) {
     const { data, error: errorCodigo } = await clienteServicio()
       .from('ordenes')
       .select('codigo_entrega')
@@ -398,7 +419,9 @@ export async function detalleDeOrden(ordenId: string, sesion: Sesion): Promise<D
 /** The inputs the buttons are decided from, built from what the page shows. */
 export function paraAcciones(detalle: DetalleOrden): OrdenParaAcciones {
   return {
+    tipo: detalle.tipo,
     estado: detalle.estado,
+    pagada: detalle.pagadaEn !== null,
     entregadaEn: detalle.entregadaEn ? new Date(detalle.entregadaEn) : null,
     tieneResena: detalle.resena !== null,
     disputa: detalle.disputa
@@ -430,6 +453,28 @@ export async function confirmarPagoManual(ordenId: string, usuarioId: string): P
 export async function marcarLista(ordenId: string, usuarioId: string): Promise<Resultado<null>> {
   if (!esUuid(ordenId) || !esUuid(usuarioId)) return NO_ENCONTRADA();
   return ejecutarRpc(clienteServicio().rpc('marcar_lista', { p_orden: ordenId, p_actor: usuarioId }));
+}
+
+/** The shop says an agreed job is done. From then on the client can pay it. */
+export async function marcarHecha(ordenId: string, usuarioId: string): Promise<Resultado<null>> {
+  if (!esUuid(ordenId) || !esUuid(usuarioId)) return NO_ENCONTRADA();
+  return ejecutarRpc(clienteServicio().rpc('marcar_hecha', { p_orden: ordenId, p_actor: usuarioId }));
+}
+
+/** Either party cancels an agreed job, with a short reason. The database checks the same limits. */
+export async function cancelarOrden(
+  ordenId: string,
+  usuarioId: string,
+  motivo: string,
+): Promise<Resultado<null>> {
+  if (!esUuid(ordenId) || !esUuid(usuarioId)) return NO_ENCONTRADA();
+  const texto = motivo.trim();
+  if (largo(texto) < 4 || largo(texto) > 300) {
+    return fallo('DATOS_INVALIDOS', 'El motivo tiene que tener entre 4 y 300 caracteres.');
+  }
+  return ejecutarRpc(
+    clienteServicio().rpc('cancelar_orden', { p_orden: ordenId, p_actor: usuarioId, p_motivo: texto }),
+  );
 }
 
 /** The buyer confirms delivery. No code is needed on this side. */

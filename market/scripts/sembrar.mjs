@@ -1,6 +1,7 @@
-// Seeds the local database: nine test users, six categories, four shops, 24 products and eight
-// orders in different states. Orders go through the real database functions, never direct inserts.
-// Safe to run twice: whatever already exists is skipped.
+// Seeds the local database: nine test users, six product categories, six services categories, six shops
+// (four sell products, two only services), 24 products, eight product orders, twelve services, five open
+// needs with their offers, and four sample jobs plus two quotes for Lucía. Orders and jobs go through the
+// real database functions, never direct inserts. Safe to run twice: whatever already exists is skipped.
 //
 // Run from the market folder: node --env-file=.env.local scripts/sembrar.mjs
 
@@ -23,7 +24,7 @@ const MINUTO_MS = 60 * 1000;
 const DIA_MS = 24 * 60 * MINUTO_MS;
 const ahora = Date.now();
 
-const nuevos = { usuarios: 0, negocios: 0, productos: 0, ordenes: 0 };
+const nuevos = { usuarios: 0, negocios: 0, productos: 0, ordenes: 0, servicios: 0, necesidades: 0, ofertas: 0, cotizaciones: 0, trabajos: 0 };
 
 // Test phones are 5037000000 plus one digit (see supabase/config.toml).
 const USUARIOS = [
@@ -39,8 +40,16 @@ const USUARIOS = [
 ];
 
 const CATEGORIAS = ['Frutas', 'Verduras', 'Granos y café', 'Lácteos y huevos', 'Miel y conservas', 'Hierbas y plantas'];
+const CATEGORIAS_SERVICIO = [
+  'Hogar y reparaciones',
+  'Transporte y mandados',
+  'Belleza y cuidado personal',
+  'Clases y tutorías',
+  'Tecnología',
+  'Comida y eventos',
+];
 
-// The shop owner is the user number; user 9 has no shop.
+// The shop owner is the user number; users 6 (Lucía) and 9 (Diego) have no shop.
 const TIENDAS = [
   {
     dueno: 2,
@@ -69,6 +78,20 @@ const TIENDAS = [
     descripcion: 'Hierbas aromáticas, té de flor de jamaica y conservas de temporada.',
     ubicacion: 'Bálsamo, La Libertad',
     lightning: 'hierbas-del-cerro@ejemplo.sv',
+  },
+  {
+    dueno: 7,
+    nombre: 'Barbería Don Andrés',
+    descripcion: 'Cortes de pelo y arreglo de barba, en el local o a domicilio.',
+    ubicacion: 'Suchitoto, Cuscatlán',
+    lightning: 'barberia-don-andres@ejemplo.sv',
+  },
+  {
+    dueno: 8,
+    nombre: 'Sofía Electricista',
+    descripcion: 'Instalaciones y reparaciones eléctricas en casas. También reparo celulares y cargadores.',
+    ubicacion: 'Suchitoto, Cuscatlán',
+    lightning: 'sofia-electricista@ejemplo.sv',
   },
 ];
 
@@ -176,6 +199,79 @@ const PEDIDOS = [
   },
 ];
 
+// [dueño, categoría, título, descripción, zona, tipo ('fijo' | 'cotizar'), precio en centavos, unidad]
+const SERVICIOS = [
+  [2, 'Clases y tutorías', 'Asesoría para huerto casero', 'Te enseño a sembrar, abonar y regar un huerto pequeño en tu patio, con semillas de la zona.', 'El Zonte, La Libertad', 'fijo', 800, 'por hora'],
+  [2, 'Hogar y reparaciones', 'Instalación de huerto en patio', 'Preparamos la tierra, armamos los cajones y dejamos sembrado el huerto. El precio depende del tamaño.', 'El Zonte, La Libertad', 'cotizar', null, null],
+  [3, 'Comida y eventos', 'Tour del cafetal', 'Recorrido por el cafetal con explicación del cultivo, el secado y el tueste. Incluye una taza de café.', 'Cerro El Bálsamo, La Libertad', 'fijo', 1000, 'por persona'],
+  [3, 'Clases y tutorías', 'Taller de catación de café', 'Aprendé a distinguir notas de sabor en tres cafés de la finca. Dura una hora y media.', 'Cerro El Bálsamo, La Libertad', 'fijo', 900, 'por persona'],
+  [4, 'Clases y tutorías', 'Taller de queso fresco', 'Hacemos queso fresco juntos desde la leche. Te vas con tu propio queso para la casa.', 'Zona de El Zonte, La Libertad', 'fijo', 1200, 'por persona'],
+  [4, 'Hogar y reparaciones', 'Reparación de cercas y portones', 'Cambio de postes, alambre y bisagras en cercas de finca o de casa. Cotizamos después de ver el trabajo.', 'Zona de El Zonte, La Libertad', 'cotizar', null, null],
+  [5, 'Transporte y mandados', 'Mandados en moto dentro de Suchitoto', 'Compras, pagos y paquetes dentro de Suchitoto. La hora la coordinamos por el chat.', 'Suchitoto, Cuscatlán', 'fijo', 200, 'por viaje'],
+  [5, 'Clases y tutorías', 'Clases de guitarra', 'Clases de guitarra para principiantes, con tu propia guitarra o con la mía.', 'Bálsamo, La Libertad', 'fijo', 600, 'por hora'],
+  [7, 'Belleza y cuidado personal', 'Corte de pelo clásico', 'Corte a tijera o máquina, con lavado. Atendemos sin cita los sábados.', 'Suchitoto, Cuscatlán', 'fijo', 500, 'por corte'],
+  [7, 'Belleza y cuidado personal', 'Arreglo de barba', 'Perfilado y arreglo de barba con navaja y toalla caliente.', 'Suchitoto, Cuscatlán', 'fijo', 300, 'por servicio'],
+  [8, 'Hogar y reparaciones', 'Instalación eléctrica en casa', 'Cableado, tomacorrientes, breakers y revisión del tablero. Cotizamos después de ver la casa.', 'Suchitoto, Cuscatlán', 'cotizar', null, null],
+  [8, 'Tecnología', 'Reparación de celulares', 'Cambio de pantalla, batería y cargadores. Revisamos el equipo y decimos el costo antes de cambiar piezas.', 'Suchitoto, Cuscatlán', 'cotizar', null, null],
+];
+
+// [usuario, categoría, título, descripción, zona, presupuesto en centavos o null]
+const NECESIDADES = [
+  [6, 'Hogar y reparaciones', 'Revisar la instalación eléctrica de la cocina', 'Se apagan los tomacorrientes cuando prendo la licuadora. Necesito que revisen el cableado y el breaker.', 'Suchitoto, Cuscatlán', 6000],
+  [6, 'Transporte y mandados', 'Mandado semanal al mercado de Suchitoto', 'Una vez por semana, compras de la lista que te mando por el chat. Alcanza con una moto.', 'Suchitoto, Cuscatlán', 300],
+  [9, 'Belleza y cuidado personal', 'Corte de pelo para una boda', 'Necesito un corte prolijo el sábado temprano, en mi casa en el Bálsamo.', 'Bálsamo, La Libertad', 2000],
+  [9, 'Clases y tutorías', 'Clases de guitarra para principiante', 'Quiero aprender acordes básicos. Prefiero clases cortas, una vez por semana.', 'Bálsamo, La Libertad', 2500],
+  [9, 'Tecnología', 'Reparar el celular que no enciende', 'Se apaga solo y no carga. No sé si es la batería o el puerto de carga.', 'Bálsamo, La Libertad', null],
+];
+
+// [necesidad (título), dueño de la tienda, precio en centavos, mensaje]
+const OFERTAS = [
+  ['Revisar la instalación eléctrica de la cocina', 8, 4500, 'Puedo pasar el sábado por la mañana. Traigo el material básico.'],
+  ['Mandado semanal al mercado de Suchitoto', 5, 300, 'Los lunes temprano. Si la lista pesa mucho, lo vemos aparte.'],
+  ['Mandado semanal al mercado de Suchitoto', 4, 400, 'Tengo camioneta chica. Puedo ir los martes o los viernes.'],
+  ['Corte de pelo para una boda', 7, 1500, 'Voy a tu casa el sábado a las 6 de la mañana. Llevo todo.'],
+  ['Clases de guitarra para principiante', 5, 2400, 'Doce clases de una hora. Empezamos con tres acordes y una canción.'],
+  ['Reparar el celular que no enciende', 8, 1200, 'Lo reviso y te digo el costo antes de cambiar piezas.'],
+];
+
+// Sample jobs for Lucía (6). estado: where the job ends. Each one goes through the real functions.
+const TRABAJOS = [
+  {
+    clave: 'sembrar-trabajo-01',
+    cliente: 6,
+    servicio: 'Taller de queso fresco',
+    estado: 'acordada',
+    nota: 'Vamos el sábado a las 9 de la mañana. Llevo una bolsa para el queso.',
+  },
+  { clave: 'sembrar-trabajo-02', cliente: 6, servicio: 'Mandados en moto dentro de Suchitoto', estado: 'hecha' },
+  { clave: 'sembrar-trabajo-03', cliente: 6, servicio: 'Asesoría para huerto casero', estado: 'entregada' },
+  {
+    clave: 'sembrar-trabajo-04',
+    cliente: 6,
+    servicio: 'Clases de guitarra',
+    estado: 'cancelada',
+    motivo: 'Ya no lo necesito, gracias.',
+  },
+];
+
+// Quotes for Lucía (6): one waits for the shop, one already has an offer waiting for her.
+const COTIZACIONES = [
+  {
+    cliente: 6,
+    servicio: 'Instalación eléctrica en casa',
+    descripcion: 'Quiero revisar el tablero y poner dos tomacorrientes nuevos en la cocina.',
+    estado: 'ofrecida',
+    precio: 9500,
+    mensaje: 'Incluye tomacorrientes y breaker. Puedo ir el jueves por la tarde.',
+  },
+  {
+    cliente: 6,
+    servicio: 'Instalación de huerto en patio',
+    descripcion: 'Tengo un patio de tierra de unos tres metros. Me interesa un huerto con verduras de temporada.',
+    estado: 'solicitada',
+  },
+];
+
 // Calls a database function and stops with its message when it fails.
 async function rpc(nombre, args) {
   const { data, error } = await s.rpc(nombre, args);
@@ -280,6 +376,152 @@ async function asegurarProductos(ids, negocioDe, categoriaDe) {
   return new Map(todos.map((p) => [`${p.negocio_id}|${p.nombre}`, p.id]));
 }
 
+async function asegurarCategoriasServicio() {
+  const { error } = await s
+    .from('categorias_servicio')
+    .upsert(CATEGORIAS_SERVICIO.map((nombre, i) => ({ nombre, orden: i + 1 })), { onConflict: 'nombre', ignoreDuplicates: true });
+  if (error) throw error;
+  const { data, error: errorLectura } = await s.from('categorias_servicio').select('id, nombre');
+  if (errorLectura) throw errorLectura;
+  return Object.fromEntries(data.map((c) => [c.nombre, c.id]));
+}
+
+// Returns the id of each seeded service by its title (the titles are unique in the seed).
+async function asegurarServicios(ids, negocioDe, categoriaDe) {
+  const tiendas = Object.values(negocioDe);
+  const { data: existentes, error } = await s.from('servicios').select('negocio_id, titulo').in('negocio_id', tiendas);
+  if (error) throw error;
+  const yaExisten = new Set(existentes.map((x) => `${x.negocio_id}|${x.titulo}`));
+
+  for (const [dueno, categoria, titulo, descripcion, zona, tipo, precio, unidad] of SERVICIOS) {
+    if (yaExisten.has(`${negocioDe[dueno]}|${titulo}`)) continue;
+    await rpc('guardar_servicio', {
+      p_usuario: ids[dueno],
+      p_servicio: null,
+      p_categoria: categoriaDe[categoria],
+      p_titulo: titulo,
+      p_descripcion: descripcion,
+      p_zona: zona,
+      p_tipo_precio: tipo,
+      p_precio: precio,
+      p_unidad: unidad,
+      p_activo: true,
+      p_fotos: [],
+    });
+    nuevos.servicios++;
+  }
+
+  const { data: todos, error: errorLectura } = await s.from('servicios').select('id, titulo').in('negocio_id', tiendas);
+  if (errorLectura) throw errorLectura;
+  return new Map(todos.map((x) => [x.titulo, x.id]));
+}
+
+// Returns the id of each seeded need by its title.
+async function asegurarNecesidades(ids, categoriaDe) {
+  const usuarios = [ids[6], ids[9]];
+  const { data: existentes, error } = await s.from('necesidades').select('usuario_id, titulo').in('usuario_id', usuarios);
+  if (error) throw error;
+  const yaExisten = new Set(existentes.map((n) => `${n.usuario_id}|${n.titulo}`));
+
+  for (const [usuario, categoria, titulo, descripcion, zona, presupuesto] of NECESIDADES) {
+    if (yaExisten.has(`${ids[usuario]}|${titulo}`)) continue;
+    await rpc('publicar_necesidad', {
+      p_usuario: ids[usuario],
+      p_categoria: categoriaDe[categoria],
+      p_titulo: titulo,
+      p_descripcion: descripcion,
+      p_zona: zona,
+      p_presupuesto: presupuesto,
+    });
+    nuevos.necesidades++;
+  }
+
+  const { data: todas, error: errorLectura } = await s.from('necesidades').select('id, titulo').in('usuario_id', usuarios);
+  if (errorLectura) throw errorLectura;
+  return new Map(todas.map((n) => [n.titulo, n.id]));
+}
+
+async function asegurarOfertas(ids, negocioDe, necesidadDe) {
+  for (const [titulo, dueno, precio, mensaje] of OFERTAS) {
+    const necesidad = necesidadDe.get(titulo);
+    // One offer per shop and need: an existing one is left alone, so a second run changes nothing.
+    const existente = await unico('cotizaciones', 'id', { necesidad_id: necesidad, negocio_id: negocioDe[dueno] });
+    if (existente) continue;
+    await rpc('ofertar', { p_usuario: ids[dueno], p_necesidad: necesidad, p_precio: precio, p_mensaje: mensaje });
+    nuevos.ofertas++;
+  }
+}
+
+// The service's shop owner acts for the provider. Each step runs only when the job is not there yet,
+// so a second run stops where the first one ended.
+async function sembrarTrabajo(t, ids, servicioDe) {
+  const cliente = ids[t.cliente];
+  const titular = SERVICIOS.find((x) => x[2] === t.servicio);
+  const vendedor = ids[titular[0]];
+  const existe = await unico('ordenes', 'id', { comprador_id: cliente, clave_idempotencia: t.clave });
+
+  const orden = await rpc('contratar_servicio', {
+    p_cliente: cliente,
+    p_servicio: servicioDe.get(t.servicio),
+    p_nota: t.nota ?? '',
+    p_clave: t.clave,
+    p_cotizacion_btc: COTIZACION,
+  });
+  if (!existe) nuevos.trabajos++;
+
+  let estado = orden.estado;
+  if (t.estado === 'cancelada') {
+    if (estado === 'acordada') {
+      await rpc('cancelar_orden', { p_orden: orden.id, p_actor: cliente, p_motivo: t.motivo });
+    }
+    return;
+  }
+  if (t.estado !== 'acordada' && estado === 'acordada') {
+    await rpc('marcar_hecha', { p_orden: orden.id, p_actor: vendedor });
+    estado = 'hecha';
+  }
+  if (t.estado === 'entregada' && estado === 'hecha') {
+    await rpc('registrar_cobro_servicio', {
+      p_orden: orden.id,
+      p_proveedor: 'falso',
+      p_referencia: `sembrar-${t.clave}`,
+      p_bolt11: null,
+      p_destino: null,
+      p_verificar_url: null,
+      p_expira_en: new Date(Date.now() + 10 * MINUTO_MS).toISOString(),
+      p_cotizacion_btc: COTIZACION,
+    });
+    await rpc('confirmar_pago', { p_orden: orden.id, p_actor: null });
+  }
+}
+
+async function sembrarCotizacion(c, ids, servicioDe) {
+  const cliente = ids[c.cliente];
+  const titular = SERVICIOS.find((x) => x[2] === c.servicio);
+  const existente = await unico('cotizaciones', 'id, estado', {
+    cliente_id: cliente,
+    servicio_id: servicioDe.get(c.servicio),
+    descripcion_cliente: c.descripcion,
+  });
+  let cotizacion = existente;
+  if (!cotizacion) {
+    cotizacion = await rpc('solicitar_cotizacion', {
+      p_cliente: cliente,
+      p_servicio: servicioDe.get(c.servicio),
+      p_descripcion: c.descripcion,
+    });
+    nuevos.cotizaciones++;
+  }
+  if (c.estado === 'ofrecida' && cotizacion.estado === 'solicitada') {
+    await rpc('responder_cotizacion', {
+      p_cotizacion: cotizacion.id,
+      p_actor: ids[titular[0]],
+      p_precio: c.precio,
+      p_mensaje: c.mensaje,
+    });
+  }
+}
+
 async function sembrarPedido(p, ids, negocioDe, productoDe) {
   const comprador = ids[p.comprador];
   const vendedor = ids[p.tienda];
@@ -371,7 +613,7 @@ async function sembrarPedido(p, ids, negocioDe, productoDe) {
   }
 }
 
-async function resumen(negocioDe) {
+async function resumen(negocioDe, ids) {
   const tiendas = Object.values(negocioDe);
 
   const { count: usuarios } = await s
@@ -385,8 +627,10 @@ async function resumen(negocioDe) {
     .in('id', tiendas)
     .eq('estado', 'aprobado');
   const { data: productos } = await s.from('productos').select('activo, stock').in('negocio_id', tiendas);
-  const { data: ordenes } = await s.from('ordenes').select('id, estado').like('clave_idempotencia', 'sembrar-%');
-  const idsOrdenes = (ordenes ?? []).map((o) => o.id);
+  const { data: sembradas } = await s.from('ordenes').select('id, estado, tipo').like('clave_idempotencia', 'sembrar-%');
+  const ordenes = (sembradas ?? []).filter((o) => o.tipo === 'productos');
+  const trabajos = (sembradas ?? []).filter((o) => o.tipo === 'servicio');
+  const idsOrdenes = (sembradas ?? []).map((o) => o.id);
   const { count: mensajes } = await s
     .from('mensajes')
     .select('id', { count: 'exact', head: true })
@@ -410,11 +654,49 @@ async function resumen(negocioDe) {
   console.log(`  Órdenes: ${ordenes?.length ?? 0} (nuevas: ${nuevos.ordenes})`);
   console.log(`  Por estado: ${Object.entries(porEstado).map(([e, n]) => `${e} ${n}`).join(', ')}`);
   console.log(`  Mensajes: ${mensajes}, avisos: ${avisos}`);
+
+  const { count: categoriasServicio } = await s.from('categorias_servicio').select('id', { count: 'exact', head: true });
+  const { data: servicios } = await s.from('servicios').select('id, activo').in('negocio_id', tiendas);
+  const { count: sinNegocio } = await s
+    .from('negocios')
+    .select('id', { count: 'exact', head: true })
+    .in('usuario_id', [ids[6], ids[9]]);
+  const { data: necesidades } = await s.from('necesidades').select('id, estado').in('usuario_id', [ids[6], ids[9]]);
+  const idsNecesidades = (necesidades ?? []).map((n) => n.id);
+  const { data: ofertas } = idsNecesidades.length
+    ? await s.from('cotizaciones').select('id').in('necesidad_id', idsNecesidades)
+    : { data: [] };
+  const { data: cotizaciones } = await s
+    .from('cotizaciones')
+    .select('estado')
+    .eq('cliente_id', ids[6])
+    .not('servicio_id', 'is', null);
+
+  const contar = (filas, campo) => {
+    const cuenta = {};
+    for (const f of filas ?? []) cuenta[f[campo]] = (cuenta[f[campo]] ?? 0) + 1;
+    return Object.entries(cuenta).map(([e, n]) => `${e} ${n}`).join(', ') || 'ninguna';
+  };
+
+  console.log(`  Categorías de servicio: ${categoriasServicio}`);
+  console.log(
+    `  Servicios: ${servicios?.length ?? 0}, activos: ${(servicios ?? []).filter((x) => x.activo).length} ` +
+      `(nuevos: ${nuevos.servicios})`,
+  );
+  console.log(
+    `  Necesidades: ${necesidades?.length ?? 0}, abiertas: ${(necesidades ?? []).filter((n) => n.estado === 'abierta').length} ` +
+      `(nuevas: ${nuevos.necesidades})`,
+  );
+  console.log(`  Ofertas en necesidades: ${ofertas?.length ?? 0} (nuevas: ${nuevos.ofertas})`);
+  console.log(`  Cotizaciones de Lucía: ${contar(cotizaciones, 'estado')}`);
+  console.log(`  Trabajos: ${trabajos.length} (nuevos: ${nuevos.trabajos}), por estado: ${contar(trabajos, 'estado')}`);
+  console.log(`  Lucía y Diego con negocio: ${sinNegocio} (deben ser 0)`);
 }
 
 async function main() {
   const ids = await asegurarUsuarios();
   const categoriaDe = await asegurarCategorias();
+  const categoriaServicioDe = await asegurarCategoriasServicio();
   const negocioDe = await asegurarTiendas(ids, ids[1]);
   const productoDe = await asegurarProductos(ids, negocioDe, categoriaDe);
 
@@ -422,7 +704,17 @@ async function main() {
     await sembrarPedido(p, ids, negocioDe, productoDe);
   }
 
-  await resumen(negocioDe);
+  const servicioDe = await asegurarServicios(ids, negocioDe, categoriaServicioDe);
+  const necesidadDe = await asegurarNecesidades(ids, categoriaServicioDe);
+  await asegurarOfertas(ids, negocioDe, necesidadDe);
+  for (const t of TRABAJOS) {
+    await sembrarTrabajo(t, ids, servicioDe);
+  }
+  for (const c of COTIZACIONES) {
+    await sembrarCotizacion(c, ids, servicioDe);
+  }
+
+  await resumen(negocioDe, ids);
 }
 
 main().catch((error) => {

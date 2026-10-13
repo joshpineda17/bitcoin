@@ -5,12 +5,16 @@ import { notFound } from 'next/navigation';
 import {
   type EstadoNegocio,
   ESTADOS_ORDEN,
-  type ResultadoDisputa,
-  RESULTADOS_DISPUTA,
   detalleLegible,
   etiquetaAccion,
 } from '@/app/admin/etiquetas';
-import { type EstadoOrden } from '@/lib/estados';
+import {
+  type EstadoOrden,
+  type ResultadoDisputa,
+  resultadosPosibles,
+  type TipoOrden,
+  TODOS_LOS_RESULTADOS,
+} from '@/lib/estados';
 
 import { cotizacionSegura } from './catalogo';
 import { barrer } from './mantenimiento';
@@ -295,6 +299,7 @@ export async function cambiarEstadoNegocio(
 export type FilaOrdenAdmin = {
   id: string;
   numero: number;
+  tipo: TipoOrden;
   estado: EstadoOrden;
   creadaEn: string;
   negocio: string;
@@ -313,6 +318,7 @@ export type PaginaOrdenes = {
 type FilaOrdenListaBD = {
   id: string;
   numero: number;
+  tipo: TipoOrden;
   estado: EstadoOrden;
   creada_en: string;
   total_usd_centavos: number;
@@ -323,14 +329,16 @@ type FilaOrdenListaBD = {
 
 export async function ordenesAdmin(
   actorId: string,
-  filtro: { pagina: number; estado: EstadoOrden | null },
+  filtro: { pagina: number; estado: EstadoOrden | null; tipo?: TipoOrden | null },
 ): Promise<PaginaOrdenes> {
   await exigirAdminBD(actorId);
   await barrer();
 
   // Count first: the database answers an out-of-range page with an error, not an empty list.
-  const conteo = clienteServicio().from('ordenes').select('id', { count: 'exact', head: true });
-  const { count: total, error: errorConteo } = await (filtro.estado ? conteo.eq('estado', filtro.estado) : conteo);
+  let conteo = clienteServicio().from('ordenes').select('id', { count: 'exact', head: true });
+  if (filtro.estado) conteo = conteo.eq('estado', filtro.estado);
+  if (filtro.tipo) conteo = conteo.eq('tipo', filtro.tipo);
+  const { count: total, error: errorConteo } = await conteo;
   if (errorConteo) throw new Error(`No pudimos contar las órdenes: ${errorConteo.message}`);
 
   // A page past the last one shows the last page.
@@ -338,20 +346,21 @@ export async function ordenesAdmin(
   const pagina = Math.min(filtro.pagina, ultima);
   const desde = (pagina - 1) * POR_PAGINA;
 
-  const lista = clienteServicio()
+  let lista = clienteServicio()
     .from('ordenes')
     .select(
-      'id, numero, estado, creada_en, total_usd_centavos, total_sats, negocios(nombre), comprador:usuarios!ordenes_comprador_id_fkey(nombre)',
+      'id, numero, tipo, estado, creada_en, total_usd_centavos, total_sats, negocios(nombre), comprador:usuarios!ordenes_comprador_id_fkey(nombre)',
     );
-  const { data, error } = await (filtro.estado ? lista.eq('estado', filtro.estado) : lista)
-    .order('numero', { ascending: false })
-    .range(desde, desde + POR_PAGINA - 1);
+  if (filtro.estado) lista = lista.eq('estado', filtro.estado);
+  if (filtro.tipo) lista = lista.eq('tipo', filtro.tipo);
+  const { data, error } = await lista.order('numero', { ascending: false }).range(desde, desde + POR_PAGINA - 1);
   if (error) throw new Error(`No pudimos leer las órdenes: ${error.message}`);
 
   return {
     filas: ((data ?? []) as unknown as FilaOrdenListaBD[]).map((f) => ({
       id: f.id,
       numero: f.numero,
+      tipo: f.tipo,
       estado: f.estado,
       creadaEn: f.creada_en,
       negocio: f.negocios?.nombre ?? '',
@@ -363,6 +372,62 @@ export async function ordenesAdmin(
     pagina,
     porPagina: POR_PAGINA,
   };
+}
+
+// A job marked done and still unpaid after this many hours is listed for the admin.
+const HORAS_SIN_PAGAR = 48;
+const MS_HORA = 60 * 60 * 1000;
+
+export type TrabajoSinPagar = {
+  id: string;
+  numero: number;
+  comprador: string;
+  negocio: string;
+  totalUsdCentavos: number;
+  totalSats: number;
+  hechaEn: string;
+  horasEsperando: number;
+};
+
+type FilaTrabajoSinPagarBD = {
+  id: string;
+  numero: number;
+  hecha_en: string;
+  total_usd_centavos: number;
+  total_sats: number;
+  negocios: { nombre: string } | null;
+  comprador: { nombre: string } | null;
+};
+
+/** Jobs marked done more than 48 hours ago that nobody has paid. The oldest comes first. */
+export async function trabajosSinPagar(actorId: string): Promise<TrabajoSinPagar[]> {
+  await exigirAdminBD(actorId);
+  await barrer();
+
+  const ahora = Date.now();
+  const corte = new Date(ahora - HORAS_SIN_PAGAR * MS_HORA).toISOString();
+  const { data, error } = await clienteServicio()
+    .from('ordenes')
+    .select(
+      'id, numero, hecha_en, total_usd_centavos, total_sats, negocios(nombre), comprador:usuarios!ordenes_comprador_id_fkey(nombre)',
+    )
+    .eq('tipo', 'servicio')
+    .eq('estado', 'hecha')
+    .lt('hecha_en', corte)
+    .order('hecha_en', { ascending: true })
+    .limit(500);
+  if (error) throw new Error(`No pudimos leer los trabajos sin pagar: ${error.message}`);
+
+  return ((data ?? []) as unknown as FilaTrabajoSinPagarBD[]).map((f) => ({
+    id: f.id,
+    numero: f.numero,
+    comprador: f.comprador?.nombre ?? '',
+    negocio: f.negocios?.nombre ?? '',
+    totalUsdCentavos: f.total_usd_centavos,
+    totalSats: f.total_sats,
+    hechaEn: f.hecha_en,
+    horasEsperando: Math.floor((ahora - Date.parse(f.hecha_en)) / MS_HORA),
+  }));
 }
 
 export type FilaAuditoria = {
@@ -379,8 +444,10 @@ export type FilaAuditoria = {
 export type DetalleOrdenAdmin = {
   id: string;
   numero: number;
+  tipo: TipoOrden;
   estado: EstadoOrden;
-  modoEntrega: string;
+  // Null for a job: it has no delivery mode.
+  modoEntrega: string | null;
   totalUsdCentavos: number;
   totalSats: number;
   cotizacionUsdBtc: number;
@@ -393,6 +460,9 @@ export type DetalleOrdenAdmin = {
   expiradaEn: string | null;
   disputadaEn: string | null;
   resueltaEn: string | null;
+  hechaEn: string | null;
+  canceladaEn: string | null;
+  motivoCancelacion: string | null;
   negocio: string;
   vendedor: string;
   comprador: string;
@@ -418,8 +488,9 @@ export type DetalleOrdenAdmin = {
 type FilaOrdenDetalleBD = {
   id: string;
   numero: number;
+  tipo: TipoOrden;
   estado: EstadoOrden;
-  modo_entrega: string;
+  modo_entrega: string | null;
   total_usd_centavos: number;
   total_sats: number;
   cotizacion_usd_btc: number;
@@ -433,6 +504,9 @@ type FilaOrdenDetalleBD = {
   expirada_en: string | null;
   disputada_en: string | null;
   resuelta_en: string | null;
+  hecha_en: string | null;
+  cancelada_en: string | null;
+  motivo_cancelacion: string | null;
   comprador: { nombre: string } | null;
   negocios: { nombre: string; usuario_id: string; dueno: { nombre: string } | null } | null;
 };
@@ -492,7 +566,7 @@ export async function ordenDetalleAdmin(actorId: string, ordenId: string): Promi
   const { data: fila, error } = await db
     .from('ordenes')
     .select(
-      'id, numero, estado, modo_entrega, total_usd_centavos, total_sats, cotizacion_usd_btc, comision_teorica_sats, comprador_id, creada_en, pagada_en, lista_en, entregada_en, cerrada_en, expirada_en, disputada_en, resuelta_en, comprador:usuarios!ordenes_comprador_id_fkey(nombre), negocios(nombre, usuario_id, dueno:usuarios!negocios_usuario_id_fkey(nombre))',
+      'id, numero, tipo, estado, modo_entrega, total_usd_centavos, total_sats, cotizacion_usd_btc, comision_teorica_sats, comprador_id, creada_en, pagada_en, lista_en, entregada_en, cerrada_en, expirada_en, disputada_en, resuelta_en, hecha_en, cancelada_en, motivo_cancelacion, comprador:usuarios!ordenes_comprador_id_fkey(nombre), negocios(nombre, usuario_id, dueno:usuarios!negocios_usuario_id_fkey(nombre))',
     )
     .eq('id', ordenId)
     .maybeSingle();
@@ -549,6 +623,7 @@ export async function ordenDetalleAdmin(actorId: string, ordenId: string): Promi
   return {
     id: orden.id,
     numero: orden.numero,
+    tipo: orden.tipo,
     estado: orden.estado,
     modoEntrega: orden.modo_entrega,
     totalUsdCentavos: orden.total_usd_centavos,
@@ -563,6 +638,9 @@ export async function ordenDetalleAdmin(actorId: string, ordenId: string): Promi
     expiradaEn: orden.expirada_en,
     disputadaEn: orden.disputada_en,
     resueltaEn: orden.resuelta_en,
+    hechaEn: orden.hecha_en,
+    canceladaEn: orden.cancelada_en,
+    motivoCancelacion: orden.motivo_cancelacion,
     negocio: orden.negocios?.nombre ?? '',
     vendedor: orden.negocios?.dueno?.nombre ?? '',
     comprador: orden.comprador?.nombre ?? '',
@@ -620,11 +698,31 @@ export async function resolverDisputa(
   nota: string,
 ): Promise<Resultado<null>> {
   if (!esUuid(ordenId)) return fallo('NO_ENCONTRADA', 'No encontramos esa orden.');
-  if (!RESULTADOS_DISPUTA.includes(resultado)) {
+  if (!TODOS_LOS_RESULTADOS.includes(resultado)) {
     return fallo('DATOS_INVALIDOS', 'Elegí un resultado para la disputa.');
   }
   try {
     if (!(await esAdminEnBaseDatos(actorId))) return NO_ADMIN();
+
+    // Each result is checked against the order it is for: a job never paid takes the two
+    // "owed" results, every other order takes the money results.
+    const { data: orden, error: errorOrden } = await clienteServicio()
+      .from('ordenes')
+      .select('tipo, pagada_en')
+      .eq('id', ordenId)
+      .maybeSingle();
+    if (errorOrden) throw new Error(`No pudimos leer la orden: ${errorOrden.message}`);
+    if (!orden) return fallo('NO_ENCONTRADA', 'No encontramos esa orden.');
+    const pagada = orden.pagada_en !== null;
+    if (!resultadosPosibles({ tipo: orden.tipo, pagada }).includes(resultado)) {
+      return fallo(
+        'DATOS_INVALIDOS',
+        orden.tipo === 'servicio' && !pagada
+          ? 'Un trabajo sin pagar solo puede resolverse como corresponde pagar o no corresponde pagar.'
+          : 'Ese resultado solo sirve para un trabajo sin pagar.',
+      );
+    }
+
     const { error } = await clienteServicio().rpc('resolver_disputa', {
       p_orden: ordenId,
       p_actor: actorId,
@@ -719,6 +817,140 @@ export async function disputasAdmin(actorId: string): Promise<DisputaAdmin[]> {
 
 // ---------------------------------------------------------------------------------------------
 // Auditoría
+
+// ---------------------------------------------------------------------------------------------
+// Servicios y necesidades: moderation. Names only, never a phone or an email.
+
+export type ServicioAdmin = {
+  id: string;
+  titulo: string;
+  negocio: string;
+  dueno: string;
+  zona: string;
+  tipoPrecio: 'fijo' | 'cotizar';
+  precioUsdCentavos: number | null;
+  unidad: string | null;
+  activo: boolean;
+  oculto: boolean;
+  creadoEn: string;
+};
+
+type FilaServicioBD = {
+  id: string;
+  titulo: string;
+  zona: string;
+  tipo_precio: 'fijo' | 'cotizar';
+  precio_usd_centavos: number | null;
+  unidad: string | null;
+  activo: boolean;
+  oculto: boolean;
+  creado_en: string;
+  negocios: { nombre: string; dueno: { nombre: string } | null } | null;
+};
+
+export async function serviciosAdmin(actorId: string): Promise<ServicioAdmin[]> {
+  await exigirAdminBD(actorId);
+  const { data, error } = await clienteServicio()
+    .from('servicios')
+    .select(
+      'id, titulo, zona, tipo_precio, precio_usd_centavos, unidad, activo, oculto, creado_en, negocios(nombre, dueno:usuarios!negocios_usuario_id_fkey(nombre))',
+    )
+    .order('creado_en', { ascending: false });
+  if (error) throw new Error(`No pudimos leer los servicios: ${error.message}`);
+
+  return ((data ?? []) as unknown as FilaServicioBD[]).map((f) => ({
+    id: f.id,
+    titulo: f.titulo,
+    negocio: f.negocios?.nombre ?? '',
+    dueno: f.negocios?.dueno?.nombre ?? '',
+    zona: f.zona,
+    tipoPrecio: f.tipo_precio,
+    precioUsdCentavos: f.precio_usd_centavos,
+    unidad: f.unidad,
+    activo: f.activo,
+    oculto: f.oculto,
+    creadoEn: f.creado_en,
+  }));
+}
+
+export type NecesidadAdmin = {
+  id: string;
+  titulo: string;
+  autor: string;
+  zona: string;
+  presupuestoUsdCentavos: number | null;
+  estado: 'abierta' | 'asignada' | 'cancelada' | 'vencida';
+  oculta: boolean;
+  creadaEn: string;
+  venceEn: string;
+};
+
+type FilaNecesidadBD = {
+  id: string;
+  titulo: string;
+  zona: string;
+  presupuesto_usd_centavos: number | null;
+  estado: NecesidadAdmin['estado'];
+  oculta: boolean;
+  creada_en: string;
+  vence_en: string;
+  autor: { nombre: string } | null;
+};
+
+export async function necesidadesAdmin(actorId: string): Promise<NecesidadAdmin[]> {
+  await exigirAdminBD(actorId);
+  const { data, error } = await clienteServicio()
+    .from('necesidades')
+    .select('id, titulo, zona, presupuesto_usd_centavos, estado, oculta, creada_en, vence_en, autor:usuarios!necesidades_usuario_id_fkey(nombre)')
+    .order('creada_en', { ascending: false });
+  if (error) throw new Error(`No pudimos leer las necesidades: ${error.message}`);
+
+  return ((data ?? []) as unknown as FilaNecesidadBD[]).map((f) => ({
+    id: f.id,
+    titulo: f.titulo,
+    autor: f.autor?.nombre ?? '',
+    zona: f.zona,
+    presupuestoUsdCentavos: f.presupuesto_usd_centavos,
+    estado: f.estado,
+    oculta: f.oculta,
+    creadaEn: f.creada_en,
+    venceEn: f.vence_en,
+  }));
+}
+
+/** Hides a service from the catalogue, or shows it again. The database writes the audit row. */
+export async function ocultarServicio(actorId: string, servicioId: string, oculto: boolean): Promise<Resultado<null>> {
+  if (!esUuid(servicioId)) return fallo('NO_ENCONTRADA', 'No encontramos ese servicio.');
+  try {
+    if (!(await esAdminEnBaseDatos(actorId))) return NO_ADMIN();
+    const { error } = await clienteServicio().rpc('ocultar_servicio', {
+      p_servicio: servicioId,
+      p_actor: actorId,
+      p_oculto: oculto,
+    });
+    if (error) return desdeError(error);
+    return exito(null);
+  } catch (error) {
+    return desdeError(error);
+  }
+}
+
+/** Hides a need from the board, or shows it again. The database writes the audit row. */
+export async function ocultarNecesidad(actorId: string, necesidadId: string, oculta: boolean): Promise<Resultado<null>> {
+  if (!esUuid(necesidadId)) return fallo('NO_ENCONTRADA', 'No encontramos esa necesidad.');
+  try {
+    if (!(await esAdminEnBaseDatos(actorId))) return NO_ADMIN();
+    const { error } = await clienteServicio().rpc('ocultar_necesidad', {
+      p_necesidad: necesidadId,
+      p_actor: actorId,
+      p_oculta: oculta,
+    });
+    if (error) return desdeError(error);
+    return exito(null);
+  } catch (error) {
+    return desdeError(error);
+  }
+}
 
 export async function auditoriaAdmin(actorId: string): Promise<FilaAuditoria[]> {
   await exigirAdminBD(actorId);

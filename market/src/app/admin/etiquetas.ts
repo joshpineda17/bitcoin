@@ -1,9 +1,24 @@
 // Labels and small formatters for the admin area. Pure: no I/O, so Client Components can import it.
 
 import { formatoSats, formatoUsd } from '@/lib/dinero';
-import { ETIQUETA_ESTADO, type EstadoOrden } from '@/lib/estados';
+import {
+  ETIQUETA_ESTADO,
+  ETIQUETA_RESULTADO,
+  RESULTADOS_CON_REEMBOLSO,
+  type EstadoOrden,
+  type ResultadoDisputa,
+  type TipoOrden,
+} from '@/lib/estados';
+
+// The result labels live in lib/estados, next to the rules that choose them.
+export { ETIQUETA_RESULTADO, type ResultadoDisputa };
 
 export const ESTADOS_ORDEN = Object.keys(ETIQUETA_ESTADO) as EstadoOrden[];
+
+export const ETIQUETA_TIPO: Record<TipoOrden, string> = {
+  productos: 'Productos',
+  servicio: 'Trabajos',
+};
 
 // Shops: the three groups on /admin/negocios.
 export type EstadoNegocio = 'pendiente' | 'aprobado' | 'suspendido';
@@ -13,13 +28,8 @@ export const ETIQUETA_NEGOCIO: Record<EstadoNegocio, string> = {
   suspendido: 'Suspendido',
 };
 
-export type ResultadoDisputa = 'reembolso_total' | 'reembolso_parcial' | 'sin_reembolso';
-export const RESULTADOS_DISPUTA: ResultadoDisputa[] = ['reembolso_total', 'reembolso_parcial', 'sin_reembolso'];
-export const ETIQUETA_RESULTADO: Record<ResultadoDisputa, string> = {
-  reembolso_total: 'Reembolso total',
-  reembolso_parcial: 'Reembolso parcial',
-  sin_reembolso: 'Sin reembolso',
-};
+// The money results: the choices on a product dispute. A job never paid has its own two (see estados).
+export const RESULTADOS_DISPUTA: ResultadoDisputa[] = RESULTADOS_CON_REEMBOLSO;
 
 export const ETIQUETA_PROVEEDOR: Record<string, string> = {
   manual: 'Lightning Address',

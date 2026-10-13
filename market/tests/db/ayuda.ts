@@ -250,3 +250,213 @@ export function codigoDe(error: { message?: string } | null | undefined): string
   const coincide = /^([A-Z_]+):/.exec(error?.message ?? '');
   return coincide ? coincide[1] : null;
 }
+
+// ---------------------------------------------------------------------------------------------
+// Services, the board and jobs (tests/db/servicios-*.test.ts).
+
+const CATEGORIAS_SERVICIO = [
+  'Hogar y reparaciones',
+  'Transporte y mandados',
+  'Belleza y cuidado personal',
+  'Clases y tutorías',
+  'Tecnología',
+  'Comida y eventos',
+];
+
+// The first service category, creating the six seed categories when the database has none.
+export async function categoriaServicioDePrueba(): Promise<number> {
+  const s = servicio();
+  const { error: errorAlta } = await s
+    .from('categorias_servicio')
+    .upsert(CATEGORIAS_SERVICIO.map((nombre, i) => ({ nombre, orden: i + 1 })), { onConflict: 'nombre', ignoreDuplicates: true });
+  if (errorAlta) throw errorAlta;
+  const { data, error } = await s.from('categorias_servicio').select('id').order('orden').limit(1);
+  if (error) throw error;
+  return data![0].id;
+}
+
+export type OpcionesServicio = {
+  titulo?: string;
+  tipo?: 'fijo' | 'cotizar';
+  precio?: number;
+  unidad?: string;
+  activo?: boolean;
+};
+
+// Creates a service through guardar_servicio. Fixed price by default.
+export async function servicioDe(dueno: Usuario, opciones: OpcionesServicio = {}): Promise<Fila> {
+  const tipo = opciones.tipo ?? 'fijo';
+  const { data, error } = await servicio().rpc('guardar_servicio', {
+    p_usuario: dueno.id,
+    p_servicio: null,
+    p_categoria: await categoriaServicioDePrueba(),
+    p_titulo: opciones.titulo ?? `Servicio de prueba ${sufijo()}`,
+    p_descripcion: 'Servicio creado por las pruebas de base de datos.',
+    p_zona: 'Suchitoto, Cuscatlán',
+    p_tipo_precio: tipo,
+    p_precio: tipo === 'fijo' ? (opciones.precio ?? 500) : null,
+    p_unidad: tipo === 'fijo' ? (opciones.unidad ?? 'por corte') : null,
+    p_activo: opciones.activo ?? true,
+    p_fotos: [],
+  });
+  if (error) throw error;
+  return data;
+}
+
+// Needs posted by the tests. limpiarTablon() cancels them so they leave the board.
+const necesidadesCreadas: { id: string; autor: Usuario }[] = [];
+
+export async function necesidadDe(
+  autor: Usuario,
+  opciones: { titulo?: string; presupuesto?: number | null } = {},
+): Promise<Fila> {
+  const { data, error } = await servicio().rpc('publicar_necesidad', {
+    p_usuario: autor.id,
+    p_categoria: await categoriaServicioDePrueba(),
+    p_titulo: opciones.titulo ?? `Necesidad de prueba ${sufijo()}`,
+    p_descripcion: 'Necesidad publicada por las pruebas de base de datos.',
+    p_zona: 'Suchitoto, Cuscatlán',
+    p_presupuesto: opciones.presupuesto === undefined ? 5000 : opciones.presupuesto,
+  });
+  if (error) throw error;
+  necesidadesCreadas.push({ id: data.id, autor });
+  return data;
+}
+
+// Cancels the needs this file posted. Needs already closed are skipped.
+export async function limpiarTablon(): Promise<void> {
+  for (const { id, autor } of necesidadesCreadas.splice(0)) {
+    await servicio().rpc('cancelar_necesidad', { p_necesidad: id, p_usuario: autor.id });
+  }
+}
+
+// Opens or closes a shop without going through the owner's form.
+export async function abiertoNegocio(negocioId: string, abierto: boolean): Promise<void> {
+  const { error } = await servicio().from('negocios').update({ abierto }).eq('id', negocioId);
+  if (error) throw error;
+}
+
+// Suspends a shop: its services and offers stop showing. An administrator does it.
+export async function suspenderNegocio(negocioId: string): Promise<void> {
+  const admin = await administrador();
+  const { error } = await servicio().rpc('cambiar_estado_negocio', {
+    p_negocio: negocioId,
+    p_actor: admin.id,
+    p_estado: 'suspendido',
+  });
+  if (error) throw error;
+}
+
+// Hides a service or a need as an administrator.
+export async function ocultarServicio(servicioId: string, oculto: boolean) {
+  const admin = await administrador();
+  const { data, error } = await servicio().rpc('ocultar_servicio', { p_servicio: servicioId, p_actor: admin.id, p_oculto: oculto });
+  if (error) throw error;
+  return data;
+}
+
+export async function ocultarNecesidad(necesidadId: string, oculta: boolean) {
+  const admin = await administrador();
+  const { data, error } = await servicio().rpc('ocultar_necesidad', { p_necesidad: necesidadId, p_actor: admin.id, p_oculta: oculta });
+  if (error) throw error;
+  return data;
+}
+
+export function cotizarRaw(cliente: Usuario, servicioId: string, descripcion = 'Quiero una cotización para un trabajo de prueba.') {
+  return servicio().rpc('solicitar_cotizacion', {
+    p_cliente: cliente.id,
+    p_servicio: servicioId,
+    p_descripcion: descripcion,
+  });
+}
+
+export function responderRaw(cotizacionId: string, dueno: Usuario, precio: number, mensaje = 'Respuesta de prueba.') {
+  return servicio().rpc('responder_cotizacion', {
+    p_cotizacion: cotizacionId,
+    p_actor: dueno.id,
+    p_precio: precio,
+    p_mensaje: mensaje,
+  });
+}
+
+export function ofertarRaw(dueno: Usuario, necesidadId: string, precio: number, mensaje = 'Oferta de prueba.') {
+  return servicio().rpc('ofertar', {
+    p_usuario: dueno.id,
+    p_necesidad: necesidadId,
+    p_precio: precio,
+    p_mensaje: mensaje,
+  });
+}
+
+export function aceptarRaw(cotizacionId: string, cliente: Usuario, cotizacionBtc = COTIZACION) {
+  return servicio().rpc('aceptar_cotizacion', {
+    p_cotizacion: cotizacionId,
+    p_actor: cliente.id,
+    p_cotizacion_btc: cotizacionBtc,
+  });
+}
+
+export function contratarRaw(
+  cliente: Usuario,
+  servicioId: string,
+  opciones: { nota?: string; clave?: string; cotizacionBtc?: number } = {},
+) {
+  return servicio().rpc('contratar_servicio', {
+    p_cliente: cliente.id,
+    p_servicio: servicioId,
+    p_nota: opciones.nota ?? '',
+    p_clave: opciones.clave ?? `contrato-${sufijo()}`,
+    p_cotizacion_btc: opciones.cotizacionBtc ?? COTIZACION,
+  });
+}
+
+// Hires a fixed-price service and fails the test if it is refused.
+export async function contratar(
+  cliente: Usuario,
+  servicioId: string,
+  opciones: { nota?: string; clave?: string; cotizacionBtc?: number } = {},
+): Promise<Fila> {
+  const { data, error } = await contratarRaw(cliente, servicioId, opciones);
+  if (error) throw error;
+  return data;
+}
+
+// The shop marks a job done. Returns the raw result.
+export function marcarHechaRaw(ordenId: string, actor: Usuario) {
+  return servicio().rpc('marcar_hecha', { p_orden: ordenId, p_actor: actor.id });
+}
+
+// Payment request for a job at 'hecha', then the system confirms it with the fake provider. Returns the job.
+export async function pagarTrabajo(ordenId: string, expiraEn = new Date(Date.now() + 600_000).toISOString()): Promise<Fila> {
+  const s = servicio();
+  const { error: errorCobro } = await s.rpc('registrar_cobro_servicio', {
+    p_orden: ordenId,
+    p_proveedor: 'falso',
+    p_referencia: `falso-${sufijo()}`,
+    p_bolt11: null,
+    p_destino: null,
+    p_verificar_url: null,
+    p_expira_en: expiraEn,
+    p_cotizacion_btc: COTIZACION,
+  });
+  if (errorCobro) throw errorCobro;
+  const { data, error } = await s.rpc('confirmar_pago', { p_orden: ordenId, p_actor: null });
+  if (error) throw error;
+  return data;
+}
+
+// Notices for one user, optionally of one type.
+export async function avisosDeUsuario(usuario: Usuario, tipo?: string): Promise<Fila[]> {
+  let consulta = servicio().from('avisos').select('*').eq('usuario_id', usuario.id);
+  if (tipo) consulta = consulta.eq('tipo', tipo);
+  const { data, error } = await consulta;
+  if (error) throw error;
+  return data ?? [];
+}
+
+// The shop of a user, by owner id.
+export async function negocioDe(dueno: Usuario): Promise<Fila> {
+  const { data, error } = await servicio().from('negocios').select('*').eq('usuario_id', dueno.id).single();
+  if (error) throw error;
+  return data;
+}

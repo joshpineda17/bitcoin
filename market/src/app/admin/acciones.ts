@@ -6,7 +6,9 @@ import { cambiarEstadoNegocio, resolverDisputa } from '@/servidor/admin';
 import { exigirAdmin } from '@/servidor/sesion';
 import { exito, fallo, type Resultado } from '@/servidor/resultado';
 
-import { type ResultadoDisputa, RESULTADOS_DISPUTA } from './etiquetas';
+import { TODOS_LOS_RESULTADOS, type ResultadoDisputa } from '@/lib/estados';
+
+// Accepts all five results; servidor/admin.ts checks each one against the order it is for.
 
 // Every action checks the admin session itself. The id of the admin comes from the session,
 // never from the form.
@@ -48,7 +50,7 @@ export async function resolverDisputaAccion(
   const nota = texto(datos.get('nota'));
 
   if (!UUID.test(orden)) return fallo('NO_ENCONTRADA', 'No encontramos esa orden.');
-  if (!RESULTADOS_DISPUTA.includes(resultadoTexto as ResultadoDisputa)) {
+  if (!TODOS_LOS_RESULTADOS.includes(resultadoTexto as ResultadoDisputa)) {
     return fallo('DATOS_INVALIDOS', 'Elegí un resultado para la disputa.');
   }
   if (nota.length < 10 || nota.length > 1000) {

@@ -1,5 +1,5 @@
 // Shapes shared by the server functions and the client components. Keep server code out of here.
-import type { EstadoOrden } from '@/lib/estados';
+import type { EstadoOrden, ResultadoDisputa, TipoOrden } from '@/lib/estados';
 
 export type RolOrden = 'comprador' | 'vendedor';
 export type ModoEntrega = 'recogida' | 'entrega_vendedor';
@@ -8,12 +8,16 @@ export type ModoEntrega = 'recogida' | 'entrega_vendedor';
 export type ResumenOrden = {
   id: string;
   numero: number;
+  tipo: TipoOrden;
   estado: EstadoOrden;
   otraParte: string;
   totalUsdCentavos: number;
   totalSats: number;
   creadaEn: string;
   pagadaEn: string | null;
+  hechaEn: string | null;
+  canceladaEn: string | null;
+  motivoCancelacion: string | null;
   // Units bought, summed over the lines.
   productos: number;
   // True when the viewer has a next step to take on this order.
@@ -41,7 +45,7 @@ export type ResenaOrden = {
 
 export type DisputaOrden = {
   estado: 'abierta' | 'resuelta';
-  resultado: 'reembolso_total' | 'reembolso_parcial' | 'sin_reembolso' | null;
+  resultado: ResultadoDisputa | null;
   motivo: string;
   evidencia: string;
   notaResolucion: string;
@@ -54,13 +58,15 @@ export type DisputaOrden = {
 export type DetalleOrden = {
   id: string;
   numero: number;
+  tipo: TipoOrden;
   estado: EstadoOrden;
   rol: RolOrden;
   otraParte: string;
   totalUsdCentavos: number;
   totalSats: number;
   cotizacionUsdBtc: number;
-  modoEntrega: ModoEntrega;
+  // Null for a job: a job has no delivery mode.
+  modoEntrega: ModoEntrega | null;
   creadaEn: string;
   pagadaEn: string | null;
   listaEn: string | null;
@@ -69,6 +75,9 @@ export type DetalleOrden = {
   expiradaEn: string | null;
   disputadaEn: string | null;
   resueltaEn: string | null;
+  hechaEn: string | null;
+  canceladaEn: string | null;
+  motivoCancelacion: string | null;
   lineas: LineaOrden[];
   pago: PagoOrden | null;
   resena: ResenaOrden | null;
@@ -88,5 +97,7 @@ export type Aviso = {
   id: string;
   texto: string;
   ordenId: string | null;
+  // Site path to open: the stored one, or /ordenes/<id> for an order notice.
+  ruta: string;
   creadoEn: string;
 };

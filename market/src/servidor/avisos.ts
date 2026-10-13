@@ -13,7 +13,7 @@ export async function misAvisos(usuarioId: string, limite: number): Promise<Avis
   const db = await clienteSesion();
   const { data, error } = await db
     .from('avisos')
-    .select('id, orden_id, texto, creado_en')
+    .select('id, orden_id, ruta, texto, creado_en')
     .eq('usuario_id', usuarioId)
     .eq('leido', false)
     .order('creado_en', { ascending: false })
@@ -23,6 +23,8 @@ export async function misAvisos(usuarioId: string, limite: number): Promise<Avis
     id: f.id,
     texto: f.texto,
     ordenId: f.orden_id,
+    // Notices about a quote or an offer carry their own page; order notices open the order.
+    ruta: f.ruta ?? (f.orden_id ? `/ordenes/${f.orden_id}` : '/'),
     creadoEn: f.creado_en,
   }));
 }

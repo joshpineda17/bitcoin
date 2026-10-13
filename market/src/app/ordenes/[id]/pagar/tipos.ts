@@ -1,12 +1,14 @@
 // Payment screen state, shared by the server page and the Client Component.
 // No server imports here, so Client Components can use it.
 
-import type { EstadoOrden } from '@/lib/estados';
+import type { EstadoOrden, TipoOrden } from '@/lib/estados';
 
 export type ProveedorCobro = 'manual' | 'falso' | 'nwc' | 'blink';
 
 export type EstadoPago = {
   estado: EstadoOrden;
+  // A job at 'hecha' whose request expired comes back here, so the screen can offer a new one.
+  tipo: TipoOrden;
   numero: number;
   totalSats: number;
   totalUsdCentavos: number;

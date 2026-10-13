@@ -6,3 +6,4 @@ scripts
 .env*
 playwright.config.ts
 vitest.config.ts
+graphify-out

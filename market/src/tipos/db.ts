@@ -78,6 +78,7 @@ export type Database = {
           id: string
           leido: boolean
           orden_id: string | null
+          ruta: string | null
           texto: string
           tipo: string
           usuario_id: string
@@ -87,6 +88,7 @@ export type Database = {
           id?: string
           leido?: boolean
           orden_id?: string | null
+          ruta?: string | null
           texto: string
           tipo: string
           usuario_id: string
@@ -96,6 +98,7 @@ export type Database = {
           id?: string
           leido?: boolean
           orden_id?: string | null
+          ruta?: string | null
           texto?: string
           tipo?: string
           usuario_id?: string
@@ -118,6 +121,24 @@ export type Database = {
         ]
       }
       categorias: {
+        Row: {
+          id: number
+          nombre: string
+          orden: number
+        }
+        Insert: {
+          id?: never
+          nombre: string
+          orden?: number
+        }
+        Update: {
+          id?: never
+          nombre?: string
+          orden?: number
+        }
+        Relationships: []
+      }
+      categorias_servicio: {
         Row: {
           id: number
           nombre: string
@@ -178,6 +199,94 @@ export type Database = {
             columns: ["orden_id"]
             isOneToOne: true
             referencedRelation: "ordenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cotizaciones: {
+        Row: {
+          cliente_id: string
+          creada_en: string
+          descripcion_cliente: string
+          estado: Database["public"]["Enums"]["estado_cotizacion"]
+          id: string
+          mensaje: string
+          necesidad_id: string | null
+          negocio_id: string
+          orden_id: string | null
+          precio_usd_centavos: number | null
+          respondida_en: string | null
+          servicio_id: string | null
+        }
+        Insert: {
+          cliente_id: string
+          creada_en?: string
+          descripcion_cliente?: string
+          estado?: Database["public"]["Enums"]["estado_cotizacion"]
+          id?: string
+          mensaje?: string
+          necesidad_id?: string | null
+          negocio_id: string
+          orden_id?: string | null
+          precio_usd_centavos?: number | null
+          respondida_en?: string | null
+          servicio_id?: string | null
+        }
+        Update: {
+          cliente_id?: string
+          creada_en?: string
+          descripcion_cliente?: string
+          estado?: Database["public"]["Enums"]["estado_cotizacion"]
+          id?: string
+          mensaje?: string
+          necesidad_id?: string | null
+          negocio_id?: string
+          orden_id?: string | null
+          precio_usd_centavos?: number | null
+          respondida_en?: string | null
+          servicio_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cotizaciones_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cotizaciones_necesidad_id_fkey"
+            columns: ["necesidad_id"]
+            isOneToOne: false
+            referencedRelation: "necesidades"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cotizaciones_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "circularidad_negocios"
+            referencedColumns: ["negocio_id"]
+          },
+          {
+            foreignKeyName: "cotizaciones_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cotizaciones_orden_id_fkey"
+            columns: ["orden_id"]
+            isOneToOne: false
+            referencedRelation: "ordenes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cotizaciones_servicio_id_fkey"
+            columns: ["servicio_id"]
+            isOneToOne: false
+            referencedRelation: "servicios"
             referencedColumns: ["id"]
           },
         ]
@@ -249,7 +358,8 @@ export type Database = {
           nombre: string
           orden_id: string
           precio_usd_centavos: number
-          producto_id: string
+          producto_id: string | null
+          servicio_id: string | null
           unidad: string
         }
         Insert: {
@@ -258,7 +368,8 @@ export type Database = {
           nombre: string
           orden_id: string
           precio_usd_centavos: number
-          producto_id: string
+          producto_id?: string | null
+          servicio_id?: string | null
           unidad: string
         }
         Update: {
@@ -267,7 +378,8 @@ export type Database = {
           nombre?: string
           orden_id?: string
           precio_usd_centavos?: number
-          producto_id?: string
+          producto_id?: string | null
+          servicio_id?: string | null
           unidad?: string
         }
         Relationships: [
@@ -283,6 +395,13 @@ export type Database = {
             columns: ["producto_id"]
             isOneToOne: false
             referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lineas_orden_servicio_id_fkey"
+            columns: ["servicio_id"]
+            isOneToOne: false
+            referencedRelation: "servicios"
             referencedColumns: ["id"]
           },
         ]
@@ -322,6 +441,63 @@ export type Database = {
             columns: ["orden_id"]
             isOneToOne: false
             referencedRelation: "ordenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      necesidades: {
+        Row: {
+          categoria_id: number
+          creada_en: string
+          descripcion: string
+          estado: Database["public"]["Enums"]["estado_necesidad"]
+          id: string
+          oculta: boolean
+          presupuesto_usd_centavos: number | null
+          titulo: string
+          usuario_id: string
+          vence_en: string
+          zona: string
+        }
+        Insert: {
+          categoria_id: number
+          creada_en?: string
+          descripcion?: string
+          estado?: Database["public"]["Enums"]["estado_necesidad"]
+          id?: string
+          oculta?: boolean
+          presupuesto_usd_centavos?: number | null
+          titulo: string
+          usuario_id: string
+          vence_en?: string
+          zona?: string
+        }
+        Update: {
+          categoria_id?: number
+          creada_en?: string
+          descripcion?: string
+          estado?: Database["public"]["Enums"]["estado_necesidad"]
+          id?: string
+          oculta?: boolean
+          presupuesto_usd_centavos?: number | null
+          titulo?: string
+          usuario_id?: string
+          vence_en?: string
+          zona?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "necesidades_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias_servicio"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "necesidades_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
             referencedColumns: ["id"]
           },
         ]
@@ -378,6 +554,7 @@ export type Database = {
       }
       ordenes: {
         Row: {
+          cancelada_en: string | null
           cerrada_en: string | null
           clave_idempotencia: string
           codigo_entrega: string | null
@@ -389,17 +566,21 @@ export type Database = {
           entregada_en: string | null
           estado: Database["public"]["Enums"]["estado_orden"]
           expirada_en: string | null
+          hecha_en: string | null
           id: string
           lista_en: string | null
-          modo_entrega: Database["public"]["Enums"]["modo_entrega"]
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
           negocio_id: string
           numero: number
           pagada_en: string | null
           resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
           total_sats: number
           total_usd_centavos: number
         }
         Insert: {
+          cancelada_en?: string | null
           cerrada_en?: string | null
           clave_idempotencia: string
           codigo_entrega?: string | null
@@ -411,17 +592,21 @@ export type Database = {
           entregada_en?: string | null
           estado?: Database["public"]["Enums"]["estado_orden"]
           expirada_en?: string | null
+          hecha_en?: string | null
           id?: string
           lista_en?: string | null
-          modo_entrega: Database["public"]["Enums"]["modo_entrega"]
+          modo_entrega?: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion?: string | null
           negocio_id: string
           numero?: never
           pagada_en?: string | null
           resuelta_en?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_orden"]
           total_sats: number
           total_usd_centavos: number
         }
         Update: {
+          cancelada_en?: string | null
           cerrada_en?: string | null
           clave_idempotencia?: string
           codigo_entrega?: string | null
@@ -433,13 +618,16 @@ export type Database = {
           entregada_en?: string | null
           estado?: Database["public"]["Enums"]["estado_orden"]
           expirada_en?: string | null
+          hecha_en?: string | null
           id?: string
           lista_en?: string | null
-          modo_entrega?: Database["public"]["Enums"]["modo_entrega"]
+          modo_entrega?: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion?: string | null
           negocio_id?: string
           numero?: never
           pagada_en?: string | null
           resuelta_en?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_orden"]
           total_sats?: number
           total_usd_centavos?: number
         }
@@ -580,6 +768,76 @@ export type Database = {
           },
         ]
       }
+      servicios: {
+        Row: {
+          activo: boolean
+          categoria_id: number
+          creado_en: string
+          descripcion: string
+          fotos: string[]
+          id: string
+          negocio_id: string
+          oculto: boolean
+          precio_usd_centavos: number | null
+          tipo_precio: Database["public"]["Enums"]["tipo_precio"]
+          titulo: string
+          unidad: string | null
+          zona: string
+        }
+        Insert: {
+          activo?: boolean
+          categoria_id: number
+          creado_en?: string
+          descripcion?: string
+          fotos?: string[]
+          id?: string
+          negocio_id: string
+          oculto?: boolean
+          precio_usd_centavos?: number | null
+          tipo_precio: Database["public"]["Enums"]["tipo_precio"]
+          titulo: string
+          unidad?: string | null
+          zona?: string
+        }
+        Update: {
+          activo?: boolean
+          categoria_id?: number
+          creado_en?: string
+          descripcion?: string
+          fotos?: string[]
+          id?: string
+          negocio_id?: string
+          oculto?: boolean
+          precio_usd_centavos?: number | null
+          tipo_precio?: Database["public"]["Enums"]["tipo_precio"]
+          titulo?: string
+          unidad?: string | null
+          zona?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "servicios_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias_servicio"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "servicios_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "circularidad_negocios"
+            referencedColumns: ["negocio_id"]
+          },
+          {
+            foreignKeyName: "servicios_negocio_id_fkey"
+            columns: ["negocio_id"]
+            isOneToOne: false
+            referencedRelation: "negocios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usuarios: {
         Row: {
           creado_en: string
@@ -636,6 +894,15 @@ export type Database = {
         }
         Returns: string
       }
+      _texto_aviso_servicio: {
+        Args: {
+          p_estado: Database["public"]["Enums"]["estado_orden"]
+          p_numero: number
+          p_para: string
+          p_tipo: Database["public"]["Enums"]["tipo_orden"]
+        }
+        Returns: string
+      }
       _texto_valido: {
         Args: {
           p_max: number
@@ -654,6 +921,7 @@ export type Database = {
           p_orden: string
         }
         Returns: {
+          cancelada_en: string | null
           cerrada_en: string | null
           clave_idempotencia: string
           codigo_entrega: string | null
@@ -665,13 +933,16 @@ export type Database = {
           entregada_en: string | null
           estado: Database["public"]["Enums"]["estado_orden"]
           expirada_en: string | null
+          hecha_en: string | null
           id: string
           lista_en: string | null
-          modo_entrega: Database["public"]["Enums"]["modo_entrega"]
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
           negocio_id: string
           numero: number
           pagada_en: string | null
           resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
           total_sats: number
           total_usd_centavos: number
         }
@@ -682,6 +953,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      _usd_texto: { Args: { p_centavos: number }; Returns: string }
       abrir_disputa: {
         Args: {
           p_actor: string
@@ -706,6 +978,45 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "disputas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      aceptar_cotizacion: {
+        Args: {
+          p_actor: string
+          p_cotizacion: string
+          p_cotizacion_btc: number
+        }
+        Returns: {
+          cancelada_en: string | null
+          cerrada_en: string | null
+          clave_idempotencia: string
+          codigo_entrega: string | null
+          comision_teorica_sats: number
+          comprador_id: string
+          cotizacion_usd_btc: number
+          creada_en: string
+          disputada_en: string | null
+          entregada_en: string | null
+          estado: Database["public"]["Enums"]["estado_orden"]
+          expirada_en: string | null
+          hecha_en: string | null
+          id: string
+          lista_en: string | null
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
+          negocio_id: string
+          numero: number
+          pagada_en: string | null
+          resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
+          total_sats: number
+          total_usd_centavos: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "ordenes"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -781,6 +1092,63 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      cancelar_necesidad: {
+        Args: { p_necesidad: string; p_usuario: string }
+        Returns: {
+          categoria_id: number
+          creada_en: string
+          descripcion: string
+          estado: Database["public"]["Enums"]["estado_necesidad"]
+          id: string
+          oculta: boolean
+          presupuesto_usd_centavos: number | null
+          titulo: string
+          usuario_id: string
+          vence_en: string
+          zona: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "necesidades"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      cancelar_orden: {
+        Args: { p_actor: string; p_motivo: string; p_orden: string }
+        Returns: {
+          cancelada_en: string | null
+          cerrada_en: string | null
+          clave_idempotencia: string
+          codigo_entrega: string | null
+          comision_teorica_sats: number
+          comprador_id: string
+          cotizacion_usd_btc: number
+          creada_en: string
+          disputada_en: string | null
+          entregada_en: string | null
+          estado: Database["public"]["Enums"]["estado_orden"]
+          expirada_en: string | null
+          hecha_en: string | null
+          id: string
+          lista_en: string | null
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
+          negocio_id: string
+          numero: number
+          pagada_en: string | null
+          resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
+          total_sats: number
+          total_usd_centavos: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "ordenes"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       cerrar_ordenes: { Args: never; Returns: number }
       circularidad_red: {
         Args: never
@@ -796,6 +1164,7 @@ export type Database = {
       confirmar_pago: {
         Args: { p_actor: string; p_orden: string }
         Returns: {
+          cancelada_en: string | null
           cerrada_en: string | null
           clave_idempotencia: string
           codigo_entrega: string | null
@@ -807,13 +1176,16 @@ export type Database = {
           entregada_en: string | null
           estado: Database["public"]["Enums"]["estado_orden"]
           expirada_en: string | null
+          hecha_en: string | null
           id: string
           lista_en: string | null
-          modo_entrega: Database["public"]["Enums"]["modo_entrega"]
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
           negocio_id: string
           numero: number
           pagada_en: string | null
           resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
           total_sats: number
           total_usd_centavos: number
         }
@@ -847,17 +1219,16 @@ export type Database = {
           isSetofReturn: false
         }
       }
-      crear_orden: {
+      contratar_servicio: {
         Args: {
           p_clave: string
-          p_comision_bps?: number
-          p_comprador: string
-          p_cotizacion: number
-          p_lineas: Json
-          p_modo: Database["public"]["Enums"]["modo_entrega"]
-          p_negocio: string
+          p_cliente: string
+          p_cotizacion_btc: number
+          p_nota: string
+          p_servicio: string
         }
         Returns: {
+          cancelada_en: string | null
           cerrada_en: string | null
           clave_idempotencia: string
           codigo_entrega: string | null
@@ -869,13 +1240,59 @@ export type Database = {
           entregada_en: string | null
           estado: Database["public"]["Enums"]["estado_orden"]
           expirada_en: string | null
+          hecha_en: string | null
           id: string
           lista_en: string | null
-          modo_entrega: Database["public"]["Enums"]["modo_entrega"]
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
           negocio_id: string
           numero: number
           pagada_en: string | null
           resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
+          total_sats: number
+          total_usd_centavos: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "ordenes"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      crear_orden: {
+        Args: {
+          p_clave: string
+          p_comision_bps?: number
+          p_comprador: string
+          p_cotizacion: number
+          p_lineas: Json
+          p_modo: Database["public"]["Enums"]["modo_entrega"]
+          p_negocio: string
+        }
+        Returns: {
+          cancelada_en: string | null
+          cerrada_en: string | null
+          clave_idempotencia: string
+          codigo_entrega: string | null
+          comision_teorica_sats: number
+          comprador_id: string
+          cotizacion_usd_btc: number
+          creada_en: string
+          disputada_en: string | null
+          entregada_en: string | null
+          estado: Database["public"]["Enums"]["estado_orden"]
+          expirada_en: string | null
+          hecha_en: string | null
+          id: string
+          lista_en: string | null
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
+          negocio_id: string
+          numero: number
+          pagada_en: string | null
+          resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
           total_sats: number
           total_usd_centavos: number
         }
@@ -959,10 +1376,47 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      guardar_servicio: {
+        Args: {
+          p_activo: boolean
+          p_categoria: number
+          p_descripcion: string
+          p_fotos: string[]
+          p_precio: number
+          p_servicio: string
+          p_tipo_precio: Database["public"]["Enums"]["tipo_precio"]
+          p_titulo: string
+          p_unidad: string
+          p_usuario: string
+          p_zona: string
+        }
+        Returns: {
+          activo: boolean
+          categoria_id: number
+          creado_en: string
+          descripcion: string
+          fotos: string[]
+          id: string
+          negocio_id: string
+          oculto: boolean
+          precio_usd_centavos: number | null
+          tipo_precio: Database["public"]["Enums"]["tipo_precio"]
+          titulo: string
+          unidad: string | null
+          zona: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "servicios"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       marcar_avisos_leidos: { Args: { p_usuario: string }; Returns: number }
       marcar_entregada: {
         Args: { p_actor: string; p_codigo: string; p_orden: string }
         Returns: {
+          cancelada_en: string | null
           cerrada_en: string | null
           clave_idempotencia: string
           codigo_entrega: string | null
@@ -974,13 +1428,51 @@ export type Database = {
           entregada_en: string | null
           estado: Database["public"]["Enums"]["estado_orden"]
           expirada_en: string | null
+          hecha_en: string | null
           id: string
           lista_en: string | null
-          modo_entrega: Database["public"]["Enums"]["modo_entrega"]
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
           negocio_id: string
           numero: number
           pagada_en: string | null
           resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
+          total_sats: number
+          total_usd_centavos: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "ordenes"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      marcar_hecha: {
+        Args: { p_actor: string; p_orden: string }
+        Returns: {
+          cancelada_en: string | null
+          cerrada_en: string | null
+          clave_idempotencia: string
+          codigo_entrega: string | null
+          comision_teorica_sats: number
+          comprador_id: string
+          cotizacion_usd_btc: number
+          creada_en: string
+          disputada_en: string | null
+          entregada_en: string | null
+          estado: Database["public"]["Enums"]["estado_orden"]
+          expirada_en: string | null
+          hecha_en: string | null
+          id: string
+          lista_en: string | null
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
+          negocio_id: string
+          numero: number
+          pagada_en: string | null
+          resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
           total_sats: number
           total_usd_centavos: number
         }
@@ -994,6 +1486,7 @@ export type Database = {
       marcar_lista: {
         Args: { p_actor: string; p_orden: string }
         Returns: {
+          cancelada_en: string | null
           cerrada_en: string | null
           clave_idempotencia: string
           codigo_entrega: string | null
@@ -1005,13 +1498,16 @@ export type Database = {
           entregada_en: string | null
           estado: Database["public"]["Enums"]["estado_orden"]
           expirada_en: string | null
+          hecha_en: string | null
           id: string
           lista_en: string | null
-          modo_entrega: Database["public"]["Enums"]["modo_entrega"]
+          modo_entrega: Database["public"]["Enums"]["modo_entrega"] | null
+          motivo_cancelacion: string | null
           negocio_id: string
           numero: number
           pagada_en: string | null
           resuelta_en: string | null
+          tipo: Database["public"]["Enums"]["tipo_orden"]
           total_sats: number
           total_usd_centavos: number
         }
@@ -1046,10 +1542,166 @@ export type Database = {
         }
       }
       mi_negocio_id: { Args: never; Returns: string }
+      ocultar_necesidad: {
+        Args: { p_actor: string; p_necesidad: string; p_oculta: boolean }
+        Returns: {
+          categoria_id: number
+          creada_en: string
+          descripcion: string
+          estado: Database["public"]["Enums"]["estado_necesidad"]
+          id: string
+          oculta: boolean
+          presupuesto_usd_centavos: number | null
+          titulo: string
+          usuario_id: string
+          vence_en: string
+          zona: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "necesidades"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      ocultar_servicio: {
+        Args: { p_actor: string; p_oculto: boolean; p_servicio: string }
+        Returns: {
+          activo: boolean
+          categoria_id: number
+          creado_en: string
+          descripcion: string
+          fotos: string[]
+          id: string
+          negocio_id: string
+          oculto: boolean
+          precio_usd_centavos: number | null
+          tipo_precio: Database["public"]["Enums"]["tipo_precio"]
+          titulo: string
+          unidad: string | null
+          zona: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "servicios"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      ofertar: {
+        Args: {
+          p_mensaje: string
+          p_necesidad: string
+          p_precio: number
+          p_usuario: string
+        }
+        Returns: {
+          cliente_id: string
+          creada_en: string
+          descripcion_cliente: string
+          estado: Database["public"]["Enums"]["estado_cotizacion"]
+          id: string
+          mensaje: string
+          necesidad_id: string | null
+          negocio_id: string
+          orden_id: string | null
+          precio_usd_centavos: number | null
+          respondida_en: string | null
+          servicio_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cotizaciones"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      publicar_necesidad: {
+        Args: {
+          p_categoria: number
+          p_descripcion: string
+          p_presupuesto: number
+          p_titulo: string
+          p_usuario: string
+          p_zona: string
+        }
+        Returns: {
+          categoria_id: number
+          creada_en: string
+          descripcion: string
+          estado: Database["public"]["Enums"]["estado_necesidad"]
+          id: string
+          oculta: boolean
+          presupuesto_usd_centavos: number | null
+          titulo: string
+          usuario_id: string
+          vence_en: string
+          zona: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "necesidades"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       puede_ver_orden: { Args: { p_orden_id: string }; Returns: boolean }
+      rechazar_cotizacion: {
+        Args: { p_actor: string; p_cotizacion: string }
+        Returns: {
+          cliente_id: string
+          creada_en: string
+          descripcion_cliente: string
+          estado: Database["public"]["Enums"]["estado_cotizacion"]
+          id: string
+          mensaje: string
+          necesidad_id: string | null
+          negocio_id: string
+          orden_id: string | null
+          precio_usd_centavos: number | null
+          respondida_en: string | null
+          servicio_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cotizaciones"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       registrar_cobro: {
         Args: {
           p_bolt11: string
+          p_destino: string
+          p_expira_en: string
+          p_orden: string
+          p_proveedor: Database["public"]["Enums"]["tipo_proveedor"]
+          p_referencia: string
+          p_verificar_url: string
+        }
+        Returns: {
+          bolt11: string | null
+          destino: string | null
+          estado: Database["public"]["Enums"]["estado_cobro"]
+          expira_en: string
+          id: string
+          orden_id: string
+          pagado_en: string | null
+          proveedor: Database["public"]["Enums"]["tipo_proveedor"]
+          referencia_externa: string | null
+          verificar_url: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cobros"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      registrar_cobro_servicio: {
+        Args: {
+          p_bolt11: string
+          p_cotizacion_btc: number
           p_destino: string
           p_expira_en: string
           p_orden: string
@@ -1104,6 +1756,80 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      responder_cotizacion: {
+        Args: {
+          p_actor: string
+          p_cotizacion: string
+          p_mensaje: string
+          p_precio: number
+        }
+        Returns: {
+          cliente_id: string
+          creada_en: string
+          descripcion_cliente: string
+          estado: Database["public"]["Enums"]["estado_cotizacion"]
+          id: string
+          mensaje: string
+          necesidad_id: string | null
+          negocio_id: string
+          orden_id: string | null
+          precio_usd_centavos: number | null
+          respondida_en: string | null
+          servicio_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cotizaciones"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      retirar_cotizacion: {
+        Args: { p_actor: string; p_cotizacion: string }
+        Returns: {
+          cliente_id: string
+          creada_en: string
+          descripcion_cliente: string
+          estado: Database["public"]["Enums"]["estado_cotizacion"]
+          id: string
+          mensaje: string
+          necesidad_id: string | null
+          negocio_id: string
+          orden_id: string | null
+          precio_usd_centavos: number | null
+          respondida_en: string | null
+          servicio_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cotizaciones"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      solicitar_cotizacion: {
+        Args: { p_cliente: string; p_descripcion: string; p_servicio: string }
+        Returns: {
+          cliente_id: string
+          creada_en: string
+          descripcion_cliente: string
+          estado: Database["public"]["Enums"]["estado_cotizacion"]
+          id: string
+          mensaje: string
+          necesidad_id: string | null
+          negocio_id: string
+          orden_id: string | null
+          precio_usd_centavos: number | null
+          respondida_en: string | null
+          servicio_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cotizaciones"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       solicitar_negocio: {
         Args: {
           p_descripcion: string
@@ -1132,10 +1858,19 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      vencer_necesidades: { Args: never; Returns: number }
     }
     Enums: {
       estado_cobro: "pendiente" | "pagado" | "expirado"
+      estado_cotizacion:
+        | "solicitada"
+        | "ofrecida"
+        | "aceptada"
+        | "rechazada"
+        | "retirada"
+        | "vencida"
       estado_disputa: "abierta" | "resuelta"
+      estado_necesidad: "abierta" | "asignada" | "cancelada" | "vencida"
       estado_negocio: "pendiente" | "aprobado" | "suspendido"
       estado_orden:
         | "creada"
@@ -1147,11 +1882,18 @@ export type Database = {
         | "expirada"
         | "disputada"
         | "resuelta"
+        | "acordada"
+        | "hecha"
+        | "cancelada"
       modo_entrega: "recogida" | "entrega_vendedor"
       resultado_disputa:
         | "reembolso_total"
         | "reembolso_parcial"
         | "sin_reembolso"
+        | "corresponde_pagar"
+        | "no_corresponde_pagar"
+      tipo_orden: "productos" | "servicio"
+      tipo_precio: "fijo" | "cotizar"
       tipo_proveedor: "manual" | "falso" | "nwc" | "blink"
     }
     CompositeTypes: {
@@ -1284,7 +2026,16 @@ export const Constants = {
   public: {
     Enums: {
       estado_cobro: ["pendiente", "pagado", "expirado"],
+      estado_cotizacion: [
+        "solicitada",
+        "ofrecida",
+        "aceptada",
+        "rechazada",
+        "retirada",
+        "vencida",
+      ],
       estado_disputa: ["abierta", "resuelta"],
+      estado_necesidad: ["abierta", "asignada", "cancelada", "vencida"],
       estado_negocio: ["pendiente", "aprobado", "suspendido"],
       estado_orden: [
         "creada",
@@ -1296,13 +2047,20 @@ export const Constants = {
         "expirada",
         "disputada",
         "resuelta",
+        "acordada",
+        "hecha",
+        "cancelada",
       ],
       modo_entrega: ["recogida", "entrega_vendedor"],
       resultado_disputa: [
         "reembolso_total",
         "reembolso_parcial",
         "sin_reembolso",
+        "corresponde_pagar",
+        "no_corresponde_pagar",
       ],
+      tipo_orden: ["productos", "servicio"],
+      tipo_precio: ["fijo", "cotizar"],
       tipo_proveedor: ["manual", "falso", "nwc", "blink"],
     },
   },
