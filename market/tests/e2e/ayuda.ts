@@ -112,3 +112,20 @@ export async function codigoDeCorreo(correo: string, desde?: Date): Promise<stri
   }
   throw new Error(`No llegó el código a ${correo} en 20 segundos. Revisá que el stack local esté arriba.`);
 }
+
+/**
+ * The hashed token a sign-in link carries, made with the service-role client. The local mail has only
+ * the code, so tests open /auth/confirmar with this token, the way the link would. A new address gets
+ * its account here, as a sign-in would create it; `nombre` names the account when given.
+ */
+export async function tokenDeEnlace(correo: string, nombre?: string): Promise<string> {
+  const cliente = servicio();
+  const { data, error } = await cliente.auth.admin.generateLink({ type: 'magiclink', email: correo });
+  const hash = data?.properties?.hashed_token;
+  if (error || !hash || !data.user) throw new Error(`No pude armar el enlace para ${correo}: ${error?.message}`);
+  if (nombre) {
+    const { error: errorNombre } = await cliente.rpc('actualizar_perfil', { p_usuario: data.user.id, p_nombre: nombre });
+    if (errorNombre) throw new Error(`No pude poner el nombre a ${correo}: ${errorNombre.message}`);
+  }
+  return hash;
+}

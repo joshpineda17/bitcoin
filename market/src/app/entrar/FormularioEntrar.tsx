@@ -54,7 +54,7 @@ export function FormularioEntrar({ metodo, volver }: { metodo: Metodo; volver: s
                 aria-invalid={errorContacto ? true : undefined}
               />
               <p id="ayuda-correo" className={estilos.ayuda}>
-                Te mandamos el código de seis números a este correo.
+                Te mandamos un correo para entrar a esta dirección.
               </p>
             </div>
           ) : (
@@ -102,6 +102,13 @@ export function FormularioEntrar({ metodo, volver }: { metodo: Metodo; volver: s
           <input type="hidden" name="volver" value={volver} />
           <input type="hidden" name="metodo" value={metodo} />
           <input type="hidden" name="contacto" value={estado.contacto} />
+
+          {esCorreo && (
+            <p className={estilos.ayuda}>
+              Te mandamos un correo a {mascaraCorreo(estado.contacto)}. Escribí el código de seis números, o abrí el
+              enlace del correo en este mismo navegador.
+            </p>
+          )}
 
           <div className={estilos.grupo}>
             <label htmlFor="codigo" className="campo-etiqueta">
@@ -194,4 +201,12 @@ function BotonEnvio({
 function mascara(telefono: string): string {
   const digitos = telefono.replace(/[\s-]/g, '');
   return `•••• ••${digitos.slice(-2)}`;
+}
+
+// Shows the first two letters of the address, as "jo•••@gmail.com".
+function mascaraCorreo(correo: string): string {
+  const limpio = correo.trim().toLowerCase();
+  const arroba = limpio.indexOf('@');
+  if (arroba < 1) return '';
+  return `${limpio.slice(0, Math.min(2, arroba))}•••${limpio.slice(arroba)}`;
 }

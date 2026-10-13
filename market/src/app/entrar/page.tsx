@@ -42,13 +42,25 @@ async function EntradaConDestino({ busqueda }: { busqueda: PageProps<'/entrar'>[
   const habilitados = metodosHabilitados();
   const metodo = metodoElegido(params.metodo, habilitados);
   const otro = habilitados.find((m) => m !== metodo);
+  // Only this one value is shown. The text is fixed, so no query text reaches the page.
+  const avisoEnlace = params.aviso === 'enlace';
 
   return (
     <>
       <section className="encabezado">
         <h1>{metodo === 'correo' ? 'Entrá con tu correo' : 'Entrá con tu celular'}</h1>
-        <p>Te mandamos un código de seis números. No hace falta contraseña.</p>
+        <p>
+          {metodo === 'correo'
+            ? 'Te mandamos un correo para entrar. No hace falta contraseña.'
+            : 'Te mandamos un código de seis números. No hace falta contraseña.'}
+        </p>
       </section>
+
+      {avisoEnlace && (
+        <p role="alert" className={estilos.error}>
+          Ese enlace ya no sirve. Pedí uno nuevo y abrilo en este mismo navegador.
+        </p>
+      )}
 
       {demoActivo() && <PanelDemo volver={volver} />}
 

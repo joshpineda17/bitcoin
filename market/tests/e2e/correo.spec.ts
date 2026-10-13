@@ -1,10 +1,12 @@
 import { type Browser, type Page, expect, test } from '@playwright/test';
 
-import { codigoDeCorreo, OPCIONES_CONTEXTO, seDesborda } from './ayuda';
+import { codigoDeCorreo, OPCIONES_CONTEXTO, seDesborda, tokenDeEnlace } from './ayuda';
 
 // One address for the whole file: the first test creates the account, the second signs in to it.
 const CORREO = `prueba-${Date.now()}@correo.test`;
 const NOMBRE = 'Vera Correo';
+// The header shows the first word of the name, so the link test checks for "Ada".
+const NOMBRE_ENLACE = 'Ada Enlace';
 
 // Opens /entrar by email in a fresh context and sends the code. Returns the moment the send was clicked.
 async function enviarCodigoCorreo(pagina: Page, correo: string): Promise<Date> {
@@ -98,4 +100,54 @@ test('en 320 px ninguno de los dos métodos se desborda', async ({ browser }) =>
   await pagina.waitForLoadState('networkidle');
   await expect(pagina.getByLabel('Correo', { exact: true })).toBeVisible();
   expect(await seDesborda(pagina), 'entrar con correo tiene desplazamiento lateral').toBe(false);
+});
+
+// The link path. The local mail has only the code, so these open /auth/confirmar with the token a
+// sign-in link would carry (see tokenDeEnlace).
+test('enlace de un correo ya registrado: entra con el enlace y llega a la página de inicio', async ({ browser }) => {
+  const correo = `prueba-enlace-${Date.now()}@correo.test`;
+  const token = await tokenDeEnlace(correo, NOMBRE_ENLACE);
+
+  const pagina = await nuevaSesion(browser);
+  await pagina.goto(`/auth/confirmar?token_hash=${token}&type=email`);
+
+  await pagina.waitForURL((url) => url.pathname === '/', { timeout: 60_000 });
+  await expect(pagina.locator('header').getByRole('link', { name: 'Ada', exact: true })).toBeVisible();
+});
+
+test('enlace de un correo nuevo: entra y lo manda a /cuenta para poner el nombre', async ({ browser }) => {
+  const correo = `prueba-enlace-nuevo-${Date.now()}@correo.test`;
+  const token = await tokenDeEnlace(correo);
+
+  const pagina = await nuevaSesion(browser);
+  await pagina.goto(`/auth/confirmar?token_hash=${token}&type=email`);
+
+  await pagina.waitForURL((url) => url.pathname === '/cuenta', { timeout: 60_000 });
+  await expect(pagina.getByRole('heading', { name: 'Tu cuenta' })).toBeVisible();
+  await expect(pagina.getByRole('definition')).toContainText('@correo.test');
+});
+
+test('enlace inválido o sin datos: vuelve a /entrar con el aviso de enlace vencido', async ({ browser }) => {
+  const pagina = await nuevaSesion(browser);
+  const aviso = pagina.getByRole('alert').filter({ hasText: 'Ese enlace ya no sirve. Pedí uno nuevo' });
+
+  await pagina.goto(`/auth/confirmar?token_hash=${'a'.repeat(64)}&type=email`);
+  await pagina.waitForURL((url) => url.pathname === '/entrar' && url.searchParams.get('aviso') === 'enlace');
+  await expect(aviso).toBeVisible();
+
+  await pagina.goto('/auth/confirmar');
+  await pagina.waitForURL((url) => url.pathname === '/entrar' && url.searchParams.get('aviso') === 'enlace');
+  await expect(aviso).toBeVisible();
+});
+
+test('enlace con un destino ajeno: termina en este sitio, nunca en otro', async ({ browser }) => {
+  const correo = `prueba-enlace-volver-${Date.now()}@correo.test`;
+  const token = await tokenDeEnlace(correo, NOMBRE_ENLACE);
+
+  const pagina = await nuevaSesion(browser);
+  await pagina.goto(`/auth/confirmar?volver=//evil.example&token_hash=${token}&type=email`);
+
+  await pagina.waitForURL((url) => url.pathname === '/', { timeout: 60_000 });
+  const sitio = new URL(test.info().project.use.baseURL ?? 'http://localhost:4323');
+  expect(new URL(pagina.url()).host).toBe(sitio.host);
 });

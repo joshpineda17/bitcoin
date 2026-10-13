@@ -1,5 +1,6 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { destinoSeguro, normalizarCelular, normalizarCorreo, rutaCuenta } from '@/servidor/cuentas';
@@ -42,9 +43,18 @@ function mensajeDeEnvio(codigo: string | undefined): string {
   }
 }
 
+// The hosted project's free plan sends very few emails an hour. Demo accounts are offered only
+// when the demo flag is on.
+function mensajeLimiteCorreo(): string {
+  return demoActivo()
+    ? 'Por ahora solo podemos mandar pocos correos por hora. Probá más tarde o usá una cuenta de demo.'
+    : 'Por ahora solo podemos mandar pocos correos por hora. Probá más tarde.';
+}
+
 function mensajeDeEnvioCorreo(codigo: string | undefined): string {
   switch (codigo) {
     case 'over_email_send_rate_limit':
+      return mensajeLimiteCorreo();
     case 'over_request_rate_limit':
       return 'Pediste demasiados códigos. Esperá unos minutos antes de intentar otra vez.';
     case 'email_address_invalid':
@@ -76,9 +86,33 @@ function destinoDe(metodo: Metodo, texto: string): Destino | null {
   return correo ? { metodo: 'correo', correo } : null;
 }
 
+// The link in the email comes back to this site, to /auth/confirmar, with the destination kept
+// in `volver`. The origin is the one the request came from, never typed by the visitor. Supabase
+// must also allow that address as a redirect. Returns undefined when the headers give no plain
+// origin; the email then uses the project's site URL, and the typed code still works.
+async function enlaceDeConfirmacion(volver: string): Promise<string | undefined> {
+  const cabeceras = await headers();
+  const origen = cabeceras.get('origin');
+  const host = (cabeceras.get('x-forwarded-host') ?? cabeceras.get('host') ?? '').split(',')[0].trim();
+  const proto = (cabeceras.get('x-forwarded-proto') ?? 'http').split(',')[0].trim();
+  const base = origen && origen !== 'null' ? origen : host ? `${proto}://${host}` : '';
+  if (!/^https?:\/\/[a-z0-9.-]+(:\d+)?$/i.test(base)) return undefined;
+
+  const enlace = new URL('/auth/confirmar', base);
+  if (volver !== '/') enlace.searchParams.set('volver', volver);
+  return enlace.toString();
+}
+
+// What the status line says after a send. An email may carry a code or a link, so it does not
+// promise a code.
+function avisoDeEnvio(metodo: Metodo, reenvio: boolean): string {
+  if (metodo === 'correo') return reenvio ? 'Te reenviamos el correo.' : 'Listo. Revisá tu correo.';
+  return reenvio ? 'Te reenviamos el código.' : 'Listo. Ingresá el código de seis números.';
+}
+
 // Asks GoTrue to send a code. Returns the sentence to show, or null when it went out.
 // A new address gets an account at once; an existing one just gets a new code.
-async function pedirCodigo(supabase: ClienteSesion, destino: Destino): Promise<string | null> {
+async function pedirCodigo(supabase: ClienteSesion, destino: Destino, volver: string): Promise<string | null> {
   if (destino.metodo === 'telefono') {
     const { error } = await supabase.auth.signInWithOtp({ phone: `+503${destino.celular}` });
     if (error) {
@@ -89,7 +123,7 @@ async function pedirCodigo(supabase: ClienteSesion, destino: Destino): Promise<s
   }
   const { error } = await supabase.auth.signInWithOtp({
     email: destino.correo,
-    options: { shouldCreateUser: true },
+    options: { shouldCreateUser: true, emailRedirectTo: await enlaceDeConfirmacion(volver) },
   });
   if (error) {
     console.error('signInWithOtp:', error.code, error.message);
@@ -170,7 +204,7 @@ export async function entrar(previo: EstadoEntrar, datos: FormData): Promise<Est
     }
 
     const supabase = await clienteSesion();
-    const error = await pedirCodigo(supabase, destino);
+    const error = await pedirCodigo(supabase, destino, volver);
     if (error) {
       return { metodo, paso: 'contacto', contacto: contactoTecleado, codigo: '', error: { campo: 'contacto', mensaje: error } };
     }
@@ -180,7 +214,7 @@ export async function entrar(previo: EstadoEntrar, datos: FormData): Promise<Est
       paso: 'codigo',
       contacto: contactoTecleado,
       codigo: '',
-      aviso: intencion === 'reenviar' ? 'Te reenviamos el código.' : 'Listo. Ingresá el código de seis números.',
+      aviso: avisoDeEnvio(metodo, intencion === 'reenviar'),
     };
   }
 
@@ -228,7 +262,7 @@ export async function entrarDemo(persona: PersonaDemo, volver: string): Promise<
 
   const destino: Destino = { metodo: 'telefono', celular: PERSONAS_DEMO[persona] };
   const supabase = await clienteSesion();
-  const error = await pedirCodigo(supabase, destino);
+  const error = await pedirCodigo(supabase, destino, destinoSeguro(volver));
   if (error) return fallo('NO_ENVIADO', error);
 
   const verificado = await confirmarCodigo(supabase, destino, CODIGO_DEMO);
