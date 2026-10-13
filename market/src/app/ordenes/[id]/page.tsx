@@ -65,8 +65,8 @@ async function Orden({ params }: { params: Promise<{ id: string }> }) {
     <article className={styles.orden} aria-labelledby="orden-titulo">
       <header className={styles.cabecera}>
         <p>
-          <Link href={esComprador ? '/ordenes' : '/mi-negocio/ordenes'}>
-            ← Volver a {esComprador ? 'mis compras' : 'mis ventas'}
+          <Link href={esComprador ? '/ordenes' : '/mi-negocio/ordenes'} className={styles.volver}>
+            ← Volver a {esComprador ? (trabajo ? 'mis órdenes' : 'mis compras') : 'mis ventas'}
           </Link>
         </p>
         <h1 id="orden-titulo">{trabajo ? `Trabajo ${detalle.numero}` : `Orden ${detalle.numero}`}</h1>

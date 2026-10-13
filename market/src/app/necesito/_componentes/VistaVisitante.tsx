@@ -39,6 +39,10 @@ export function VistaVisitante({
             campos={{ cotizacionId: miOferta.id }}
             etiqueta="Retirar mi oferta"
             variante="secundario"
+            confirmacion={{
+              texto: 'Si la retirás, el autor no puede aceptarla. Después podés volver a ofertar.',
+              etiquetaConfirmar: 'Sí, retirar mi oferta',
+            }}
             disponible={miOferta.estado === 'ofrecida'}
           />
         </article>

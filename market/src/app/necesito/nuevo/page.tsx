@@ -8,7 +8,7 @@ import { categoriasServicio } from '@/servidor/servicios';
 import { FormularioNecesidad } from '../_componentes/FormularioNecesidad';
 import estilos from '../estilos.module.css';
 
-export const metadata: Metadata = { title: 'Publicar una necesidad' };
+export const metadata: Metadata = { title: 'Publicar lo que necesito' };
 
 export default function PaginaNuevaNecesidad() {
   return (

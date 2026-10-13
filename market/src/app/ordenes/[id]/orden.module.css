@@ -7,6 +7,13 @@
   min-width: 0;
 }
 
+/* A back link tall enough to tap. */
+.volver {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alto-toque);
+}
+
 .cabecera {
   display: grid;
   gap: 10px;

@@ -20,14 +20,21 @@ export const metadata: Metadata = { title: 'Pagar la orden' };
 export default function PaginaPagar(props: PageProps<'/ordenes/[id]/pagar'>) {
   return (
     <Suspense fallback={<p role="status">Cargando el pago…</p>}>
-      <PagoOrden params={props.params} />
+      <PagoOrden params={props.params} searchParams={props.searchParams} />
     </Suspense>
   );
 }
 
-async function PagoOrden({ params }: { params: Promise<{ id: string }> }) {
+async function PagoOrden({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ reintento?: string }>;
+}) {
   const { id } = await params;
   if (!UUID.test(id)) notFound();
+  const { reintento } = await searchParams;
 
   const sesion = await exigirSesion(`/ordenes/${id}/pagar`);
   const lectura = await estadoDePago(id, sesion.usuario.id);
@@ -47,6 +54,12 @@ async function PagoOrden({ params }: { params: Promise<{ id: string }> }) {
     const cobro = await asegurarCobro(id);
     if (cobro.ok) {
       const relectura = await estadoDePago(id, sesion.usuario.id);
+      // The request was made, so a read that still shows the state from before it is stale: Next
+      // memoizes the identical GET that estadoDePago made before asegurarCobro (see servidor/supabase.ts).
+      // Reload once; the new render reads the stored request. The flag stops a loop if that is stale too.
+      if (relectura.ok && relectura.dato.estado === estado.estado && reintento !== '1') {
+        redirect(`/ordenes/${id}/pagar?reintento=1`);
+      }
       if (relectura.ok) estado = relectura.dato;
     } else {
       problema = cobro.mensaje;

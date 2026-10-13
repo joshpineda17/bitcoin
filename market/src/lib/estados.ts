@@ -99,11 +99,11 @@ export const DESCRIPCION_ESTADO: Record<EstadoOrden, Record<RolParte, string>> =
   },
   acordada: {
     comprador: 'Pagás cuando el trabajo esté hecho. CacaoMarket no guarda tu dinero. Coordiná hora y lugar por el chat.',
-    vendedor: 'Cobrás al terminar. Coordiná bien antes de ir.',
+    vendedor: 'Coordiná hora y lugar por el chat. Cuando termines, marcá el trabajo como hecho.',
   },
   hecha: {
     comprador: 'El trabajo está hecho. Pagalo cuando estés conforme. Si no estás de acuerdo, abrí una disputa.',
-    vendedor: 'Marcaste el trabajo como hecho. Esperá el pago del cliente.',
+    vendedor: 'Marcaste el trabajo como hecho. El cliente ya puede pagarte.',
   },
   cancelada: {
     comprador: 'El trabajo se canceló. Revisá el motivo en la orden.',

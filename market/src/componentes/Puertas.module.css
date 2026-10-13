@@ -1,7 +1,9 @@
 /* The section switch: one segmented control with three equal columns. It stays one row down to
    320px. The small line under each name hides below 360px, where the names need the room. */
+/* The same 20px under the switch on every page that shows it. */
 .nav {
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .lista {

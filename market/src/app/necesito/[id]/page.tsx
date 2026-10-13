@@ -13,7 +13,16 @@ import { VistaAutor } from '../_componentes/VistaAutor';
 import { VistaVisitante } from '../_componentes/VistaVisitante';
 import estilos from '../estilos.module.css';
 
-export const metadata: Metadata = { title: 'Necesidad' };
+// The need's title names the page. A need the visitor cannot read gets the plain title. Signed-in
+// people read through their own view, so the author still sees the title of an assigned need.
+export async function generateMetadata(props: PageProps<'/necesito/[id]'>): Promise<Metadata> {
+  const { id } = await props.params;
+  const sesion = await sesionActual();
+  const necesidad = sesion
+    ? (await necesidadParaUsuario(id, sesion.usuario))?.necesidad
+    : await necesidadPublica(id);
+  return { title: necesidad?.titulo ?? 'Necesidad' };
+}
 
 // Three views of one page, decided on the server: signed out, the author, and any other signed-in person.
 // A need the visitor may not see is answered exactly like a missing one.
@@ -54,7 +63,9 @@ async function Detalle({ params }: { params: Promise<{ id: string }> }) {
   return (
     <>
       <p>
-        <Link href="/necesito">← Volver al tablón</Link>
+        <Link href="/necesito" className={estilos.volver}>
+          ← Volver al tablón
+        </Link>
       </p>
       <FichaNecesidad necesidad={vista.necesidad} cotizacion={cotizacion} />
       {vista.esAutor ? (

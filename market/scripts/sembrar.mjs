@@ -199,20 +199,21 @@ const PEDIDOS = [
   },
 ];
 
-// [dueño, categoría, título, descripción, zona, tipo ('fijo' | 'cotizar'), precio en centavos, unidad]
+// [dueño, categoría, título, descripción, zona, tipo ('fijo' | 'cotizar'), precio en centavos, unidad, foto (en public/productos, o null)]
+// The electrical service has no photo: no clean picture of a house installation was found.
 const SERVICIOS = [
-  [2, 'Clases y tutorías', 'Asesoría para huerto casero', 'Te enseño a sembrar, abonar y regar un huerto pequeño en tu patio, con semillas de la zona.', 'El Zonte, La Libertad', 'fijo', 800, 'por hora'],
-  [2, 'Hogar y reparaciones', 'Instalación de huerto en patio', 'Preparamos la tierra, armamos los cajones y dejamos sembrado el huerto. El precio depende del tamaño.', 'El Zonte, La Libertad', 'cotizar', null, null],
-  [3, 'Comida y eventos', 'Tour del cafetal', 'Recorrido por el cafetal con explicación del cultivo, el secado y el tueste. Incluye una taza de café.', 'Cerro El Bálsamo, La Libertad', 'fijo', 1000, 'por persona'],
-  [3, 'Clases y tutorías', 'Taller de catación de café', 'Aprendé a distinguir notas de sabor en tres cafés de la finca. Dura una hora y media.', 'Cerro El Bálsamo, La Libertad', 'fijo', 900, 'por persona'],
-  [4, 'Clases y tutorías', 'Taller de queso fresco', 'Hacemos queso fresco juntos desde la leche. Te vas con tu propio queso para la casa.', 'Zona de El Zonte, La Libertad', 'fijo', 1200, 'por persona'],
-  [4, 'Hogar y reparaciones', 'Reparación de cercas y portones', 'Cambio de postes, alambre y bisagras en cercas de finca o de casa. Cotizamos después de ver el trabajo.', 'Zona de El Zonte, La Libertad', 'cotizar', null, null],
-  [5, 'Transporte y mandados', 'Mandados en moto dentro de Suchitoto', 'Compras, pagos y paquetes dentro de Suchitoto. La hora la coordinamos por el chat.', 'Suchitoto, Cuscatlán', 'fijo', 200, 'por viaje'],
-  [5, 'Clases y tutorías', 'Clases de guitarra', 'Clases de guitarra para principiantes, con tu propia guitarra o con la mía.', 'Bálsamo, La Libertad', 'fijo', 600, 'por hora'],
-  [7, 'Belleza y cuidado personal', 'Corte de pelo clásico', 'Corte a tijera o máquina, con lavado. Atendemos sin cita los sábados.', 'Suchitoto, Cuscatlán', 'fijo', 500, 'por corte'],
-  [7, 'Belleza y cuidado personal', 'Arreglo de barba', 'Perfilado y arreglo de barba con navaja y toalla caliente.', 'Suchitoto, Cuscatlán', 'fijo', 300, 'por servicio'],
-  [8, 'Hogar y reparaciones', 'Instalación eléctrica en casa', 'Cableado, tomacorrientes, breakers y revisión del tablero. Cotizamos después de ver la casa.', 'Suchitoto, Cuscatlán', 'cotizar', null, null],
-  [8, 'Tecnología', 'Reparación de celulares', 'Cambio de pantalla, batería y cargadores. Revisamos el equipo y decimos el costo antes de cambiar piezas.', 'Suchitoto, Cuscatlán', 'cotizar', null, null],
+  [2, 'Clases y tutorías', 'Asesoría para huerto casero', 'Te enseño a sembrar, abonar y regar un huerto pequeño en tu patio, con semillas de la zona.', 'El Zonte, La Libertad', 'fijo', 800, 'por hora', '/productos/servicio-asesoria-huerto-casero.jpg'],
+  [2, 'Hogar y reparaciones', 'Instalación de huerto en patio', 'Preparamos la tierra, armamos los cajones y dejamos sembrado el huerto. El precio depende del tamaño.', 'El Zonte, La Libertad', 'cotizar', null, null, '/productos/servicio-instalacion-huerto-patio.jpg'],
+  [3, 'Comida y eventos', 'Tour del cafetal', 'Recorrido por el cafetal con explicación del cultivo, el secado y el tueste. Incluye una taza de café.', 'Cerro El Bálsamo, La Libertad', 'fijo', 1000, 'por persona', '/productos/servicio-tour-cafetal.jpg'],
+  [3, 'Clases y tutorías', 'Taller de catación de café', 'Aprendé a distinguir notas de sabor en tres cafés de la finca. Dura una hora y media.', 'Cerro El Bálsamo, La Libertad', 'fijo', 900, 'por persona', '/productos/servicio-taller-catacion-cafe.jpg'],
+  [4, 'Clases y tutorías', 'Taller de queso fresco', 'Hacemos queso fresco juntos desde la leche. Te vas con tu propio queso para la casa.', 'Zona de El Zonte, La Libertad', 'fijo', 1200, 'por persona', '/productos/servicio-taller-queso-fresco.jpg'],
+  [4, 'Hogar y reparaciones', 'Reparación de cercas y portones', 'Cambio de postes, alambre y bisagras en cercas de finca o de casa. Cotizamos después de ver el trabajo.', 'Zona de El Zonte, La Libertad', 'cotizar', null, null, '/productos/servicio-reparacion-cercas-portones.jpg'],
+  [5, 'Transporte y mandados', 'Mandados en moto dentro de Suchitoto', 'Compras, pagos y paquetes dentro de Suchitoto. La hora la coordinamos por el chat.', 'Suchitoto, Cuscatlán', 'fijo', 200, 'por viaje', '/productos/servicio-mandados-moto-suchitoto.jpg'],
+  [5, 'Clases y tutorías', 'Clases de guitarra', 'Clases de guitarra para principiantes, con tu propia guitarra o con la mía.', 'Bálsamo, La Libertad', 'fijo', 600, 'por hora', '/productos/servicio-clases-guitarra.jpg'],
+  [7, 'Belleza y cuidado personal', 'Corte de pelo clásico', 'Corte a tijera o máquina, con lavado. Atendemos sin cita los sábados.', 'Suchitoto, Cuscatlán', 'fijo', 500, 'por corte', '/productos/servicio-corte-pelo-clasico.jpg'],
+  [7, 'Belleza y cuidado personal', 'Arreglo de barba', 'Perfilado y arreglo de barba con navaja y toalla caliente.', 'Suchitoto, Cuscatlán', 'fijo', 300, 'por servicio', '/productos/servicio-arreglo-barba.jpg'],
+  [8, 'Hogar y reparaciones', 'Instalación eléctrica en casa', 'Cableado, tomacorrientes, breakers y revisión del tablero. Cotizamos después de ver la casa.', 'Suchitoto, Cuscatlán', 'cotizar', null, null, null],
+  [8, 'Tecnología', 'Reparación de celulares', 'Cambio de pantalla, batería y cargadores. Revisamos el equipo y decimos el costo antes de cambiar piezas.', 'Suchitoto, Cuscatlán', 'cotizar', null, null, '/productos/servicio-reparacion-celulares.jpg'],
 ];
 
 // [usuario, categoría, título, descripción, zona, presupuesto en centavos o null]
@@ -393,7 +394,7 @@ async function asegurarServicios(ids, negocioDe, categoriaDe) {
   if (error) throw error;
   const yaExisten = new Set(existentes.map((x) => `${x.negocio_id}|${x.titulo}`));
 
-  for (const [dueno, categoria, titulo, descripcion, zona, tipo, precio, unidad] of SERVICIOS) {
+  for (const [dueno, categoria, titulo, descripcion, zona, tipo, precio, unidad, foto] of SERVICIOS) {
     if (yaExisten.has(`${negocioDe[dueno]}|${titulo}`)) continue;
     await rpc('guardar_servicio', {
       p_usuario: ids[dueno],
@@ -406,7 +407,7 @@ async function asegurarServicios(ids, negocioDe, categoriaDe) {
       p_precio: precio,
       p_unidad: unidad,
       p_activo: true,
-      p_fotos: [],
+      p_fotos: foto ? [foto] : [],
     });
     nuevos.servicios++;
   }

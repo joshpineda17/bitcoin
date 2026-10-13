@@ -933,3 +933,11 @@ main:focus {
     transition: background-color 0.15s, color 0.15s;
   }
 }
+
+/* Four tab labels do not fit a 320px screen at full size: "Mi negocio" touched the edge. */
+@media (max-width: 359px) {
+  .nav--barra a {
+    font-size: 0.8125rem;
+    padding-inline: 0;
+  }
+}

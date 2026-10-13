@@ -124,6 +124,9 @@
 }
 
 .paginacion a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alto-toque);
   color: var(--tostado);
   font-weight: 700;
 }

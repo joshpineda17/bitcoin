@@ -29,7 +29,7 @@ export function VistaAutor({
       <section aria-labelledby="ofertas-titulo" className={estilos.bloque}>
         <h2 id="ofertas-titulo">Ofertas</h2>
         {ofertas.length === 0 ? (
-          <p>Sin ofertas todavía.</p>
+          <p>Todavía no hay ofertas. Suelen llegar el mismo día.</p>
         ) : (
           <ul className={estilos.lista}>
             {ofertas.map((oferta) => (
@@ -41,17 +41,20 @@ export function VistaAutor({
         )}
       </section>
 
-      <BotonAccion
-        accion={cancelarNecesidadAccion}
-        campos={{ necesidadId: necesidad.id }}
-        etiqueta="Cancelar esta necesidad"
-        variante="secundario"
-        confirmacion={{
-          texto: 'Si la cancelás, las ofertas abiertas se cierran y nadie más puede ofertar. No se puede deshacer.',
-          etiquetaConfirmar: 'Sí, cancelar',
-        }}
-        disponible={abierta}
-      />
+      {/* Its own block with space above: it is the last action, not part of the last offer. */}
+      <div className={estilos.seccion}>
+        <BotonAccion
+          accion={cancelarNecesidadAccion}
+          campos={{ necesidadId: necesidad.id }}
+          etiqueta="Cancelar esta necesidad"
+          variante="secundario"
+          confirmacion={{
+            texto: 'Si la cancelás, las ofertas abiertas se cierran y nadie más puede ofertar. No se puede deshacer.',
+            etiquetaConfirmar: 'Sí, cancelar',
+          }}
+          disponible={abierta}
+        />
+      </div>
     </>
   );
 }

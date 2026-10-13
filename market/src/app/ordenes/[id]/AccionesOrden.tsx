@@ -113,7 +113,7 @@ export function AccionesOrden({
       )}
 
       {tiene('abrir_disputa') && (
-        <FormularioDisputa ordenId={ordenId} trabajoSinPagar={trabajo && !pagada} />
+        <FormularioDisputa ordenId={ordenId} trabajoSinPagar={trabajo && !pagada} trabajo={trabajo} />
       )}
     </div>
   );

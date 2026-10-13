@@ -184,7 +184,10 @@ export function PagoCliente({
   // prefetched copy) asks once from here. Deferred to a timer, as the countdown check above.
   const pidioCobro = useRef(false);
   useEffect(() => {
-    if (!trabajo || estado.estado !== 'hecha') return;
+    // Only for a page that ARRIVED without a request. A request that lapsed while the client was
+    // looking also leaves the job at 'hecha', and then the client must ask for the new one: the
+    // amount in sats can change, so it is never renewed behind their back.
+    if (!trabajo || inicial.estado !== 'hecha' || estado.estado !== 'hecha' || expiroTrabajo) return;
     // The flag is set when the request is sent, so a cleanup before that does not lose it.
     const id = setTimeout(() => {
       if (pidioCobro.current) return;
@@ -371,9 +374,10 @@ export function PagoCliente({
 
       {direccion !== null && destino !== null && (
         <section className={styles.bloque} aria-labelledby="pago-direccion">
-          <h2 id="pago-direccion">Pagá a la dirección del vendedor</h2>
+          <h2 id="pago-direccion">{trabajo ? 'Pagá a la dirección de quien trabaja' : 'Pagá a la dirección del vendedor'}</h2>
           <p className={styles.nota}>
-            Enviá exactamente este monto a esta dirección desde tu billetera. El vendedor confirma cuando lo recibe.
+            Enviá exactamente este monto a esta dirección desde tu billetera.{' '}
+            {trabajo ? 'Quien trabaja confirma cuando lo recibe.' : 'El vendedor confirma cuando lo recibe.'}
           </p>
           <div className={styles.campos}>
             <label htmlFor="campo-direccion" className="campo-etiqueta">

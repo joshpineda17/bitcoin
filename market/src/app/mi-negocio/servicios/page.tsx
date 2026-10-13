@@ -49,7 +49,9 @@ async function ListaServicios({ busqueda }: { busqueda: PageProps<'/mi-negocio/s
                 Agregar servicio
               </Boton>
               <p id="agregar-motivo" className={estilos.ayuda}>
-                {motivo}
+                {sesion.negocio.estado === 'suspendido'
+                  ? 'Se habilita cuando se levante la suspensión.'
+                  : 'Se habilita cuando el negocio esté aprobado.'}
               </p>
             </>
           )}

@@ -91,6 +91,8 @@ async function CatalogoServicios({ busqueda }: { busqueda: PageProps<'/servicios
               className="campo"
               name="q"
               type="search"
+              // The server cuts the search at 80 characters (textoBusqueda); the field says so too.
+              maxLength={80}
               defaultValue={texto}
               autoComplete="off"
             />

@@ -50,7 +50,9 @@ async function DetalleServicio({ params }: { params: Promise<{ id: string }> }) 
 
       <div className={estilos.info}>
         <p>
-          <Link href="/servicios">← Volver a servicios</Link>
+          <Link href="/servicios" className={estilos.volver}>
+            ← Volver a servicios
+          </Link>
         </p>
         <h1>{servicio.titulo}</h1>
 

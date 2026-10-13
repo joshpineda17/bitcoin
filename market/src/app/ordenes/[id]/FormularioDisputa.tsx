@@ -9,7 +9,15 @@ import { useAccion } from './useAccion';
 // The buyer's dispute form. It sits behind a disclosure, so it does not compete with the main
 // action. The text says who reviews it and who pays a refund, because the app holds no money.
 // A job not paid yet is disputed before payment: the review decides whether it is owed.
-export function FormularioDisputa({ ordenId, trabajoSinPagar = false }: { ordenId: string; trabajoSinPagar?: boolean }) {
+export function FormularioDisputa({
+  ordenId,
+  trabajoSinPagar = false,
+  trabajo = false,
+}: {
+  ordenId: string;
+  trabajoSinPagar?: boolean;
+  trabajo?: boolean;
+}) {
   const [abierto, setAbierto] = useState(false);
   const [motivo, setMotivo] = useState('');
   const [evidencia, setEvidencia] = useState('');
@@ -48,7 +56,7 @@ export function FormularioDisputa({ ordenId, trabajoSinPagar = false }: { ordenI
           ) : (
             <p className={styles.ayuda}>
               Un administrador de CacaoMarket revisa cada disputa. CacaoMarket nunca tiene el dinero,
-              así que si corresponde un reembolso, lo paga el vendedor fuera de la app y vos lo confirmás
+              así que si corresponde un reembolso, lo paga {trabajo ? 'quien trabaja' : 'el vendedor'} fuera de la app y vos lo confirmás
               después.
             </p>
           )}

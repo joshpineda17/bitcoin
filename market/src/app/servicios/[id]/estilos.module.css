@@ -1,3 +1,10 @@
+/* A back link tall enough to tap. */
+.volver {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--alto-toque);
+}
+
 /* Service page. One column at phone width; the photo and the details side by side from 820px. */
 .servicio {
   display: grid;

@@ -58,5 +58,9 @@ export function clienteServicio() {
   }
   return createClient<Database>(url, clave, {
     auth: { persistSession: false, autoRefreshToken: false },
+    // Next shares identical GET requests within one render. This client reads a row, writes it and
+    // reads it again in the same render (the payment screen does), so the second read must be real.
+    // A signal on the request is the documented way to opt out.
+    global: { fetch: (entrada, opciones) => fetch(entrada, { ...opciones, signal: opciones?.signal ?? new AbortController().signal }) },
   });
 }

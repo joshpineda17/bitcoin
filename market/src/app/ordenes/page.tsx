@@ -41,7 +41,7 @@ async function Compras({ searchParams }: { searchParams: Promise<{ pagina?: stri
   return (
     <div className={styles.pagina}>
       <div className={styles.encabezado}>
-        <h1>Mis compras</h1>
+        <h1>Mis órdenes</h1>
         <p>Seguí cada pedido, desde el pago hasta la entrega.</p>
         <p>
           <Link href="/cotizaciones" className={styles.enlaceSeccion}>
@@ -69,7 +69,7 @@ async function Compras({ searchParams }: { searchParams: Promise<{ pagina?: stri
       )}
 
       {ordenes.length === 0 ? (
-        <Vacio texto="Todavía no hiciste ninguna compra." accion={{ href: '/', etiqueta: 'Ver productos' }} />
+        <Vacio texto="Todavía no hiciste ninguna compra ni contrataste un trabajo." accion={{ href: '/', etiqueta: 'Ver productos' }} />
       ) : (
         <>
           {enPagina.length > 0 && (

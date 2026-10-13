@@ -33,3 +33,23 @@ están hechos según lo permiten CC BY y CC BY-SA.
 
 Las fuentes están en Wikimedia Commons. Cada enlace lleva a la página del archivo, donde está el
 autor y la licencia completa.
+
+## Fotos de servicios
+
+Las fotos de servicios siguen la misma regla: 4:3 (800 x 600 px), JPEG sin metadatos. Algunas
+se recortaron más para quitar marcas visibles (un cubo y el logo de una capa). Ese recorte
+también está permitido por CC BY y CC BY-SA.
+
+| Servicio | Archivo | Autor | Licencia | Fuente |
+|---|---|---|---|---|
+| Asesoría para huerto casero | servicio-asesoria-huerto-casero.jpg | Kerstin Namuth | CC BY-SA 4.0 ([licencia](https://creativecommons.org/licenses/by-sa/4.0)) | https://commons.wikimedia.org/wiki/File:Raised_vegetable_bed_1.jpg |
+| Instalación de huerto en patio | servicio-instalacion-huerto-patio.jpg | Kolforn | CC BY-SA 4.0 ([licencia](https://creativecommons.org/licenses/by-sa/4.0)) | https://commons.wikimedia.org/wiki/File:-2020-07-10_Raised_garden_beds,_Trimingham,_Norfolk.JPG |
+| Tour del cafetal | servicio-tour-cafetal.jpg | U.S. Fish and Wildlife Service Northeast Region | CC BY 2.0 ([licencia](https://creativecommons.org/licenses/by/2.0)) | https://commons.wikimedia.org/wiki/File:Coffee_farm_in_Colombia.jpg |
+| Taller de catación de café | servicio-taller-catacion-cafe.jpg | Visitor7 | CC BY-SA 3.0 ([licencia](https://creativecommons.org/licenses/by-sa/3.0)) | https://commons.wikimedia.org/wiki/File:Coffee_Cupping-1.jpg |
+| Taller de queso fresco | servicio-taller-queso-fresco.jpg | Aticona39 | CC BY 4.0 ([licencia](https://creativecommons.org/licenses/by/4.0)) | https://commons.wikimedia.org/wiki/File:Producci%C3%B3n_de_queso_fresco_prensado.jpg |
+| Reparación de cercas y portones | servicio-reparacion-cercas-portones.jpg | David Anstiss | CC BY-SA 2.0 ([licencia](https://creativecommons.org/licenses/by-sa/2.0)) | https://commons.wikimedia.org/wiki/File:Repairing_the_fence_near_Cold_Blow_Farm_-_geograph.org.uk_-_1772053.jpg |
+| Mandados en moto dentro de Suchitoto | servicio-mandados-moto-suchitoto.jpg | ObbyK | CC BY-SA 4.0 ([licencia](https://creativecommons.org/licenses/by-sa/4.0)) | https://commons.wikimedia.org/wiki/File:Motorcycle_Transportation_in_a_busy_Kampala_Street.jpg |
+| Clases de guitarra | servicio-clases-guitarra.jpg | Alvesgaspar | CC BY 3.0 ([licencia](https://creativecommons.org/licenses/by/3.0)) | https://commons.wikimedia.org/wiki/File:Guitar_May_2009-1.jpg |
+| Corte de pelo clásico | servicio-corte-pelo-clasico.jpg | Greg Willis | CC BY-SA 2.0 ([licencia](https://creativecommons.org/licenses/by-sa/2.0)) | https://commons.wikimedia.org/wiki/File:Barber_cutting_hair_(3749541180).jpg |
+| Arreglo de barba | servicio-arreglo-barba.jpg | Gkbediako | CC BY-SA 4.0 ([licencia](https://creativecommons.org/licenses/by-sa/4.0)) | https://commons.wikimedia.org/wiki/File:A_Ghanaian_Barber_trims_a_beard.jpg |
+| Reparación de celulares | servicio-reparacion-celulares.jpg | Amuzujoe | CC BY-SA 4.0 ([licencia](https://creativecommons.org/licenses/by-sa/4.0)) | https://commons.wikimedia.org/wiki/File:Phone_Repair_01.jpg |
