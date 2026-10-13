@@ -62,3 +62,33 @@
   flex-wrap: wrap;
   gap: 8px;
 }
+
+/* Demo panel: Tostado on Arena, the same pairing as the rest of the form. */
+.panelDemo {
+  display: grid;
+  gap: 12px;
+  max-width: 28rem;
+  padding: 16px;
+  border-radius: var(--radio);
+  background: var(--arena);
+  color: var(--tostado);
+}
+
+.tituloDemo {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+.ayudaDemo {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+/* The plain link under the form that switches the sign-in method. */
+.cambio {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--tostado);
+  font-weight: 600;
+}

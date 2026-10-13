@@ -6,7 +6,8 @@ import { cache } from 'react';
 import { clienteSesion } from './supabase';
 
 export type Sesion = {
-  usuario: { id: string; nombre: string; esAdmin: boolean; telefono: string };
+  // A person signs in by phone or by email, so one of the two is empty.
+  usuario: { id: string; nombre: string; esAdmin: boolean; telefono: string; correo: string };
   negocio: {
     id: string;
     nombre: string;
@@ -37,8 +38,9 @@ export const sesionActual = cache(async (): Promise<Sesion | null> => {
       id,
       nombre: perfil.data.nombre,
       esAdmin: perfil.data.es_admin,
-      // The phone comes from the user's own token, never from a table read.
+      // Phone and email come from the user's own token, never from a table read.
       telefono: data.user.phone ?? '',
+      correo: data.user.email ?? '',
     },
     negocio: negocio.data
       ? {

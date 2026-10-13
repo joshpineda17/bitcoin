@@ -220,8 +220,8 @@ export type NegocioAdmin = {
   tipoProveedorPago: string;
   creadoEn: string;
   dueno: string;
-  // The phone is read here only, for the admin screen. Sessions never see it.
-  telefono: string;
+  // The owner's phone or email, as stored, for the admin screen. Sessions never see it.
+  contacto: string;
 };
 
 type FilaNegocioBD = {
@@ -235,6 +235,15 @@ type FilaNegocioBD = {
   creado_en: string;
   dueno: { nombre: string; telefono: string } | null;
 };
+
+// With demo access on, anyone can sign in as the sample admin, so real people's contacts are
+// never shown whole: only enough to recognise them.
+function contactoVisible(contacto: string): string {
+  if (process.env.NEXT_PUBLIC_DEMO !== '1' || contacto === '') return contacto;
+  const arroba = contacto.indexOf('@');
+  if (arroba > 0) return `${contacto.slice(0, 2)}•••${contacto.slice(arroba)}`;
+  return `•••• ••${contacto.slice(-2)}`;
+}
 
 export async function negociosAdmin(actorId: string): Promise<NegocioAdmin[]> {
   await exigirAdminBD(actorId);
@@ -256,7 +265,7 @@ export async function negociosAdmin(actorId: string): Promise<NegocioAdmin[]> {
     tipoProveedorPago: f.tipo_proveedor_pago,
     creadoEn: f.creado_en,
     dueno: f.dueno?.nombre ?? '',
-    telefono: f.dueno?.telefono ?? '',
+    contacto: contactoVisible(f.dueno?.telefono ?? ''),
   }));
 }
 

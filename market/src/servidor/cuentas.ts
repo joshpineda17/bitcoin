@@ -47,6 +47,16 @@ export function normalizarCelular(texto: string): string | null {
 }
 
 /**
+ * A plausible email address, trimmed and lower-cased, at most 254 characters. Returns null when it
+ * does not look like one. The mail server still makes the final call.
+ */
+export function normalizarCorreo(texto: string): string | null {
+  const limpio = texto.trim().toLowerCase();
+  if (limpio.length > 254) return null;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(limpio) ? limpio : null;
+}
+
+/**
  * Where to send the visitor after sign-in. Only a path on this site; anything else goes to
  * the home page. This is the open-redirect guard, so keep it strict.
  */

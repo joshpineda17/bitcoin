@@ -4,13 +4,13 @@ import { useActionState, useEffect, useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { entrar, type EstadoEntrar } from './acciones';
+import type { Metodo } from './configuracion';
 import estilos from './estilos.module.css';
 
-const ESTADO_INICIAL: EstadoEntrar = { paso: 'telefono', telefono: '', codigo: '' };
-
-export function FormularioEntrar({ volver }: { volver: string }) {
-  const [estado, accion] = useActionState(entrar, ESTADO_INICIAL);
-  const campoTelefono = useRef<HTMLInputElement>(null);
+export function FormularioEntrar({ metodo, volver }: { metodo: Metodo; volver: string }) {
+  const estadoInicial: EstadoEntrar = { metodo, paso: 'contacto', contacto: '', codigo: '' };
+  const [estado, accion] = useActionState(entrar, estadoInicial);
+  const campoContacto = useRef<HTMLInputElement>(null);
   const campoCodigo = useRef<HTMLInputElement>(null);
 
   // Move focus to the field that needs the visitor: the one with the error, or the new step.
@@ -18,60 +18,90 @@ export function FormularioEntrar({ volver }: { volver: string }) {
     if (estado.error?.campo === 'codigo' || (!estado.error && estado.paso === 'codigo')) {
       campoCodigo.current?.focus();
     } else {
-      campoTelefono.current?.focus();
+      campoContacto.current?.focus();
     }
   }, [estado]);
 
-  const errorTelefono = estado.error?.campo === 'telefono' ? estado.error.mensaje : null;
+  const errorContacto = estado.error?.campo === 'contacto' ? estado.error.mensaje : null;
   const errorCodigo = estado.error?.campo === 'codigo' ? estado.error.mensaje : null;
+  const esCorreo = metodo === 'correo';
 
   return (
     <div className={estilos.bloque}>
-      {estado.paso === 'telefono' ? (
+      {estado.paso === 'contacto' ? (
         <form action={accion} className={estilos.formulario}>
           <input type="hidden" name="volver" value={volver} />
+          <input type="hidden" name="metodo" value={metodo} />
           <input type="hidden" name="intencion" value="enviar" />
 
-          <div className={estilos.grupo}>
-            <label htmlFor="telefono" className="campo-etiqueta">
-              Número de celular
-            </label>
-            <div className={estilos.telefono}>
-              <span className={estilos.prefijo}>+503</span>
+          {esCorreo ? (
+            <div className={estilos.grupo}>
+              <label htmlFor="correo" className="campo-etiqueta">
+                Correo
+              </label>
               <input
-                ref={campoTelefono}
-                id="telefono"
-                name="telefono"
+                ref={campoContacto}
+                id="correo"
+                name="contacto"
                 className="campo"
-                type="tel"
-                inputMode="numeric"
-                autoComplete="tel-national"
-                defaultValue={estado.telefono}
-                aria-describedby={errorTelefono ? 'error-telefono' : 'ayuda-telefono'}
-                aria-invalid={errorTelefono ? true : undefined}
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                autoCapitalize="none"
+                spellCheck={false}
+                defaultValue={estado.contacto}
+                aria-describedby={errorContacto ? 'error-contacto' : 'ayuda-correo'}
+                aria-invalid={errorContacto ? true : undefined}
               />
+              <p id="ayuda-correo" className={estilos.ayuda}>
+                Te mandamos el código de seis números a este correo.
+              </p>
             </div>
-            <p id="ayuda-telefono" className={estilos.ayuda}>
-              Son 8 números. Podés escribirlos con espacios o guiones.
-            </p>
-          </div>
-
-          {errorTelefono && (
-            <div id="error-telefono" role="alert" className={estilos.error}>
-              {errorTelefono}
+          ) : (
+            <div className={estilos.grupo}>
+              <label htmlFor="telefono" className="campo-etiqueta">
+                Número de celular
+              </label>
+              <div className={estilos.telefono}>
+                <span className={estilos.prefijo}>+503</span>
+                <input
+                  ref={campoContacto}
+                  id="telefono"
+                  name="contacto"
+                  className="campo"
+                  type="tel"
+                  inputMode="numeric"
+                  autoComplete="tel-national"
+                  defaultValue={estado.contacto}
+                  aria-describedby={errorContacto ? 'error-contacto' : 'ayuda-telefono'}
+                  aria-invalid={errorContacto ? true : undefined}
+                />
+              </div>
+              <p id="ayuda-telefono" className={estilos.ayuda}>
+                Son 8 números. Podés escribirlos con espacios o guiones.
+              </p>
             </div>
           )}
 
-          <p className={estilos.demo}>
-            Modo demo: para probar usá un número de 7000 0001 a 7000 0009. No se manda SMS.
-          </p>
+          {errorContacto && (
+            <div id="error-contacto" role="alert" className={estilos.error}>
+              {errorContacto}
+            </div>
+          )}
+
+          {!esCorreo && (
+            <p className={estilos.demo}>
+              Modo demo: para probar usá un número de 7000 0001 a 7000 0009. No se manda SMS.
+            </p>
+          )}
 
           <BotonEnvio intencion="enviar" etiqueta="Enviar código" etiquetaEnvio="Enviando…" />
         </form>
       ) : (
         <form action={accion} className={estilos.formulario}>
           <input type="hidden" name="volver" value={volver} />
-          <input type="hidden" name="telefono" value={estado.telefono} />
+          <input type="hidden" name="metodo" value={metodo} />
+          <input type="hidden" name="contacto" value={estado.contacto} />
 
           <div className={estilos.grupo}>
             <label htmlFor="codigo" className="campo-etiqueta">
@@ -90,7 +120,7 @@ export function FormularioEntrar({ volver }: { volver: string }) {
               aria-invalid={errorCodigo ? true : undefined}
             />
             <p id="ayuda-codigo" className={estilos.ayuda}>
-              Enviado al +503 {mascara(estado.telefono)}.
+              {esCorreo ? 'Vence en una hora.' : `Enviado al +503 ${mascara(estado.contacto)}.`}
             </p>
           </div>
 
@@ -100,7 +130,7 @@ export function FormularioEntrar({ volver }: { volver: string }) {
             </div>
           )}
 
-          <p className={estilos.demo}>Modo demo: usá el código 123456. No se manda SMS.</p>
+          {!esCorreo && <p className={estilos.demo}>Modo demo: usá el código 123456. No se manda SMS.</p>}
 
           <div className={estilos.acciones}>
             <BotonEnvio intencion="verificar" etiqueta="Entrar" etiquetaEnvio="Verificando…" />
@@ -113,7 +143,7 @@ export function FormularioEntrar({ volver }: { volver: string }) {
             />
             <BotonEnvio
               intencion="cambiar"
-              etiqueta="Cambiar número"
+              etiqueta={esCorreo ? 'Cambiar correo' : 'Cambiar número'}
               etiquetaEnvio="Cambiando…"
               secundario
               sinValidar

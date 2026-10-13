@@ -1,26 +1,26 @@
 import type { Metadata } from 'next';
-import { connection } from 'next/server';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { connection } from 'next/server';
 import { Suspense } from 'react';
 
 import { destinoSeguro, rutaCuenta } from '@/servidor/cuentas';
 import { sesionActual } from '@/servidor/sesion';
 
+import { demoActivo, type Metodo, metodoElegido, metodosHabilitados } from './configuracion';
+import estilos from './estilos.module.css';
 import { FormularioEntrar } from './FormularioEntrar';
+import { PanelDemo } from './PanelDemo';
 
 export const metadata: Metadata = {
   title: 'Entrar',
 };
 
-// The sign-in form. The destination comes from the URL, so the form streams in behind a boundary.
+// The sign-in form. The destination and the chosen method come from the URL, so the form
+// streams in behind a boundary.
 export default function PaginaEntrar(props: PageProps<'/entrar'>) {
   return (
     <div className="entrar">
-      <section className="encabezado">
-        <h1>Entrá con tu celular</h1>
-        <p>Te mandamos un código de seis números. No hace falta contraseña.</p>
-      </section>
-
       <Suspense fallback={<p role="status">Cargando…</p>}>
         <EntradaConDestino busqueda={props.searchParams} />
       </Suspense>
@@ -39,5 +39,33 @@ async function EntradaConDestino({ busqueda }: { busqueda: PageProps<'/entrar'>[
     redirect(sesion.usuario.nombre.trim() ? volver : rutaCuenta(volver));
   }
 
-  return <FormularioEntrar volver={volver} />;
+  const habilitados = metodosHabilitados();
+  const metodo = metodoElegido(params.metodo, habilitados);
+  const otro = habilitados.find((m) => m !== metodo);
+
+  return (
+    <>
+      <section className="encabezado">
+        <h1>{metodo === 'correo' ? 'Entrá con tu correo' : 'Entrá con tu celular'}</h1>
+        <p>Te mandamos un código de seis números. No hace falta contraseña.</p>
+      </section>
+
+      {demoActivo() && <PanelDemo volver={volver} />}
+
+      <FormularioEntrar metodo={metodo} volver={volver} />
+
+      {otro && (
+        <Link href={enlaceMetodo(otro, volver)} className={estilos.cambio}>
+          {otro === 'correo' ? 'Entrar con correo' : 'Entrar con celular'}
+        </Link>
+      )}
+    </>
+  );
+}
+
+// Keeps the visitor's destination when switching method.
+function enlaceMetodo(metodo: Metodo, volver: string): string {
+  const query = new URLSearchParams({ metodo });
+  if (volver !== '/') query.set('volver', volver);
+  return `/entrar?${query.toString()}`;
 }

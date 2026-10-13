@@ -86,3 +86,29 @@ export async function idDe(persona: Persona): Promise<string> {
 export async function seDesborda(pagina: Page): Promise<boolean> {
   return pagina.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
 }
+
+// The local stack's mail catcher (Mailpit, supabase/config.toml [local_smtp]). Emails never leave the machine.
+const CATCHER = 'http://127.0.0.1:54324';
+
+/**
+ * The six digits in the newest email the local stack sent to `correo`. Polls the catcher for up to
+ * 20 seconds. Pass `desde` to ignore mail that arrived earlier, such as a code from a previous sign-in.
+ */
+export async function codigoDeCorreo(correo: string, desde?: Date): Promise<string> {
+  const limite = Date.now() + 20_000;
+  while (Date.now() < limite) {
+    const busqueda = await fetch(`${CATCHER}/api/v1/search?query=${encodeURIComponent(`to:${correo}`)}&limit=5`);
+    if (busqueda.ok) {
+      const { messages } = (await busqueda.json()) as { messages: { ID: string; Created: string }[] };
+      // Newest first, so the first match that is recent enough is the code to use.
+      const reciente = messages.find((m) => !desde || new Date(m.Created) >= desde);
+      if (reciente) {
+        const mensaje = (await (await fetch(`${CATCHER}/api/v1/message/${reciente.ID}`)).json()) as { Text: string };
+        const codigo = /\b(\d{6})\b/.exec(mensaje.Text ?? '');
+        if (codigo) return codigo[1];
+      }
+    }
+    await new Promise((resolver) => setTimeout(resolver, 1000));
+  }
+  throw new Error(`No llegó el código a ${correo} en 20 segundos. Revisá que el stack local esté arriba.`);
+}

@@ -42,8 +42,17 @@ async function Cuenta({ busqueda }: { busqueda: PageProps<'/cuenta'>['searchPara
       <section className={estilos.bloque} aria-labelledby="titulo-datos">
         <h2 id="titulo-datos">Tus datos</h2>
         <dl className={estilos.datos}>
-          <dt>Celular</dt>
-          <dd className="dato">{mascaraCelular(usuario.telefono)}</dd>
+          {usuario.telefono ? (
+            <>
+              <dt>Celular</dt>
+              <dd className="dato">{mascaraCelular(usuario.telefono)}</dd>
+            </>
+          ) : (
+            <>
+              <dt>Correo</dt>
+              <dd className="dato">{mascaraCorreo(usuario.correo)}</dd>
+            </>
+          )}
         </dl>
         <FormularioNombre nombre={usuario.nombre} volver={volver} />
       </section>
@@ -78,4 +87,12 @@ function mascaraCelular(telefono: string): string {
   const digitos = telefono.replace(/\D/g, '').slice(-8);
   if (digitos.length < 2) return '+503';
   return `+503 •••• ••${digitos.slice(-2)}`;
+}
+
+// Shows the first two characters of the name part and the whole domain: "jo•••@gmail.com".
+function mascaraCorreo(correo: string): string {
+  const corte = correo.lastIndexOf('@');
+  if (corte < 1) return '';
+  const inicio = Array.from(correo.slice(0, corte)).slice(0, 2).join('');
+  return `${inicio}•••${correo.slice(corte)}`;
 }

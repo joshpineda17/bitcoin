@@ -233,6 +233,17 @@ otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 3600
 
+# Sign-in by email sends a six-digit code, never a link. GoTrue uses the "confirmation" template
+# for a new address and "magic_link" for one that already exists, so both carry the code.
+# Paths are relative to the project folder that holds supabase/.
+[auth.email.template.magic_link]
+subject = "Tu código de CacaoMarket"
+content_path = "./supabase/templates/codigo.html"
+
+[auth.email.template.confirmation]
+subject = "Tu código de CacaoMarket"
+content_path = "./supabase/templates/codigo.html"
+
 # Use a production-ready SMTP server
 # [auth.email.smtp]
 # enabled = true

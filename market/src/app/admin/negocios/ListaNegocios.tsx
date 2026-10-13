@@ -9,7 +9,6 @@ import {
   ETIQUETA_PROVEEDOR,
   type EstadoNegocio,
   formatoFecha,
-  formatoTelefono,
   nombreVisible,
 } from '../etiquetas';
 import type { NegocioAdmin } from '@/servidor/admin';
@@ -90,8 +89,8 @@ function TarjetaNegocio({
           <dd>{nombreVisible(n.dueno)}</dd>
         </div>
         <div>
-          <dt>Teléfono</dt>
-          <dd className={estilos.dato}>{formatoTelefono(n.telefono)}</dd>
+          <dt>Contacto</dt>
+          <dd className={estilos.dato}>{n.contacto || '—'}</dd>
         </div>
         <div>
           <dt>Ubicación</dt>
