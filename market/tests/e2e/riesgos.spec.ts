@@ -297,16 +297,29 @@ test('URLs ajenas dicen "Esta página no existe" y no muestran datos', async ({ 
   const diego = await sesionDe(browser, 'diego');
 
   try {
-    const rutas = [`/ordenes/${ordenId}`, `/ordenes/${ordenId}/pagar`, `/mi-negocio/productos/${producto.id}`];
-    for (const ruta of rutas) {
+    for (const ruta of [`/ordenes/${ordenId}`, `/ordenes/${ordenId}/pagar`]) {
       await diego.goto(ruta);
       await expect(diego.getByText('Esta página no existe.')).toBeVisible();
       const texto = await diego.locator('body').innerText();
       expect(texto, ruta).not.toContain(producto.nombre);
       expect(texto, ruta).not.toContain('Productos y total');
     }
+    // Diego has no shop, so the seller area sends him to the application page instead.
+    await diego.goto(`/mi-negocio/productos/${producto.id}`);
+    await expect(diego).toHaveURL(/\/mi-negocio$/);
+    await expect(diego.locator('body')).not.toContainText(producto.nombre);
   } finally {
     await diego.context().close();
+  }
+
+  // Another seller, with a shop of his own, guesses the id of Rosa's product.
+  const mario = await sesionDe(browser, 'mario');
+  try {
+    await mario.goto(`/mi-negocio/productos/${producto.id}`);
+    await expect(mario.getByText('Esta página no existe.')).toBeVisible();
+    await expect(mario.locator('body')).not.toContainText(producto.nombre);
+  } finally {
+    await mario.context().close();
   }
 
   // A buyer (not admin) gets a real 404 on the admin area.
