@@ -21,3 +21,6 @@ market/.next/
 market/supabase/.temp/
 market/supabase/.branches/
 market/test-results/
+
+# browser tool scratch
+.playwright-mcp/
